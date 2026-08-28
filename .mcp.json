@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "melaya": {
+      "type": "http",
+      "url": "https://api.melaya.org/mcp"
+    }
+  }
+}

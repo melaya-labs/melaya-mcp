@@ -1,0 +1,21 @@
+{
+  "name": "melaya",
+  "version": "1.0.0",
+  "description": "Let Claude operate your Android phone and run Melaya agent pipelines. Reads the screen and taps, types, and navigates inside apps you allow-list — no per-app API needed.",
+  "author": {
+    "name": "Melaya Labs",
+    "email": "support@melaya.org",
+    "url": "https://melaya.org"
+  },
+  "homepage": "https://github.com/melaya-labs/melaya/blob/main/docs/mcp.md",
+  "repository": "https://github.com/melaya-labs/melaya-mcp",
+  "license": "Apache-2.0",
+  "keywords": [
+    "android",
+    "device-control",
+    "mobile",
+    "automation",
+    "agents",
+    "accessibility"
+  ]
+}
