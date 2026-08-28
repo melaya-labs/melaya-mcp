@@ -1,0 +1,4 @@
+# Published manifests and skill files are read on Linux by the registry,
+# plugin tooling and CI. Normalise to LF so a Windows checkout cannot leak
+# CRLF into them.
+* text=auto eol=lf
