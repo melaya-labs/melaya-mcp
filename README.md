@@ -14,7 +14,7 @@
 </div>
 
 <p align="center">
-  <img src="https://melaya.org/blog/device-control/control-hero.png" width="820" alt="Melaya Device Control">
+  <img src="https://melaya.org/blog/july-2026/three-pillars.png" width="860" alt="Melaya: assistant, agent builder and paired phone on one runtime">
 </p>
 
 Melaya pairs a phone to your account and gives an agent the same view of it a person has: it reads the screen through Android's accessibility tree, then taps, types, swipes, and moves between apps. No per-app integration, no vendor API. **If you can use the app, so can the agent.**
@@ -29,19 +29,88 @@ Nothing to install, no SDK required.
 
 ## Connect
 
-**Claude Code**
+<table>
+<tr>
+<td width="120" align="center"><img src="assets/clients/claude-code.svg" width="34"><br><b>Claude Code</b></td>
+<td>
 
 ```bash
 claude mcp add --transport http melaya https://api.melaya.org/mcp
 ```
 
-**Claude** (claude.ai, Desktop, mobile) — Settings → Connectors → Add custom connector.
+</td>
+</tr>
+<tr>
+<td width="120" align="center"><img src="assets/clients/codex.svg" width="34"><br><b>Codex CLI</b></td>
+<td>
 
-**ChatGPT** — Settings → Connectors → Developer mode.
+```bash
+codex mcp add melaya --url https://api.melaya.org/mcp
+```
 
-**Mistral Le Chat** — Connectors → Add custom MCP connector.
+Direct HTTP needs `experimental_use_rmcp_client = true` in `~/.codex/config.toml`.
 
-**Cursor, VS Code, Zed, Cline, Goose, Windsurf** and any other MCP client — add it wherever the client takes a remote MCP server URL.
+</td>
+</tr>
+<tr>
+<td width="120" align="center"><img src="assets/clients/cursor.webp" width="34"><br><b>Cursor</b></td>
+<td>
+
+`~/.cursor/mcp.json`, or `.cursor/mcp.json` for one project:
+
+```json
+{ "mcpServers": { "melaya": { "url": "https://api.melaya.org/mcp" } } }
+```
+
+</td>
+</tr>
+<tr>
+<td width="120" align="center"><img src="assets/clients/anthropic.webp" width="34"><br><b>Claude</b></td>
+<td>
+
+claude.ai, Desktop and mobile: **Settings → Connectors → Add custom connector**, paste `https://api.melaya.org/mcp`
+
+</td>
+</tr>
+<tr>
+<td width="120" align="center"><img src="assets/clients/openai.webp" width="34"><br><b>ChatGPT</b></td>
+<td>
+
+**Settings → Connectors → Developer mode**, paste the same endpoint
+
+</td>
+</tr>
+<tr>
+<td width="120" align="center"><img src="assets/clients/mistral.webp" width="34"><br><b>Le Chat</b></td>
+<td>
+
+**Connectors → Add custom MCP connector**
+
+</td>
+</tr>
+<tr>
+<td width="120" align="center"><b>VS Code</b></td>
+<td>
+
+```bash
+code --add-mcp '{"name":"melaya","type":"http","url":"https://api.melaya.org/mcp"}'
+```
+
+</td>
+</tr>
+<tr>
+<td width="120" align="center"><b>Everything else</b></td>
+<td>
+
+Windsurf, Zed, Cline, Goose, Lovable, Gemini CLI, Qwen Code and any other MCP client take the same block, in whichever file that client uses for MCP servers:
+
+```json
+{ "mcpServers": { "melaya": { "url": "https://api.melaya.org/mcp" } } }
+```
+
+</td>
+</tr>
+</table>
 
 Authentication is OAuth 2.1 with PKCE. You choose which permissions to grant on a Melaya consent page; the assistant receives a scoped token. Your password is never shared.
 
@@ -71,12 +140,18 @@ Melaya ships navigation playbooks for common apps, so the agent arrives knowing 
 
 The same read-act-verify loop on a desktop site, through the Melaya extension on Chrome or Edge. **You attach the tab; the model never picks one.**
 
+<p align="center">
+  <img src="https://melaya.org/blog/browser-control/live-session.png" width="680" alt="A live browser session, driven step by step">
+</p>
+
+It can also read the network and console of the page it is on, so it can debug rather than guess. Header values, tokens and bodies are redacted at capture, before anything reaches the model.
+
 ### Build and run agents
 
 List the template library and instantiate a validated template, or author a pipeline from scratch, validate it before saving, schedule it, and watch it run. Hand a long or recurring job to an autonomous agent on your own machine, on your own model subscription, that carries on after the conversation ends.
 
 <p align="center">
-  <img src="https://melaya.org/blog/device-control/my-pipelines.png" width="280" alt="Pipelines, scheduled and runnable">
+  <img src="https://melaya.org/blog/june-2026/agent-builder.png" width="700" alt="The Melaya Agent Builder">
 </p>
 
 ### Read your connected services
