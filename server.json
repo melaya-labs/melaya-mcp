@@ -3,8 +3,8 @@
   "name": "org.melaya/melaya",
   "title": "Melaya",
   "description": "Drive your Android phone and browser, build and run agent pipelines, from any AI assistant.",
-  "version": "1.1.0",
-  "websiteUrl": "https://github.com/melaya-labs/melaya/blob/main/docs/mcp.md",
+  "version": "1.1.1",
+  "websiteUrl": "https://melaya.org",
   "repository": {
     "url": "https://github.com/melaya-labs/melaya-mcp",
     "source": "github"
