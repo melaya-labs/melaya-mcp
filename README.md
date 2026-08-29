@@ -13,7 +13,9 @@
 
 </div>
 
-![Melaya Device Control](https://melaya.org/blog/device-control/control-hero.png)
+<p align="center">
+  <img src="https://melaya.org/blog/device-control/control-hero.png" width="820" alt="Melaya Device Control">
+</p>
 
 Melaya pairs a phone to your account and gives an agent the same view of it a person has: it reads the screen through Android's accessibility tree, then taps, types, swipes, and moves between apps. No per-app integration, no vendor API. **If you can use the app, so can the agent.**
 
@@ -55,11 +57,15 @@ Then just ask:
 
 Read the screen, open apps, tap, type, scroll, swipe, screenshot. You watch it work, and one control stops everything.
 
-![The agent working, with a live step trace and a stop control](https://melaya.org/blog/july-2026/device-agent-overlay.png)
+<p align="center">
+  <img src="https://melaya.org/blog/july-2026/device-agent-overlay.png" width="300" alt="The agent working, with a live step trace and a stop control">
+</p>
 
 Melaya ships navigation playbooks for common apps, so the agent arrives knowing where things are instead of exploring blindly.
 
-![App playbooks: navigation map, stable control ids, canonical step sequence](https://melaya.org/blog/july-2026/app-playbooks.png)
+<p align="center">
+  <img src="https://melaya.org/blog/july-2026/app-playbooks.png" width="680" alt="App playbooks: navigation map, stable control ids, canonical step sequence">
+</p>
 
 ### Operate a browser
 
@@ -69,7 +75,9 @@ The same read-act-verify loop on a desktop site, through the Melaya extension on
 
 List the template library and instantiate a validated template, or author a pipeline from scratch, validate it before saving, schedule it, and watch it run. Hand a long or recurring job to an autonomous agent on your own machine, on your own model subscription, that carries on after the conversation ends.
 
-![Pipelines, scheduled and runnable](https://melaya.org/blog/device-control/my-pipelines.png)
+<p align="center">
+  <img src="https://melaya.org/blog/device-control/my-pipelines.png" width="280" alt="Pipelines, scheduled and runnable">
+</p>
 
 ### Read your connected services
 
@@ -89,19 +97,21 @@ Enforced on the device itself, not on the server, so no prompt and no agent inst
 
 Apps on the phone, origins in the browser. The agent can hand access back, narrowing the list or clearing it, but **only you can grant it**.
 
-![The allow-list, in the Melaya app](https://melaya.org/blog/device-control/app-permissions.jpeg)
+<p align="center">
+  <img src="https://melaya.org/blog/device-control/app-permissions.jpeg" width="280" alt="The allow-list, in the Melaya app">
+</p>
 
 That asymmetry is deliberate. The agent reads text off your screen, and text can be written by anyone: a message, a comment, a web page. A boundary it could widen in response to what it reads would not be a boundary.
 
 ### Publishing and paying always ask you
 
-You see the exact text before it goes out.
+You see the exact text before it goes out, and approvals reach you even when the phone is locked.
 
-![An approval card, showing the exact text before it publishes](https://melaya.org/blog/july-2026/on-device-approval.png)
-
-And approvals reach you even when the phone is locked.
-
-![An approval on a locked phone](https://melaya.org/blog/july-2026/sleeping-phone.png)
+<p align="center">
+  <img src="https://melaya.org/blog/july-2026/on-device-approval.png" width="420" alt="An approval card, showing the exact text before it publishes">
+  &nbsp;
+  <img src="https://melaya.org/blog/july-2026/sleeping-phone.png" width="230" alt="An approval on a locked phone">
+</p>
 
 ### There is a STOP control
 
