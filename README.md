@@ -5,11 +5,12 @@
 **Let an AI assistant use your Android phone, your browser, and the rest of your Melaya account.**
 
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-org.melaya%2Fmelaya-6E56CF)](https://registry.modelcontextprotocol.io)
+[![smithery badge](https://smithery.ai/badge/info-h530/melaya)](https://smithery.ai/servers/info-h530/melaya)
 [![Tools](https://img.shields.io/badge/tools-76_across_8_domains-22D3EE)](#what-it-can-do)
 [![Auth](https://img.shields.io/badge/auth-OAuth_2.1_%2B_PKCE-10B981)](#permissions)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
 
-[Documentation](https://github.com/melaya-labs/melaya/blob/main/docs/mcp.md) · [Melaya](https://melaya.org) · [Device Control](https://melaya.org/en/product/agentic-device-control)
+[Documentation](https://github.com/melaya-labs/melaya/blob/main/docs/mcp.md) · [Melaya](https://melaya.org) · [Device Control](https://melaya.org/en/product/agentic-device-control) · [MCP Server](https://melaya.org/en/product/mcp)
 
 </div>
 
