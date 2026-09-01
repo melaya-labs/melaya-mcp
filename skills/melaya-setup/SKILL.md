@@ -5,7 +5,7 @@ description: Use for anything involving Melaya. Connecting for the first time; s
 
 # Operating Melaya
 
-Melaya gives you the user's own account: their Android phone, a browser they connected, their agent pipelines, the services they authorised, and the record of what every run did. Seventy tools across eight permissions.
+Melaya gives you the user's own account: their Android phone, a browser they connected, their agent pipelines, the services they authorised, and the record of what every run did. Seventy-six tools across eight permissions.
 
 This skill is the operating discipline. Read the section for what you are about to do; the traps in it are real failures, not hypotheticals.
 

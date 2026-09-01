@@ -1,7 +1,7 @@
 {
   "name": "melaya",
   "version": "1.0.0",
-  "description": "Let Claude use your Android phone, your browser, and your Melaya account. It reads the screen and taps, types and navigates inside apps and sites you allow-list, with no per-app API. It can also build, schedule and run agent pipelines, read the services you have connected, and tell you what every run did. Seventy tools across eight permissions you grant individually.",
+  "description": "Create and run any AI agents systems from 6k+ tools. Give your AI hands access to your Android.",
   "author": {
     "name": "Melaya Labs",
     "email": "info@melaya.org",
