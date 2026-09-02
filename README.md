@@ -249,10 +249,30 @@ Disconnecting in Melaya settings immediately revokes the connection's ability to
 
 The server itself runs as part of the Melaya platform; this repo is its public manifest, packaging and documentation.
 
+## The rest of the platform
+
+This server is one surface onto Melaya. Its tool domains map to the products
+behind them, so if a scope is useful the product page explains what it reaches:
+
+| Product | What it is | `melaya:` scope |
+|---|---|---|
+| [Melaya Agents Builder](https://melaya.org/en/product/agentic-framework) | Visual builder for agent pipelines, 6,633+ tools and 111+ subagents | `pipelines` |
+| [Melaya Assistant](https://melaya.org/en/product/assistant) | The governed operating layer over those agents | `platform` |
+| [Device Control](https://melaya.org/en/product/agentic-device-control) | Android phone control through the accessibility tree | `phone` |
+| [Melaya Browser Control](https://melaya.org/en/product/agentic-browser-control) | Origin-scoped control of a paired browser | `browser` |
+| [Melaya MCP Server](https://melaya.org/en/product/mcp) | This server | all of the above |
+
+The [browser extension](https://melaya.org/en/blog/melaya-browser-extension) is
+what Browser Control talks to, and ships for Chrome, Edge and Firefox.
+
+Pricing starts at a $0 Sandbox tier for evaluating the platform during open
+beta: [see plans](https://melaya.org/en/pricing).
+
 ## Links
 
 - [Full documentation](https://github.com/melaya-labs/melaya/blob/main/docs/mcp.md)
 - [Melaya SDKs](https://github.com/melaya-labs/melaya) — nine languages
+- [Product overview](https://melaya.org/en/product/mcp) · [All products](https://melaya.org)
 - [Privacy Policy](https://melaya.org/en/legal/privacy) · [Terms](https://melaya.org/en/legal/terms)
 - [Support](mailto:info@melaya.org)
 
