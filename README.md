@@ -6,7 +6,8 @@
 
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-org.melaya%2Fmelaya-6E56CF)](https://registry.modelcontextprotocol.io)
 [![smithery badge](https://smithery.ai/badge/info-h530/melaya)](https://smithery.ai/servers/info-h530/melaya)
-[![Tools](https://img.shields.io/badge/tools-76_across_8_domains-22D3EE)](#what-it-can-do)
+[![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/melaya-labs/melaya-mcp)
+[![Tools](https://img.shields.io/badge/tools-77_across_8_domains-22D3EE)](#what-it-can-do)
 [![Auth](https://img.shields.io/badge/auth-OAuth_2.1_%2B_PKCE-10B981)](#permissions)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
 
@@ -218,7 +219,7 @@ Eight scopes, one per domain. You grant them individually.
 | `melaya:connectors` | Read data from connected services. Read only |
 | `melaya:team` | Read project membership, and invite people you name |
 
-The tool list your assistant receives is filtered to what you granted, so connecting for phone control alone shows **21 tools rather than all 76**. If a capability seems missing, you declined it; reconnect and approve it.
+The tool list your assistant receives is filtered to what you granted, so connecting for phone control alone shows **23 tools rather than all 77**. If a capability seems missing, you declined it; reconnect and approve it.
 
 > [!NOTE]
 > **If you also use the Melaya SDK**, "connectors" means something different there. In the SDK it is project credential storage. Here, `melaya:connectors` is reading data from services you already connected. This surface cannot store, read or delete a credential.
