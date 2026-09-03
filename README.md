@@ -7,6 +7,7 @@
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-org.melaya%2Fmelaya-6E56CF)](https://registry.modelcontextprotocol.io)
 [![smithery badge](https://smithery.ai/badge/info-h530/melaya)](https://smithery.ai/servers/info-h530/melaya)
 [![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/melaya-labs/melaya-mcp)
+[![Glama MCP server](https://glama.ai/mcp/servers/@melaya-labs/melaya-mcp/badge)](https://glama.ai/mcp/servers/@melaya-labs/melaya-mcp)
 [![Tools](https://img.shields.io/badge/tools-77_across_8_domains-22D3EE)](#what-it-can-do)
 [![Auth](https://img.shields.io/badge/auth-OAuth_2.1_%2B_PKCE-10B981)](#permissions)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
