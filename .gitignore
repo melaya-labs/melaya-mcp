@@ -1,0 +1,11 @@
+# Local GitHub token used by the submission scripts. It is a credential, it
+# lives in the working tree, and nothing was stopping it from being committed.
+.ghtok
+
+# Registry signing material must never be in the repo. The Ed25519 key behind
+# the org.melaya namespace was already lost once (2026-09-01) and had to be
+# replaced; it lives in ~/.config/mcp-publisher/, not here.
+*.key
+*.pem
+.env
+.env.*
