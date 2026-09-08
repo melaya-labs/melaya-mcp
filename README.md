@@ -1,5 +1,10 @@
 <div align="center">
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/brand/melaya_horizontal_light.webp">
+  <img src="assets/brand/melaya_horizontal_dark.webp" width="340" alt="Melaya">
+</picture>
+
 # Melaya MCP Server
 
 **Let an AI assistant use your Android phone, your browser, and the rest of your Melaya account.**
@@ -257,14 +262,15 @@ behind them, so if a scope is useful the product page explains what it reaches:
 
 | Product | What it is | `melaya:` scope |
 |---|---|---|
-| [Melaya Agents Builder](https://melaya.org/en/product/agentic-framework) | Visual builder for agent pipelines, 6,633+ tools and 111+ subagents | `pipelines` |
+| [Melaya Agents](https://melaya.org/en/product/agentic-framework) | Visual builder for agent pipelines, **6,912 tools** and **103 subagents** | `pipelines` |
 | [Melaya Assistant](https://melaya.org/en/product/assistant) | The governed operating layer over those agents | `platform` |
 | [Device Control](https://melaya.org/en/product/agentic-device-control) | Android phone control through the accessibility tree | `phone` |
 | [Melaya Browser Control](https://melaya.org/en/product/agentic-browser-control) | Origin-scoped control of a paired browser | `browser` |
+| [Melaya Marketing](https://melaya.org) | Ads, search consoles, analytics, DNS and site in one cockpit, with approval before anything touches real money or your live site | `connectors` |
 | [Melaya MCP Server](https://melaya.org/en/product/mcp) | This server | all of the above |
 
 The [browser extension](https://melaya.org/en/blog/melaya-browser-extension) is
-what Browser Control talks to, and ships for Chrome, Edge and Firefox.
+what Browser Control talks to, and ships for Chrome, Edge, Brave, Opera and Firefox.
 
 Pricing starts at a $0 Sandbox tier for evaluating the platform during open
 beta: [see plans](https://melaya.org/en/pricing).
@@ -276,6 +282,11 @@ beta: [see plans](https://melaya.org/en/pricing).
 - [Product overview](https://melaya.org/en/product/mcp) · [All products](https://melaya.org)
 - [Privacy Policy](https://melaya.org/en/legal/privacy) · [Terms](https://melaya.org/en/legal/terms)
 - [Support](mailto:info@melaya.org)
+
+<div align="center">
+<img src="assets/brand/melaya_thumbs_up.webp" width="64"><br>
+<sub><b>Melaya Labs</b> · <a href="https://melaya.org">melaya.org</a> · <a href="https://discord.gg/2BBMUUdnkj">Discord</a></sub>
+</div>
 
 ## License
 
