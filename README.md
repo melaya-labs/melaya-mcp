@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/brand/melaya_horizontal_light.webp">
-  <img src="assets/brand/melaya_horizontal_dark.webp" width="340" alt="Melaya">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/brand/melaya_horizontal_dark.webp">
+  <img src="assets/brand/melaya_horizontal_light.webp" width="340" alt="Melaya">
 </picture>
 
 # Melaya MCP Server
@@ -10,12 +10,15 @@
 **Let an AI assistant use your Android phone, your browser, and the rest of your Melaya account.**
 
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-org.melaya%2Fmelaya-6E56CF)](https://registry.modelcontextprotocol.io)
-[![smithery badge](https://smithery.ai/badge/info-h530/melaya)](https://smithery.ai/servers/info-h530/melaya)
+[![Release](https://img.shields.io/github/v/release/melaya-labs/melaya-mcp?color=10B981)](https://github.com/melaya-labs/melaya-mcp/releases)
+[![Smithery](https://img.shields.io/badge/Smithery-listed-8B5CF6)](https://smithery.ai/servers/info-h530/melaya)
 [![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/melaya-labs/melaya-mcp)
 [![Glama MCP server](https://glama.ai/mcp/servers/@melaya-labs/melaya-mcp/badge)](https://glama.ai/mcp/servers/@melaya-labs/melaya-mcp)
 [![Tools](https://img.shields.io/badge/tools-80_across_8_domains-22D3EE)](#what-it-can-do)
 [![Auth](https://img.shields.io/badge/auth-OAuth_2.1_%2B_PKCE-10B981)](#permissions)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
+
+<sub>Also listed on [mcp.so](https://mcp.so/servers/melaya-1f614a) · [mcpserver.dev](https://mcpserver.dev/s/melaya_1f0eb4j) · [mcpmarket](https://mcpmarket.com/server/melaya) · [cursor.directory](https://cursor.directory/plugins/melaya) · [Glama](https://glama.ai/mcp/servers/melaya-labs/melaya-mcp)</sub>
 
 [Documentation](https://github.com/melaya-labs/melaya/blob/main/docs/mcp.md) · [Melaya](https://melaya.org) · [Device Control](https://melaya.org/en/product/agentic-device-control) · [MCP Server](https://melaya.org/en/product/mcp)
 
