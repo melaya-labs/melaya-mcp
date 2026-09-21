@@ -18,7 +18,7 @@
 [![Auth](https://img.shields.io/badge/auth-OAuth_2.1_%2B_PKCE-10B981)](#permissions)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
 
-<sub>Also listed on [mcp.so](https://mcp.so/servers/melaya-1f614a) · [mcpserver.dev](https://mcpserver.dev/s/melaya_1f0eb4j) · [mcpmarket](https://mcpmarket.com/server/melaya) · [cursor.directory](https://cursor.directory/plugins/melaya) · [Glama](https://glama.ai/mcp/servers/melaya-labs/melaya-mcp)</sub>
+<sub>Also listed on [mcp.so](https://mcp.so/servers/melaya-1f614a) · [mcpserver.dev](https://mcpserver.dev/s/melaya_1f0eb4j) · [mcpmarket](https://mcpmarket.com/server/melaya) · [cursor.directory](https://cursor.directory/plugins/melaya) · [Glama](https://glama.ai/mcp/servers/melaya-labs/melaya-mcp) · [Product Hunt](https://www.producthunt.com/products/melaya) · [AlternativeTo](https://alternativeto.net/software/melaya/about/) · [SaaSHub](https://www.saashub.com/melaya) · [AI Agents Directory](https://aiagentsdirectory.com/agent/melaya) · [AgentLocker](https://agentlocker.ai/agent/melaya) · [LaunchKiwi](https://launchkiwi.com/p/melaya)</sub>
 
 [Documentation](https://github.com/melaya-labs/melaya/blob/main/docs/mcp.md) · [Melaya](https://melaya.org) · [Device Control](https://melaya.org/en/product/agentic-device-control) · [MCP Server](https://melaya.org/en/product/mcp)
 
