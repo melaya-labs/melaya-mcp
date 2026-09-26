@@ -14,7 +14,7 @@
 [![Smithery](https://img.shields.io/badge/Smithery-listed-8B5CF6)](https://smithery.ai/servers/info-h530/melaya)
 [![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/melaya-labs/melaya-mcp)
 [![Glama MCP server](https://glama.ai/mcp/servers/@melaya-labs/melaya-mcp/badge)](https://glama.ai/mcp/servers/@melaya-labs/melaya-mcp)
-[![Tools](https://img.shields.io/badge/tools-83_across_8_domains-22D3EE)](#what-it-can-do)
+[![Tools](https://img.shields.io/badge/tools-88_across_9_domains-22D3EE)](#what-it-can-do)
 [![Auth](https://img.shields.io/badge/auth-OAuth_2.1_%2B_PKCE-10B981)](#permissions)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
 
@@ -159,15 +159,21 @@ It can also **debug** the page it is on: network activity, console output, and a
 
 ### Build and run agents
 
-List the template library and instantiate a validated template, or author a pipeline from scratch, validate it before saving, schedule it, and watch it run. Hand a long or recurring job to an autonomous agent on your own machine, on your own model subscription, that carries on after the conversation ends.
+Create a project for the work (one per client pilot, say), list the template library and instantiate a validated template, or author a pipeline from scratch, validate it before saving, schedule it, and watch it run. Hand a long or recurring job to an autonomous agent on your own machine, on your own model subscription, that carries on after the conversation ends.
 
 <p align="center">
   <img src="https://melaya.org/blog/june-2026/agent-builder.png" width="700" alt="The Melaya Agent Builder">
 </p>
 
-### Read your connected services
+### Read, and act through, your connected services
 
-Mail, documents, your ERP. **Read-only, structurally**: the write path is blocked in two independent places, so a write stays blocked even if Melaya's own tool catalog is out of date.
+Mail, documents, your ERP. **Read-only by default, structurally**: without the separate write permission the write path is blocked in two independent places, so a write stays blocked even if Melaya's own tool catalog is out of date.
+
+Grant `melaya:connectors.write` as well and the assistant can act for you there too: send an email, create or update a record or a file. **Anything that moves money or trades is excluded at every permission level**: payments, refunds, purchases, transfers, ad-spend changes and orders are refused by the server, and again by the executor, and stay with you in the Melaya app. Every write made this way is audit-logged.
+
+### Manage projects
+
+Create a project, rename it or edit its description, and delete it once it is empty. Delete is a dry run until confirmed, only the project's creator can do it, and a project that still holds pipelines, run history or other members is refused. Plan limits apply exactly as in the app.
 
 ### Find out what happened
 
@@ -209,13 +215,13 @@ The gate exists to put a human between an agent and a consequential action, and 
 
 Password fields are excluded from screen reads.
 
-Also deliberately absent, and enforced by tests rather than by convention: **trading** (it writes against live exchange keys), **administration** (no honest consent sentence exists for it), and **credential values of any kind**.
+Also deliberately absent, and enforced by tests rather than by convention: **trading and moving money through a connector** (they write against live exchange keys and payment accounts), **administration** (no honest consent sentence exists for it), and **credential values of any kind**.
 
 ---
 
 ## Permissions
 
-Eight scopes, one per domain. You grant them individually.
+Ten scopes. You grant them individually.
 
 | Scope | What it allows |
 |---|---|
@@ -225,13 +231,15 @@ Eight scopes, one per domain. You grant them individually.
 | `melaya:phone` | Operate your paired Android phone, inside apps you allow-listed |
 | `melaya:browser` | Operate a connected browser, on sites you allowed |
 | `melaya:pipelines` | Create, edit, schedule, run and cancel agent pipelines |
+| `melaya:projects` | Create projects, rename them and edit descriptions, delete an empty project you created |
 | `melaya:connectors` | Read data from connected services. Read only |
+| `melaya:connectors.write` | Act through connected services: send emails, create or update records and files. Needs `melaya:connectors`. Never moves money or trades |
 | `melaya:team` | Read project membership, and invite people you name |
 
-The tool list your assistant receives is filtered to what you granted, so connecting for phone control alone shows **23 tools rather than all 83**. If a capability seems missing, you declined it; reconnect and approve it.
+The tool list your assistant receives is filtered to what you granted, so connecting for phone control alone shows **23 tools rather than all 88**. If a capability seems missing, you declined it; reconnect and approve it.
 
 > [!NOTE]
-> **If you also use the Melaya SDK**, "connectors" means something different there. In the SDK it is project credential storage. Here, `melaya:connectors` is reading data from services you already connected. This surface cannot store, read or delete a credential.
+> **If you also use the Melaya SDK**, "connectors" means something different there. In the SDK it is project credential storage. Here, `melaya:connectors` is reading data from services you already connected, and `melaya:connectors.write` is acting through them. This surface cannot store, read or delete a credential.
 
 ## Requirements
 

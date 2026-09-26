@@ -5,7 +5,7 @@ description: Use for anything involving Melaya. Connecting for the first time; s
 
 # Operating Melaya
 
-Melaya gives you the user's own account: their Android phone, a browser they connected, their agent pipelines, the services they authorised, and the record of what every run did. Seventy-six tools across eight permissions.
+Melaya gives you the user's own account: their Android phone, a browser they connected, their agent pipelines, the services they authorised, and the record of what every run did. Eighty-eight tools across ten permissions.
 
 This skill is the operating discipline. Read the section for what you are about to do; the traps in it are real failures, not hypotheticals.
 
@@ -91,9 +91,13 @@ The traps, all real:
 
 ## Reading connected services
 
-`melaya_connector_list` shows what is connected, `melaya_connector_tools` what those services unlock, `melaya_connector_call` reads.
+`melaya_connector_list` shows what is connected, `melaya_connector_tools` what those services unlock, `melaya_connector_call` runs one.
 
-**Read-only, structurally.** There is no write path and no argument that creates one. If a task needs something sent or changed in a connected service, the answer is a Melaya pipeline that includes it, not a different call here.
+**Read-only unless the user granted `melaya:connectors.write`.** Without it there is no write path and no argument that creates one: ask the user to reconnect and grant it, or build a Melaya pipeline that includes the action. With it, `melaya_connector_call` runs write tools immediately, with no second prompt, so confirm the exact send or change with the user first unless they already asked for it. Tools that move money or trade are refused under every permission; `melaya_connector_tools` labels them, and the user runs them from the Melaya app.
+
+## Managing projects
+
+`melaya_project_list` and `melaya_project_get` read; `melaya_project_create`, `melaya_project_update` and `melaya_project_delete` need `melaya:projects`. Create one project per client pilot, then save pipelines into it. Delete is a dry run until `confirm: true`: run it first, show the user what it reports, confirm only when they agree. It removes only an empty project the user created; delete the pipelines first, and a project with run history stays.
 
 `melaya_connector_test` turns "the pipeline failed" into "your Odoo key is dead" in one call. Reach for it before debugging anything else.
 
