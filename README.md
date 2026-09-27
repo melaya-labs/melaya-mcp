@@ -16,6 +16,7 @@
 [![Glama MCP server](https://glama.ai/mcp/servers/@melaya-labs/melaya-mcp/badge)](https://glama.ai/mcp/servers/@melaya-labs/melaya-mcp)
 [![Tools](https://img.shields.io/badge/tools-88_across_9_domains-22D3EE)](#what-it-can-do)
 [![Auth](https://img.shields.io/badge/auth-OAuth_2.1_%2B_PKCE-10B981)](#permissions)
+[![Agent Skill](https://img.shields.io/badge/Agent_Skill-for_any_AI-EC4899)](#give-your-ai-the-melaya-skill)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
 
 <sub>Also listed on [mcp.so](https://mcp.so/servers/melaya-1f614a) · [mcpserver.dev](https://mcpserver.dev/s/melaya_1f0eb4j) · [mcpmarket](https://mcpmarket.com/server/melaya) · [cursor.directory](https://cursor.directory/plugins/melaya) · [Glama](https://glama.ai/mcp/servers/melaya-labs/melaya-mcp) · [Product Hunt](https://www.producthunt.com/products/melaya) · [AlternativeTo](https://alternativeto.net/software/melaya/about/) · [SaaSHub](https://www.saashub.com/melaya) · [AI Agents Directory](https://aiagentsdirectory.com/agent/melaya) · [AgentLocker](https://agentlocker.ai/agent/melaya) · [LaunchKiwi](https://launchkiwi.com/p/melaya)</sub>
@@ -25,7 +26,7 @@
 </div>
 
 <p align="center">
-  <img src="https://melaya.org/blog/july-2026/three-pillars.png" width="860" alt="Melaya: assistant, agent builder and paired phone on one runtime">
+  <img src="assets/screens/three-pillars.webp" width="860" alt="Melaya: assistant, agent builder and paired phone on one runtime">
 </p>
 
 Melaya pairs a phone to your account and gives an agent the same view of it a person has: it reads the screen through Android's accessibility tree, then taps, types, swipes, and moves between apps. No per-app integration, no vendor API. **If you can use the app, so can the agent.**
@@ -131,6 +132,35 @@ Then just ask:
 
 ---
 
+## Give your AI the Melaya skill
+
+This server gives your assistant the tools. The **[Melaya skill](https://github.com/melaya-labs/melaya/tree/main/skills/melaya)** gives it the method: which tool to call first, how to connect services, build and validate a pipeline on a real run, set triggers and approvals, and read results. Install both and your assistant gets real work right the first time instead of guessing.
+
+**Any assistant** (ChatGPT, Gemini, Cursor, …): paste this line.
+
+```text
+Install the Melaya skill from https://github.com/melaya-labs/melaya/tree/main/skills/melaya and use it whenever I ask you to work with Melaya.
+```
+
+**Claude Code**: copy it into your skills folder, then restart. It loads on its own when you mention Melaya.
+
+```bash
+git clone --depth 1 https://github.com/melaya-labs/melaya /tmp/melaya && cp -r /tmp/melaya/skills/melaya ~/.claude/skills/
+```
+
+**Claude.ai and Claude Desktop**: download [`skills/melaya`](https://github.com/melaya-labs/melaya/tree/main/skills/melaya) as a .zip and upload it under **Settings → Capabilities → Skills**. Anywhere else, add [`SKILL.md`](https://github.com/melaya-labs/melaya/blob/main/skills/melaya/SKILL.md) as a project instruction or rules file.
+
+<table>
+<tr>
+<td width="50%" valign="top"><b>Starts right</b><br><sub>Opens every session with <code>melaya_setup_status</code> and closes each gap it reports before doing anything else.</sub></td>
+<td width="50%" valign="top"><b>Stays safe</b><br><sub>Never asks for a key in chat, never decides an approval for you, confirms before anything is sent or deleted.</sub></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><b>Builds pipelines that run</b><br><sub>Reads the config before changing it, previews before saving, and judges a run by its real output, not its status.</sub></td>
+<td width="50%" valign="top"><b>Loads only what it needs</b><br><sub>One short router plus eleven modules: quickstart, pipelines, agentic systems, data, triggers and approvals, devices, handover.</sub></td>
+</tr>
+</table>
+
 ## What it can do
 
 ### Operate your phone
@@ -138,13 +168,13 @@ Then just ask:
 Read the screen, open apps, tap, type, scroll, swipe, screenshot. You watch it work, and one control stops everything.
 
 <p align="center">
-  <img src="https://melaya.org/blog/july-2026/device-agent-overlay.png" width="300" alt="The agent working, with a live step trace and a stop control">
+  <img src="assets/screens/device-agent-overlay.webp" width="300" alt="The agent working, with a live step trace and a stop control">
 </p>
 
 Melaya ships navigation playbooks for common apps, so the agent arrives knowing where things are instead of exploring blindly.
 
 <p align="center">
-  <img src="https://melaya.org/blog/july-2026/app-playbooks.png" width="680" alt="App playbooks: navigation map, stable control ids, canonical step sequence">
+  <img src="assets/screens/app-playbooks.webp" width="680" alt="App playbooks: navigation map, stable control ids, canonical step sequence">
 </p>
 
 ### Operate a browser
@@ -152,7 +182,7 @@ Melaya ships navigation playbooks for common apps, so the agent arrives knowing 
 The same read-act-verify loop on a desktop site, through the Melaya extension on Chrome or Edge. **You attach the tab; the model never picks one.**
 
 <p align="center">
-  <img src="https://melaya.org/blog/browser-control/live-session.png" width="680" alt="A live browser session, driven step by step">
+  <img src="assets/screens/live-session.webp" width="680" alt="A live browser session, driven step by step">
 </p>
 
 It can also **debug** the page it is on: network activity, console output, and a performance diagnosis that ranks causes with the file and the number behind each, rather than handing over a raw panel. Credential values are redacted at capture, before anything reaches the model.
@@ -162,7 +192,7 @@ It can also **debug** the page it is on: network activity, console output, and a
 Create a project for the work (one per client pilot, say), list the template library and instantiate a validated template, or author a pipeline from scratch, validate it before saving, schedule it, and watch it run. Hand a long or recurring job to an autonomous agent on your own machine, on your own model subscription, that carries on after the conversation ends.
 
 <p align="center">
-  <img src="https://melaya.org/blog/june-2026/agent-builder.png" width="700" alt="The Melaya Agent Builder">
+  <img src="assets/screens/agent-builder.webp" width="700" alt="The Melaya Agent Builder">
 </p>
 
 ### Read, and act through, your connected services
@@ -190,7 +220,7 @@ Enforced on the device itself, not on the server, so no prompt and no agent inst
 Apps on the phone, origins in the browser. The agent can hand access back, narrowing the list or clearing it, but **only you can grant it**.
 
 <p align="center">
-  <img src="https://melaya.org/blog/device-control/app-permissions.jpeg" width="280" alt="The allow-list, in the Melaya app">
+  <img src="assets/screens/app-permissions.jpeg" width="280" alt="The allow-list, in the Melaya app">
 </p>
 
 That asymmetry is deliberate. The agent reads text off your screen, and text can be written by anyone: a message, a comment, a web page. A boundary it could widen in response to what it reads would not be a boundary.
@@ -200,9 +230,9 @@ That asymmetry is deliberate. The agent reads text off your screen, and text can
 You see the exact text before it goes out, and approvals reach you even when the phone is locked.
 
 <p align="center">
-  <img src="https://melaya.org/blog/july-2026/on-device-approval.png" width="420" alt="An approval card, showing the exact text before it publishes">
+  <img src="assets/screens/on-device-approval.webp" width="420" alt="An approval card, showing the exact text before it publishes">
   &nbsp;
-  <img src="https://melaya.org/blog/july-2026/sleeping-phone.png" width="230" alt="An approval on a locked phone">
+  <img src="assets/screens/sleeping-phone.webp" width="230" alt="An approval on a locked phone">
 </p>
 
 ### There is a STOP control
