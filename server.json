@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "org.melaya/melaya",
   "title": "Melaya",
-  "description": "Create and run any AI agents systems from 6k+ tools. Give your AI hands access to your Android.",
+  "description": "Create and run any AI agents systems from 8k+ tools. Give your AI hands access to your Android.",
   "version": "1.2.0",
   "websiteUrl": "https://melaya.org/en/product/mcp",
   "repository": {
