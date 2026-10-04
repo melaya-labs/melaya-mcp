@@ -1,7 +1,8 @@
 {
   "name": "melaya",
-  "version": "1.3.0",
-  "description": "Create and run any AI agents systems from 8k+ tools. Give your AI hands access to your Android.",
+  "displayName": "Melaya",
+  "version": "1.3.1",
+  "description": "Build, run and fix AI agent pipelines from 8k+ tools, and let your AI operate your Android phone and browser.",
   "author": {
     "name": "Melaya Labs",
     "email": "info@melaya.org",
@@ -11,13 +12,17 @@
   "repository": "https://github.com/melaya-labs/melaya-mcp",
   "license": "Apache-2.0",
   "keywords": [
-    "android",
-    "device-control",
-    "mobile",
-    "automation",
     "agents",
-    "accessibility"
+    "automation",
+    "pipelines",
+    "workflows",
+    "android",
+    "browser",
+    "mcp-server"
   ],
+  "icon": "./.claude-plugin/icon.png",
+  "documentationUrl": "https://melaya.org/en/documentation",
+  "supportUrl": "https://melaya.org/en/documentation",
   "privacyPolicyUrl": "https://melaya.org/en/legal/privacy",
-  "icon": ".claude-plugin/icon.png"
+  "termsOfServiceUrl": "https://melaya.org/en/legal/terms"
 }
