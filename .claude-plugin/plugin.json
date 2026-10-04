@@ -17,5 +17,7 @@
     "automation",
     "agents",
     "accessibility"
-  ]
+  ],
+  "privacyPolicyUrl": "https://melaya.org/en/legal/privacy",
+  "icon": ".claude-plugin/icon.png"
 }
