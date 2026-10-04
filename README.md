@@ -142,7 +142,7 @@ This server gives your assistant the tools. The **[Melaya skill](https://github.
 Install the Melaya skill from https://github.com/melaya-labs/melaya/tree/main/skills/melaya and use it whenever I ask you to work with Melaya.
 ```
 
-**Claude Code**: copy it into your skills folder, then restart. It loads on its own when you mention Melaya.
+**Claude Code**: the Melaya plugin from this repo already bundles it, next to `melaya-setup`. Installing the plugin is enough. To use the skill on its own, copy it into your skills folder, then restart. It loads on its own when you mention Melaya.
 
 ```bash
 git clone --depth 1 https://github.com/melaya-labs/melaya /tmp/melaya && cp -r /tmp/melaya/skills/melaya ~/.claude/skills/
@@ -292,7 +292,7 @@ Disconnecting in Melaya settings immediately revokes the connection's ability to
 |---|---|
 | `server.json` | Manifest for the [official MCP Registry](https://registry.modelcontextprotocol.io) |
 | `.mcp.json` | Remote server declaration |
-| `.claude-plugin/`, `skills/`, `commands/` | Claude Code plugin packaging — one distribution of the same server |
+| `.claude-plugin/`, `skills/`, `commands/` | Claude Code plugin packaging — one distribution of the same server. `skills/melaya` is a copy of the [Melaya skill](https://github.com/melaya-labs/melaya/tree/main/skills/melaya); `skills/melaya-setup` is the first-run setup skill |
 
 The server itself runs as part of the Melaya platform; this repo is its public manifest, packaging and documentation.
 
