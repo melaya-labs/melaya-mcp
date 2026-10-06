@@ -86,7 +86,7 @@ playbook (once per app) -> open -> READ -> act on one element -> READ again -> n
 |---|---|---|
 | Know the app | `melaya_phone_playbook` with `app` | Navigation map, stable ids, known traps. Omit `app` to list apps that have one. A pipeline agent also receives it automatically the first time it looks at an app. |
 | Open | `melaya_phone_open` with `app` or `url` (exactly one) | The target must be approved. Read the screen after: apps often restore their last screen. |
-| Read | `melaya_phone_screen` | Header `app=<package> nodes=<n>`, then one line per element: index, class, `tap`/`edit`, "text", ~description, #resource-id, bounds. |
+| Read | `melaya_phone_screen` | Header `app=<package> nodes=<n>`, then one line per element: index, class, `tap`/`edit`, "text", ~description, #resource-id, bounds. A line starting `!! A notification banner covers ...` means a notification is drawn over the app and will catch taps there: swipe it up (`melaya_phone_swipe` from its middle to the top) before tapping under it. |
 | Read cheaply | `melaya_phone_current_app` | Only which app is in front. |
 | Read visually | `melaya_phone_screenshot` | When the tree is empty or unhelpful (games, video, image posts, unlabelled icons). Apps that block screenshots (banking, protected video) cannot be captured. |
 | Click by label or id | `melaya_phone_click` with `text` or `resource_id` | The most reliable action. `mode: "tap"` taps the element's centre if a normal click does nothing. |
@@ -97,9 +97,30 @@ playbook (once per app) -> open -> READ -> act on one element -> READ again -> n
 | Swipe | `melaya_phone_swipe` with `x1,y1,x2,y2` | Dismiss cards, precise gestures. Prefer scroll for feeds. |
 | Drag and drop | `melaya_phone_drag_hold` with `x1,y1,x2,y2` (optional `hold_ms`, `move_ms`, `pauses`, `waypoints`) | Press, hold until the item lifts, then move. For reordering icons, timeline clips, list rows. Raise `hold_ms` if the item never lifts. |
 | Wait | `melaya_phone_wait` with `seconds` (0.5 to 20) | After loads and animations. |
+| Several steps, a list, or gathering items | `melaya_phone_fast` with `steps` | See "Fast mode" below. Each step is re-found on the current screen by its label and checked; `collect` gathers items across scrolls. Usually several times faster than one call per step. |
 | Short known sequence | `melaya_phone_batch` with `steps` | Each step `{do, args, expect?, settle_ms?}`; `do` is one of open_app, tap, long_press, double_tap, swipe, scroll, click_text, click_id, input_text, clear_text, paste, press_enter, home, back; `expect` is `{app}`, `{text_visible}` or `{editable_focused: true}`. Aborts when an expectation fails. Not for exploring, never for publishing. |
 | Publish | `melaya_phone_publish` with `kind` (`comment`/`post`) and `text` | Always shows an approval card on the phone. See below. |
 | Stop | `melaya_phone_stop` | Halts everything, removes the Melaya overlay, gives the phone back; further actions are refused for a few minutes. |
+
+### Fast mode: several steps in one call (`melaya_phone_fast`)
+
+Once the right app is open and you have read the screen, send the next steps in **one** call instead of one tool call per tap. You plan; Melaya finds each target on the CURRENT screen by its label, acts, checks it took effect, and returns the screen at the first step that does not work out.
+
+```json
+{ "steps": [
+  { "do": "click", "target": "main_top_app_bar_search" },
+  { "do": "type", "into": "Search Reddit", "text": "AI agents", "submit": true },
+  { "do": "wait", "ms": 1500 },
+  { "do": "collect", "name_contains": "Posted", "min_chars": 20, "max": 20, "scroll_max": 5 }
+] }
+```
+
+- **Steps:** `click` (`target`: the text, description or resource id you read; optional `near` for identical labels), `type` (`into`: the field's label, its placeholder, or its resource id; `text`; `submit` presses Enter, which SENDS in chat apps), `press` (`Enter`, `back`, `home`, `recents`), `scroll` (`direction`, `times`), `wait` (`ms`), `expect` (`url_contains` = the app id, and/or `text`), `collect` and `for_each` exactly as in the browser (see `browser-setup-and-operation.md`). For `collect` on the phone, describe items by `name_contains` (feed cards carry a description such as "Posted in r/..."; ads say "Promoted post" instead), `rid` (resource id ending) or `role` (class).
+- **Notification banners:** before each step, a notification covering the screen is swiped up out of the way (it stays in the shade, unread), so it cannot catch the tap.
+- **Duplicates:** rows of identical buttons are tapped at their own position, not through a shared id.
+- **Statuses and options:** as in the browser (`completed`, `ambiguous`, `low_confidence`, `no_progress`, `unknown_outcome`, ...; `humanize`, `budget_s`, `steps_json`).
+- **Safety:** every tap goes through the same path as `melaya_phone_click` / `melaya_phone_type`, so allowed apps, the on-device publish and payment gates and approvals apply. MCP phone control runs in `safe` mode: commit-like controls (send, post, follow, connect, register...) are handed back unless `allow_commit: true`, and even then the phone shows its approval card. Never put a publish in fast mode; use `melaya_phone_publish`.
+- **When not to use it:** a screen you have not read, games and video (no tree), and anything where each result decides the next step.
 
 ### Rules of thumb
 

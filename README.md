@@ -134,21 +134,21 @@ Then just ask:
 
 ## Give your AI the Melaya skill
 
-This server gives your assistant the tools. The **[Melaya skill](https://github.com/melaya-labs/melaya/tree/main/skills/melaya)** gives it the method: which tool to call first, how to connect services, build and validate a pipeline on a real run, set triggers and approvals, and read results. Install both and your assistant gets real work right the first time instead of guessing.
+This server gives your assistant the tools. The **[Melaya skill](https://github.com/melaya-labs/melaya-mcp/tree/main/skills/melaya)** gives it the method: which tool to call first, how to connect services, build and validate a pipeline on a real run, set triggers and approvals, and read results. Install both and your assistant gets real work right the first time instead of guessing.
 
 **Any assistant** (ChatGPT, Gemini, Cursor, …): paste this line.
 
 ```text
-Install the Melaya skill from https://github.com/melaya-labs/melaya/tree/main/skills/melaya and use it whenever I ask you to work with Melaya.
+Install the Melaya skill from https://github.com/melaya-labs/melaya-mcp/tree/main/skills/melaya and use it whenever I ask you to work with Melaya.
 ```
 
 **Claude Code**: the Melaya plugin from this repo already bundles it, next to `melaya-setup`. Installing the plugin is enough. To use the skill on its own, copy it into your skills folder, then restart. It loads on its own when you mention Melaya.
 
 ```bash
-git clone --depth 1 https://github.com/melaya-labs/melaya /tmp/melaya && cp -r /tmp/melaya/skills/melaya ~/.claude/skills/
+git clone --depth 1 https://github.com/melaya-labs/melaya-mcp /tmp/melaya-mcp && cp -r /tmp/melaya-mcp/skills/melaya ~/.claude/skills/
 ```
 
-**Claude.ai and Claude Desktop**: download [`skills/melaya`](https://github.com/melaya-labs/melaya/tree/main/skills/melaya) as a .zip and upload it under **Settings → Capabilities → Skills**. Anywhere else, add [`SKILL.md`](https://github.com/melaya-labs/melaya/blob/main/skills/melaya/SKILL.md) as a project instruction or rules file.
+**Claude.ai and Claude Desktop**: download [`skills/melaya`](https://github.com/melaya-labs/melaya-mcp/tree/main/skills/melaya) as a .zip and upload it under **Settings → Capabilities → Skills**. Anywhere else, add [`SKILL.md`](https://github.com/melaya-labs/melaya-mcp/blob/main/skills/melaya/SKILL.md) as a project instruction or rules file.
 
 <table>
 <tr>
@@ -292,7 +292,7 @@ Disconnecting in Melaya settings immediately revokes the connection's ability to
 |---|---|
 | `server.json` | Manifest for the [official MCP Registry](https://registry.modelcontextprotocol.io) |
 | `.mcp.json` | Remote server declaration |
-| `.claude-plugin/`, `skills/`, `commands/` | Claude Code plugin packaging — one distribution of the same server. `skills/melaya` is a copy of the [Melaya skill](https://github.com/melaya-labs/melaya/tree/main/skills/melaya); `skills/melaya-setup` is the first-run setup skill |
+| `.claude-plugin/`, `skills/`, `commands/` | Claude Code plugin packaging — one distribution of the same server. `skills/melaya` is the [Melaya skill](./skills/melaya) (its only source); `skills/melaya-setup` is the first-run setup skill |
 
 The server itself runs as part of the Melaya platform; this repo is its public manifest, packaging and documentation.
 

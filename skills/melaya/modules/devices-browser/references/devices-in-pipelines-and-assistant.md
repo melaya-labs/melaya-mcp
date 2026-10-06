@@ -31,14 +31,14 @@ Option C: authored from scratch (see `../../../modules/pipeline-authoring/GUIDE.
 
 - **Tools.** Put the full phone toolkit in the agent's `agent_tools`. Verify each id with `melaya_pipeline_registry` search "phone". The standard set:
   - read: `phone_get_screen_tree`, `phone_screenshot`, `phone_current_app`, `phone_app_playbook`, `phone_list_apps`, `phone_wait`;
-  - act: `phone_open_app`, `phone_open_url`, `phone_click_text`, `phone_click_id`, `phone_tap_id`, `phone_tap`, `phone_double_tap`, `phone_long_press`, `phone_swipe`, `phone_scroll`, `phone_drag_hold`, `phone_input_text`, `phone_clear_text`, `phone_press_enter`, `phone_batch`, `phone_home`, `phone_back`, `phone_recents`, `phone_notifications`;
+  - act: `phone_open_app`, `phone_open_url`, `phone_click_text`, `phone_click_id`, `phone_tap_id`, `phone_tap`, `phone_double_tap`, `phone_long_press`, `phone_swipe`, `phone_scroll`, `phone_drag_hold`, `phone_input_text`, `phone_clear_text`, `phone_press_enter`, `phone_batch`, `phone_fast`, `phone_home`, `phone_back`, `phone_recents`, `phone_notifications`;
   - publish (always approved on the phone in `safe`): `phone_post_comment`, `phone_create_post`;
   - ask the user a question on the phone: `phone_ask_user` (drop it when the pipeline is autonomous; an autonomous run should not stop to ask).
   A toolkit missing `phone_click_text` forces coordinate taps and causes mis-taps.
 - **Autonomy is `hitl_mode`.** Set the pipeline's `hitl_mode` to `safe` (default), `payments_only` or `autonomous`. It decides whether the phone shows approval cards for publishing, payments and risky taps. In the Device Control page this is the **Autonomy** selector on the pipeline row.
 - **Leave `human_approval_tools` empty** on phone agents. The phone gates itself; listing phone tools there would double the gate. The on-device gate does NOT cover everything: instruct the agent to ask (with `phone_ask_user`) before spending money, changing account settings, deleting data or opening sensitive personal information.
 - **No runner required.** Phone pipelines can run in the cloud; the phone is reached through Melaya. The runner is needed only if the pipeline's model lives on the runner.
-- **Instructions should say:** operate only the approved apps; read before acting; prefer tapping by label or id; use `phone_batch` only for short known flows and never for publishing; publish only through `phone_post_comment` / `phone_create_post`; human-paced actions; stop immediately on cancel; end with a short summary of what changed. Keep app navigation knowledge out of the prompt: the app's playbook is delivered to the agent automatically.
+- **Instructions should say:** operate only the approved apps; read before acting; prefer tapping by label or id; use `phone_batch` only for short known flows; use `phone_fast` to run several read-off-the-screen steps in one call, to loop over list rows (`for_each`) or to gather items across scrolls (`collect`); never publish through either; publish only through `phone_post_comment` / `phone_create_post`; human-paced actions; stop immediately on cancel; end with a short summary of what changed. Keep app navigation knowledge out of the prompt: the app's playbook is delivered to the agent automatically.
 - **Model.** Use a vision-capable model if the app shows images, games or unlabelled icons. Use a stronger model for ambiguous or sensitive flows.
 - **Approved apps are still required** at run time; a run fails clearly with "app not allowed" otherwise.
 
@@ -101,7 +101,7 @@ For the general HITL model and schedules, load `../../../modules/automation-gove
 **What it can do.**
 - Answer questions about the user's own pipelines, runs, costs, usage, templates and evaluations, and search Melaya's documentation.
 - Use the connectors the user selects in the chat (for example Gmail or an ERP). Write actions from those connectors pause for approval in `safe` mode.
-- Drive the paired phone directly. Before a phone task it checks pairing; if no phone is paired it shows a "pair your phone" card instead. After a successful phone task it offers to save the flow as a Device Control pipeline.
+- Drive the paired phone directly, step by step or several steps at once with fast mode (`phone_fast`, and `browser_fast` in an attached browser), following the chat's autonomy selector. Before a phone task it checks pairing; if no phone is paired it shows a "pair your phone" card instead. After a successful phone task it offers to save the flow as a Device Control pipeline.
 - Accept images and documents dropped into the chat, and voice dictation.
 - An **autonomy selector** next to the input sets `safe` / `payments_only` / `autonomous` for that chat.
 
