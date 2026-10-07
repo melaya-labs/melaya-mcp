@@ -28,8 +28,8 @@ Related skills: `../../modules/pipeline-authoring/GUIDE.md` (config schema, inst
 | `drive_search` | read | Find the spine by `name` + `mime = "sheet"`, newest first |
 | `sheets_create` | write | Create the spine with `title`, `sheet_title`, `initial_values_json` (header row) |
 | `sheets_list_tabs` | read | Find the right tab when a read comes back empty |
-| `sheets_read_range` | read | Read the table; ALWAYS with `save_to = "<name>.json"` for tables |
-| `sheets_append_row` | write | Append rows; ALWAYS with `csv_path` for wide rows, never `row_json` |
+| `sheets_read_range` | read | Read the table; ALWAYS with `save_to = "<name>.json"` for tables. To check a list of keys, pass `where = "D=a@x.com\|b@y.com\|..."` (one of, case-insensitive): the reply's `lookup.D.found` / `lookup.D.not_found` answer in ONE call |
+| `sheets_append_row` | write | Append rows; ALWAYS with `csv_path` for wide rows, never `row_json`. Add `unique_by = "<key column>"` on every table with one row per key: a key already there is refused (single row) or skipped and listed in `skipped_duplicates` (CSV) |
 | `sheets_update_by_header` | write | Write back cells by COLUMN NAME, many rows in one call; unknown column names are refused and nothing is written |
 | `sheets_update_range` | write | Write an exact A1 range (the header row at creation; avoid for write-back) |
 | `sheets_delete_rows` | write | Delete whole rows (rows below move up, no blank gap); the header row is refused |
@@ -126,8 +126,9 @@ Full pattern with the upstream output contract: [references/recorder-pattern.md]
 1. Find or create the spine.
 2. Read to `rows.json`.
 3. `dealdb_dedupe(rows = "rows.json", new_company = ..., website = ...)` for each record, in ONE parallel batch. The tool returns `verdict` (`duplicate` at score >= 0.92, `possible_duplicate` at >= 0.75, else `new`) and `best_score`. Pick one skip threshold for the system and write it into the instruction (0.92, the tool's own duplicate verdict, is the safe default; lower it to 0.85 when sources name companies inconsistently, which also skips same-domain matches). Skip dedupe when `data_rows` is 0: on a header-only file the tool returns an error.
+   When the key is exact (an email, a domain, a registry id), skip the fuzzy pass: ONE `sheets_read_range` with `where = "<key column>=<every key, joined by |>"` and keep only `lookup.<column>.not_found`. Never let the model compare keys against a read table by eye: on a 155-row ledger it missed 9 of 30 and re-emailed them.
 4. `dealdb_normalize` ONCE on all non-duplicates with `save_to = "new_rows.csv"`.
-5. `sheets_append_row(spreadsheet_id, sheet = "<TAB>", csv_path = "new_rows.csv")`.
+5. `sheets_append_row(spreadsheet_id, sheet = "<TAB>", csv_path = "new_rows.csv", unique_by = "<key column>")`. The tool skips any key already in the column, so the table keeps one row per key even when an earlier step slipped.
 
 Provenance is enforced in code at step 4 (the prompt rules still apply: FACT_RULES in `../../modules/pipeline-authoring/references/instruction-patterns.md`):
 - Only schema columns are written: extra keys are dropped (and listed) instead of spilling past the header.

@@ -1,7 +1,7 @@
 ---
 name: melaya
 description: Use for anything done on the Melaya platform through its MCP server (tools named melaya_*). Covers running, building, fixing and handing over Melaya pipelines and complete multi-pipeline agentic systems; connecting services (Google, Slack, CRMs, API keys); the local runner, Claude Code, Codex, Copilot, Ollama and LM Studio models; projects and templates; run inputs (brief and files); schedules, event triggers and approvals; data stores in Google Sheets and bulk scoring; validation, debugging and reading results; client documentation; phone and browser agents. Works for non-technical users (plain-language journeys) and for integrators (full end-to-end method). Load this first, then open only the module the task needs.
-version: 1.1.4
+version: 1.1.5
 ---
 
 # Melaya
@@ -60,6 +60,7 @@ New capability areas (for example dedicated mobile-agent or browser-agent playbo
 
 ## Changelog
 
+- 1.1.5: sheet lookups by list: `sheets_read_range` `where = "D=a|b|c"` keeps rows matching any value and returns `lookup.found` / `lookup.not_found`, so a whole candidate list is checked against a ledger in one call; `sheets_append_row` `unique_by = "<key column>"` refuses (or, for a CSV, skips) a key already in the table. Outreach and Recorder steps should use both instead of comparing a read table by eye.
 - 1.1.4: fast mode for phone and browser (`melaya_phone_fast` / `melaya_browser_fast`, `phone_fast` / `browser_fast` in the Assistant and pipelines): once the screen is read, send the next several steps (click, type, press, scroll, wait, expect, collect, for_each) in one call; it follows the same autonomy as single actions and never publishes. The skill now lives only in the melaya-mcp repository.
 - 1.1.3: triggered runs are no longer forced safe: they follow the pipeline's own approval settings (`hitl_mode` + `human_approval_tools`) exactly like a manual run, so gate every write tool by listing it; browser actions always follow the user's autonomy setting in the Melaya extension (manual, scheduled and triggered runs); the canvas Autonomy chip is shown on phone pipelines only.
 - 1.1.2: instant (push) triggers can be created, re-pointed and re-enabled over MCP with the `melaya:connectors.write` grant and `config.push.consent: true` after the user agreed (worked Instagram comment auto-reply example in trigger-sources.md, validated live); trigger autonomy (writes with no approval) can be set over MCP with the same grant plus `confirm: true` after the user agreed, validated server-side like the app.
