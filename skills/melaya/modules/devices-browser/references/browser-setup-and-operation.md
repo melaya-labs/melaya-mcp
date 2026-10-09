@@ -102,15 +102,15 @@ One tool call per click is slow: every step is a full round trip through you. On
 | `wait` | `ms` | |
 | `expect` | `url_contains` and/or `text` | Checks the page (waits a few seconds for late content); stops the run if it does not hold |
 | `collect` | `href_contains` / `name_contains` / `role` (what an item is), optional `min_chars`, `if` (a condition checked by Melaya's fast model), `max` (1-200), `scroll_max` (0-30), `in` (`@eN` of the list) | Gathers every matching item across scrolls, once each, with title, link and card text, returned in a `COLLECTED` block |
-| `for_each` | `target` (the label each item carries, e.g. "Connect"), optional `in` (`@eN` of the list), `if_row_contains`, `if` (condition per row), `max` (1-50), `scroll_max`, `click_item` (default true), `steps` (inner steps; `near: "$row"` means the current row) | Walks a list row by row, one row once, scrolling for more |
+| `for_each` | `target` (the label each item carries, e.g. "Open"), optional `in` (`@eN` of the list), `if_row_contains`, `if` (condition per row), `max` (1-50), `scroll_max`, `click_item` (default true), `steps` (inner steps; `near: "$row"` means the current row) | Walks a list row by row, one row once, scrolling for more |
 
-Other options: `humanize: true` (human-like pauses and per-keystroke typing; default is fastest), `allow_commit` (see safety), `budget_s` (up to 180). If your client cannot send a nested array, pass the same list as a JSON string in `steps_json`.
+Other options: `allow_commit` (see safety), `budget_s` (up to 180). If your client cannot send a nested array, pass the same list as a JSON string in `steps_json`.
 
 **Writing good steps**
 - Use the labels exactly as the page tree shows them. Pass the `@eN` ref when you have it; it is used while it still carries that label.
-- Repeated labels ("Connect" on every row) need `near` (row text) or a `for_each`.
+- Repeated labels ("Open" on every row) need `near` (row text) or a `for_each`.
 - Pass `in` with the list's `@eN` for `for_each` and `collect` on long lists; a whole-page read can drop rows' buttons.
-- For `collect`, a link pattern is the most robust description of an item (`/comments/` for Reddit posts, `/in/` for LinkedIn profiles).
+- For `collect`, a link pattern is the most robust description of an item (`/comments/` for Reddit posts, `/issues/` for GitHub issues).
 - A condition in `if` is judged per item by a small fast model. Items it is sure about are acted on or kept; items it is unsure about are listed as `UNSURE` for you to decide; never treat those as done.
 
 **Statuses:** `completed` (every step ran and took effect), `completed_verified`, `needs_text`, `ambiguous` (several elements match: add `near` or `ref`), `low_confidence` (nothing matches clearly), `commit_blocked`, `approval_required`, `no_progress` (a step had no effect or an expectation failed), `unknown_outcome` (may or may not have happened: verify, never repeat), `session_changed`, `stopped`, `limit`, `error`. On anything but `completed`, continue from the returned page with the normal tools.

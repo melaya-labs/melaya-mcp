@@ -50,7 +50,7 @@ Do not use `imap_fetch` for this: it takes the mailbox password as a tool argume
 | Facebook Page | `facebook` | sign-in | Choose the Page during sign-in |
 | Instagram | `instagram` | key paste: access token + Instagram Business Account ID | Needs an Instagram Business or Creator account linked to a Facebook Page |
 | X | `x` | sign-in, or bring your own X developer app (client id and secret on the card) | The Melaya-hosted X sign-in is not offered on every plan; the own-app route works on any plan |
-| LinkedIn | `linkedin` | session: login window on the runner machine | Runner must be running. `linkedin_session_status` reports the session and today's usage counters. Platforms limit automated activity: keep volumes modest |
+| LinkedIn | `linkedin` | not available over MCP | Automating LinkedIn through a logged-in session breaks LinkedIn's terms, so the MCP server refuses its tools, the LinkedIn app and linkedin.com. Do not plan it into a system built over MCP |
 | TikTok, Reddit, YouTube, Canva | `tiktok`, `reddit`, `youtube`, `canva` | sign-in | |
 | Telegram (personal account) | `telegram_user` | session wizard: app api_id and api_hash from my.telegram.org, then phone number, SMS code, optional 2FA password, all typed into the Melaya wizard | Never in chat |
 | Mastodon | `mastodon` | key paste: instance URL + access token | |

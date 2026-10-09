@@ -11,7 +11,7 @@ Read the symptom from the tool result, `melaya_run_status`, `melaya_run_diagnosi
 | Runner was connected, now `connected: false` | "Your computer went to sleep or the helper window was closed." | Wake the computer, restart the runner. Advise disabling sleep during scheduled windows. |
 | A run stopped halfway and is marked finished/orphaned | "The connection to your computer was lost during the run." | Runner disconnected for more than about 90 seconds. Keep the computer awake and on a stable connection, restart the runner, run again. |
 | Scheduled fires show "skipped" | "Your computer was off at the scheduled time, so Melaya skipped instead of failing." | Expected with `requires_runner: true`. Move the schedule to when the computer is on, or move the pipeline to cloud models. |
-| Triggered runs "skipped: runner or builder unavailable" / "trigger dropped" | "Your computer was offline" / "Your helper is an old version." | Start the runner; restart it to update (`@latest`). |
+| Triggered runs "skipped: runner or builder unavailable" / "trigger dropped" | "Your computer was offline" / "Your helper is an old version." | Start the runner. If it is an old version, run the command `melaya_runner_setup` returns now (pinned to the current release). |
 | A new feature "needs the runner updated" | "Your helper is an older version." | Restart the runner (the command always fetches the latest version). |
 | Run refused with `local_runner_required` | "One of the tools must use your home internet connection, so it cannot run on Melaya's servers." | Set `force_local_runner: true` (Configure tab "Run Locally") and run with the runner on, or remove that tool. |
 | Run refused with `run_input_files_cloud_only` | "Files can only be passed to pipelines that run on Melaya's cloud." | Put the content or a link in the text `brief`, or run a cloud-model copy of the pipeline for file tasks. |
@@ -27,11 +27,11 @@ Read the symptom from the tool result, `melaya_run_status`, `melaya_run_diagnosi
 | Run fails asking to run `claude` once to refresh | "Your Claude sign-in expired." | Open `claude` in a terminal (it refreshes), restart the runner, run again. |
 | Many 429 / rate-limit errors on `claude_code`, `codex` or `github_copilot` | "Your subscription's usage limit is reached for now; it is shared with your other use of that plan." | Wait for the plan's window to reset; reduce parallel agents; move heavy agents to a cloud key (`anthropic`, `qwen`, ...). |
 | No `codex` models in `melaya_runner_status` | "Codex is not signed in on that computer." | User runs `codex` and signs in with ChatGPT; restart the runner. |
-| No `github_copilot` models | "Copilot is not signed in where the helper can see it." | `npx @melaya/runner@latest copilot login`, approve on GitHub, restart the runner. |
+| No `github_copilot` models | "Copilot is not signed in where the helper can see it." | The user runs `npx -y @melaya/runner@1.1.60 copilot login`, approves on GitHub, restarts the runner. |
 | Copilot Claude/Gemini model fails or is missing | "That model is switched off in your Copilot settings." | Enable it in the GitHub Copilot feature settings, or use `gpt-4.1`. |
 | Copilot agent loses its instructions on long inputs | "Copilot limits how much that model can read." | Use `gpt-4.1` or a larger-cap model; avoid `gpt-4o-mini`. |
 | `claude_code` wanted on a cloud run | "Claude Code subscriptions only work on your own computer." | Runner, or provider `anthropic` with an API key for the cloud. |
-| Gemini agent fails on the runner at start ("cannot import name 'genai'") | "Your runner is older than the version that supports Gemini." | Update the runner (`npx @melaya/runner@latest`) and restart it; it rebuilds its Python environment once. |
+| Gemini agent fails on the runner at start ("cannot import name 'genai'") | "Your runner is older than the version that supports Gemini." | Restart the runner with the command `melaya_runner_setup` returns (pinned to the current release); it rebuilds its Python environment once. |
 | Gemini model returns 404 "no longer available to new users" | "Google retired that model for new keys." | Pick a current Gemini model (for example a Gemini 3 Flash or Pro model) in the model picker. |
 
 ## Local models

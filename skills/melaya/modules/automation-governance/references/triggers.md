@@ -99,7 +99,7 @@ Receipts are kept 7 days (30 days for GitHub-scheme webhooks). Live notification
 `update` with `id` plus any of `name`, `enabled`, `config`, `source_id`, `signing_scheme`, limits.
 
 - Always `get` first and send back the COMPLETE config with your change. Treat `config` as a full replacement.
-- If the trigger has UI-granted autonomy, keep `config.autonomy` exactly as `get` returned it. Changing it is refused; OMITTING it removes the autonomy. Tell the user if your edit would remove it.
+- If the trigger has autonomy, keep `config.autonomy` exactly as `get` returned it unless the user asked to change it. Changing it needs the `melaya:connectors.write` grant and `confirm: true` (section 7); OMITTING it removes the autonomy. Tell the user if your edit would remove it.
 - Push triggers: keep `config.push` exactly as returned unless you mean to re-point it; re-pointing (or re-enabling) needs the `melaya:connectors.write` grant, and a re-point needs `config.push.consent: true` after the user agreed.
 - Changing `signing_scheme` rotates the secret and revokes the old one at once: the sender stops verifying until the user presses "Rotate secret" in the app and pastes the new secret into the sender (a secret rotated over MCP is never shown).
 - A poll trigger re-baselines after a config change (the next poll records what exists and fires nothing).
@@ -160,8 +160,8 @@ Receipts are kept 7 days (30 days for GitHub-scheme webhooks). Live notification
 | `approval_ttl_s` | 60-86400, default 3600: how long a pending approval (a trigger write, or an in-run approval of a triggered run) waits before it expires unsent |
 | `accept_truncated` | payloads over 32 KB are refused unless true; then the agent sees a shortened preview, and a `tool_call` still refuses to run on it |
 | `allow_egress_proxy` | default false. True only when a tool in the action or pipeline needs Melaya's residential proxy; event-shaped arguments then leave through that proxy |
-| `autonomy` | cannot be set or changed over MCP (section 7) |
-| `hitl` | only `"safe"` is accepted |
+| `autonomy` | set or changed over MCP only with the `melaya:connectors.write` grant and `confirm: true`, after the user agreed (section 7) |
+| `hitl` | only `"safe"` is accepted, for compatibility; it is ignored. Runs started by the trigger use the pipeline's own `hitl_mode` and `human_approval_tools` |
 | `engine`, `poll` | kind-specific, see trigger-sources.md |
 
 Condition semantics (routes and `act_when`): booleans compare as booleans (`true` and the string `"true"` are equal); numbers numerically; otherwise text, trimmed and case-insensitive (`"Refund "` equals `"refund"`); `in` compares with each element (max 32); `> >= < <=` numeric when both are numbers, else text order. A missing answer is false. A condition may name a `field`: `choice`, `score`, `noul`, `confidence` or `act_probability`.

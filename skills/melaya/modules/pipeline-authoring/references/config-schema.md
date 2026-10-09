@@ -27,7 +27,7 @@ Builder = https://app.melaya.org/builder. Its tabs: **Pipeline** (the canvas of 
 | `inline_rag_docs` | array | `[{"title", "body"}]` static-context documents written at save; not visible in preview (expected) | Docs tab (they appear as documents) |
 | `rag_mode_retrieval` | bool | With `rag_embedder_provider` + `rag_embedder_model`: retrieval mode, agents get `rag_retrieve` | Docs tab: document source + **Embedder model** |
 | `static_context_local_folder_path` | string | Documents from a folder on the user's computer, never uploaded. EVERY agent must use a local provider | Docs tab: local folder (Browse... on the runner) |
-| `force_local_runner` | bool | Run on the user's runner even with cloud models (needed for session-bound tools such as LinkedIn or Luma) | Configure: **Run Locally** |
+| `force_local_runner` | bool | Run on the user's runner even with cloud models (needed for session-bound tools such as Luma) | Configure: **Run Locally** |
 | `event_triggers` / `listen_trigger_wakeups` | | Only WAKE a crew that is already running. Starting runs from events is `melaya_pipeline_trigger` | Schedule & Triggers tab |
 
 Unknown fields are silently dropped with a success response. Preview, then `melaya_pipeline_get`, to confirm.

@@ -213,11 +213,11 @@ Runs, transcripts, tool traces, failure diagnosis, cost, and what your agents ha
 
 ## What it cannot do
 
-Enforced on the device itself, not on the server, so no prompt and no agent instruction can move them.
+Enforced by the device or by the Melaya server, not by instructions, so no prompt and no agent instruction can move them.
 
 ### It only touches what you allow-list
 
-Apps on the phone, origins in the browser. The agent can hand access back, narrowing the list or clearing it, but **only you can grant it**.
+Apps on the phone, origins in the browser. The agent can hand access back, narrowing the list or clearing it, but **only you widen it**: phone apps on your phone or in the Melaya app, and browser sites on the Melaya Browser Control page or by asking your assistant to add one (it then calls `melaya_browser_allow_sites` with that site; you can also ask it for every site). The skills tell it never to widen access on its own or because of something it read.
 
 <p align="center">
   <img src="assets/screens/app-permissions.jpeg" width="280" alt="The allow-list, in the Melaya app">
@@ -225,9 +225,9 @@ Apps on the phone, origins in the browser. The agent can hand access back, narro
 
 That asymmetry is deliberate. The agent reads text off your screen, and text can be written by anyone: a message, a comment, a web page. A boundary it could widen in response to what it reads would not be a boundary.
 
-### Publishing and paying always ask you
+### Payments on your phone always ask you
 
-You see the exact text before it goes out, and approvals reach you even when the phone is locked.
+Direct phone control from your assistant runs in safe mode: publishing and paying stage an approval card, and you see the exact text before anything goes out. Phone agents and phone pipelines your assistant starts or saves keep the payment card in every mode: `autonomous` is stored and run as `payments_only` from here, which lets an agent publish without a card you asked it to skip, but still stops before every purchase or payment. Only you can set a fully unattended phone mode, in the Melaya app. In the browser, the autonomy you choose in the Melaya extension decides (safe asks before purchases, publishing and other consequential actions; payments only asks before purchases; autonomous asks nothing). Approvals reach you even when the phone is locked.
 
 <p align="center">
   <img src="assets/screens/on-device-approval.webp" width="420" alt="An approval card, showing the exact text before it publishes">
@@ -245,7 +245,9 @@ The gate exists to put a human between an agent and a consequential action, and 
 
 Password fields are excluded from screen reads.
 
-Also deliberately absent, and enforced by tests rather than by convention: **trading and moving money through a connector** (they write against live exchange keys and payment accounts), **administration** (no honest consent sentence exists for it), and **credential values of any kind**.
+LinkedIn is not available on this surface: automating it through a logged-in session breaks LinkedIn's terms, so the server refuses the LinkedIn tools, the LinkedIn app on your phone and linkedin.com in your browser.
+
+Also deliberately absent, and enforced by tests rather than by convention: **trading and moving money through a connector** (they write against live exchange keys and payment accounts), **administration** (no honest consent sentence exists for it), and **reading or setting connector credentials** (you connect services in the app). Two event-trigger fields are the exception, used only if you choose to hand a secret to your assistant instead of pasting it in the app: a provider's webhook signing secret and a stream source's key. Both are stored encrypted and never returned.
 
 ---
 
@@ -269,20 +271,20 @@ Ten scopes. You grant them individually.
 The tool list your assistant receives is filtered to what you granted, so connecting for phone control alone shows **23 tools rather than all 88**. If a capability seems missing, you declined it; reconnect and approve it.
 
 > [!NOTE]
-> **If you also use the Melaya SDK**, "connectors" means something different there. In the SDK it is project credential storage. Here, `melaya:connectors` is reading data from services you already connected, and `melaya:connectors.write` is acting through them. This surface cannot store, read or delete a credential.
+> **If you also use the Melaya SDK**, "connectors" means something different there. In the SDK it is project credential storage. Here, `melaya:connectors` is reading data from services you already connected, and `melaya:connectors.write` is acting through them. This surface cannot read, set or delete a connector credential (the trigger signing secret and stream-source key above are the only secrets it accepts, and it never returns them).
 
 ## Requirements
 
 - A Melaya account — free at [melaya.org](https://melaya.org)
 - An Android phone (Android 8 or newer) for phone control. There is no iOS build.
 - The Melaya extension on Chrome or Edge for browser control
-- For autonomous agents: Node 18+, Python 3.11+, and a signed-in CLI on the machine hosting the runner
+- For autonomous agents: Node 18+, Python 3.11+, and a signed-in CLI on the machine hosting the runner. The runner starts from one command pinned to a reviewed release (`npx -y @melaya/runner@1.1.60 --token=...`); your assistant shows it to you and runs it only after you say yes, or hands it to you to run
 
 ## Privacy
 
 Screen and page content read during a run goes to Melaya and to whichever model you selected, for the duration of that run. The [privacy policy](https://melaya.org/en/legal/privacy) covers collection, retention and deletion.
 
-One credential does cross the boundary, and it is worth naming: if you set up the optional local runner, the command you are given contains a runner token. It is valid for 7 days, revocable in settings or with `melaya_runner_revoke`, and unavoidable because the runner starts from a command line. On a hosted assistant that command appears in your conversation history. Nothing else does; provider and connector credentials are resolved server-side and never reach the assistant.
+One credential does cross the boundary, and it is worth naming: if you set up the optional local runner, the command you are given contains a runner token. It is valid for 7 days, revocable in settings or with `melaya_runner_revoke`, and unavoidable because the runner starts from a command line. On a hosted assistant that command appears in your conversation history. The only other secrets that can appear are a webhook signing secret or stream-source key you choose to give your assistant for an event trigger (stored encrypted, never returned); provider and connector credentials are resolved server-side and never reach the assistant.
 
 Disconnecting in Melaya settings immediately revokes the connection's ability to renew itself. A token it already holds keeps working until it expires, at most one hour.
 

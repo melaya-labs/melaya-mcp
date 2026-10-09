@@ -29,7 +29,7 @@ It opens no ports and works behind home routers and company firewalls.
 
 ## Updating
 
-The command uses `@latest`, so restarting the runner (Ctrl+C, run the same command again) picks up the newest version. Do this when a feature or fix "needs the runner updated", or when triggered runs are dropped by an old runner.
+The command is pinned to one reviewed release (`@melaya/runner@1.1.60`), so restarting the runner (Ctrl+C, run the same command again) restarts that same version; it never updates itself. A newer runner comes with a new Melaya plugin release that pins the new version: the user updates the plugin, then runs the new command `melaya_runner_setup` returns.
 
 If the user has lost the command and the token has expired or was never connected, call `melaya_runner_setup` again (it only mints when no runner is connected).
 
@@ -51,7 +51,7 @@ Revoke when: the command was pasted anywhere shared (chat with others, ticket, d
 - The runner token can only run this account's pipelines. It cannot read the account's other credentials or admin settings.
 - Every pipeline sent to the runner is signed; the runner checks the signature before running it.
 - Only the credentials a given pipeline needs are sent with that run.
-- A run started by an outside event (webhook, trigger) has sensitive account keys removed from its environment and is forced into safe human-approval mode.
+- A run started by an outside event (webhook, trigger) has sensitive account keys removed from its environment. It asks for approval exactly where the same pipeline asks when run by hand (its `hitl_mode` and `human_approval_tools`).
 - The runner runs pipelines with the permissions of the user account that started it, without the sandbox used in the cloud. For stronger separation, run it under a dedicated user account on the computer.
 - Sign-ins for Claude Code, Codex and Copilot are read on the computer at run time and never sent to Melaya's servers.
 

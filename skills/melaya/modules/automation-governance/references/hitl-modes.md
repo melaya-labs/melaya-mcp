@@ -18,7 +18,7 @@ Verified against how runs actually behave, not only against older documentation.
 |---|---|
 | `safe` | exactly the names in the agent's `human_approval_tools`, minus `phone_*` (phone actions use the on-device approval overlay instead) |
 | `autonomous` | the per-agent list is DROPPED. Only form-modal tools stay gated (today `luma_register_event`, which needs operator-filled form answers) |
-| `payments_only` | identical to `autonomous` at the tool layer. For phone agents it means on-device cards appear for purchases only |
+| `payments_only` | identical to `autonomous` at the tool layer. For phone agents, on-device cards appear for purchases, payments and risky taps, not for publishing. A phone pipeline saved over MCP with `autonomous` is stored as `payments_only` |
 
 Override that forces `safe` regardless of the config:
 - trading crews (always safe; their order rails only run on gated tools).
@@ -32,7 +32,7 @@ Second trap: `safe` is not "gate every write". In every run, triggered included,
 ## 3. Batching of approval cards
 
 - Several calls to the same gated tool in one model reply may coalesce into one batch card.
-- Never coalesced (one card per call, individually editable): `gmail_send`, `gmail_reply`, `smtp_send`, LinkedIn message / connection request / reply / edit / post, `x_post`, `x_reply`, `x_send_dm`, `x_delete_post`, `x_follow`, `tiktok_publish_video`, and any gated call whose args carry free text (`body`, `text`, `message`, `content`, `caption`, `comment`, `subject`, `title`, `html`, `markdown`).
+- Never coalesced (one card per call, individually editable): `gmail_send`, `gmail_reply`, `smtp_send`, `x_post`, `x_reply`, `x_send_dm`, `x_delete_post`, `x_follow`, `tiktok_publish_video`, and any gated call whose args carry free text (`body`, `text`, `message`, `content`, `caption`, `comment`, `subject`, `title`, `html`, `markdown`).
 - Form-modal tools always get one card per call so the form opens.
 
 ## 4. Approval lifecycle

@@ -20,7 +20,7 @@ Use this when a Melaya system needs a third-party service (email, files, calenda
 |---|---|---|---|
 | A. Platform sign-in (OAuth) | Opens the service card in Melaya Connectors, clicks Authorize, logs in on the provider's page, clicks Allow | Gmail, Google Calendar, Drive, Sheets, Docs, Meet, Search Console, YouTube, Google Ads, Facebook Page, and the sign-in tab of dual connectors (Notion, GitHub, X, TikTok, Reddit, Canva, Pipedrive, Attio, Klaviyo, Mailchimp, Webflow, Microsoft Advertising, Amazon Ads) | No |
 | B. API key paste (in the app, never in chat) | Creates a key on the provider's website, pastes it into the Melaya Connectors card, clicks Save; the page checks it before saving | Model providers (OpenAI, Anthropic, Gemini, Qwen, ...), Slack bot token, HubSpot private app token, Stripe, Airtable, Odoo, Salesforce, Instagram token, Jev, Tavily, DataForSEO, free register keys (Companies House, FCA, USPTO, FRED), and the "manual key" tab of dual connectors | No |
-| C. Cookie or session login | Clicks Connect; a real login window opens (on the user's own computer for some services) and the user logs in normally; Melaya keeps the resulting session | LinkedIn, Luma (login window on the runner machine), Telegram personal account (phone number, then SMS code, then 2FA password if set, typed into the Melaya wizard), NotebookLM, Substack | LinkedIn and Luma: yes, the login window opens on the runner machine |
+| C. Cookie or session login | Clicks Connect; a real login window opens (on the user's own computer for some services) and the user logs in normally; Melaya keeps the resulting session | Luma (login window on the runner machine), Telegram personal account (phone number, then SMS code, then 2FA password if set, typed into the Melaya wizard), NotebookLM, Substack | LinkedIn and Luma: yes, the login window opens on the runner machine |
 | D. Local only | Starts the runner on their computer; nothing is stored in the cloud | Runner models (Claude Code, Codex, GitHub Copilot, Ollama, LM Studio), local folders and files, databases only reachable from the user's network ("Test via runner") | Yes |
 
 Dual connectors (sign-in tab AND manual key tab): if both are filled, the manual key wins. Tell the user to use only one, normally the sign-in tab.
@@ -98,7 +98,7 @@ Cookie or session (kind C):
 ```
 <Service> does not offer a normal sign-in for apps, so Melaya uses a login session instead.
 
-1. <LinkedIn / Luma only:> Make sure the Melaya runner is running on this computer
+1. <Luma only:> Make sure the Melaya runner is running on this computer
    (I can help set it up).
 2. Open https://app.melaya.org/connectors, pick <Service> and click Connect.
 3. <A login window opens on your computer / follow the steps shown: phone number, then the
@@ -126,7 +126,6 @@ Local only (kind D): use the runner steps from SKILL.md section 1 (`melaya_runne
 | google_sheets | `sheets_list_tabs` then `sheets_read_range` | `{"spreadsheet_id": "<id from the sheet link>"}`, then `{"spreadsheet_id": "...", "a1_range": "A1:Z2"}` |
 | google_docs | `docs_read` | `{"document_id": "<id from the doc link>"}` |
 | slack | `slack_list_channels` | `{}` |
-| linkedin | `linkedin_session_status` | `{}` |
 | luma | `luma_session_status` | `{}` |
 | any other | `melaya_connector_tools` `search=<service name>`; pick a `[read-only]` list/get/me/status tool with no or few required parameters | per the parameter list |
 
@@ -143,7 +142,7 @@ A Google Sheet or Doc id is the long code in its link (`https://docs.google.com/
 | test passes, read call fails with a permission error | Key or app created without the needed scope (for example a HubSpot private app without the contacts scope) | Ask them to add the scope at the provider, regenerate the key if the provider requires it, save it again |
 | Google card shows a missing-permission message | A permission box was unticked on Google's screen | Repeat the sign-in and leave all boxes ticked |
 | Read works but "file not found" on Drive | Drive access only covers files Melaya created or files opened by id (see `service-families.md`) | Use the Sheets/Docs id from the link, or let the pipeline create the file |
-| "runner_offline" or nothing happens on LinkedIn/Luma Connect | The login window opens on the runner machine | Start the runner (`melaya_runner_setup`), then click Connect again |
+| "runner_offline" or nothing happens on Luma Connect | The login window opens on the runner machine | Start the runner (`melaya_runner_setup`), then click Connect again |
 | Everything fails with setup-shaped errors | Account or runner problem | `melaya_setup_status` and fix the named step |
 
 ## 4. Scopes and read-only consent, in plain words
@@ -178,7 +177,7 @@ Signs: a run fails with an auth error, `melaya_run_diagnosis` shows an `auth` fi
 Common causes, in plain words:
 - The user changed their password, removed Melaya's access in the provider's security settings, or an admin revoked it.
 - The key was deleted or rotated at the provider.
-- A cookie or session login expired (LinkedIn, Luma, Substack, NotebookLM expire more often than sign-in connections).
+- A cookie or session login expired (Luma, Substack, NotebookLM expire more often than sign-in connections).
 - Google: a sign-in token lasts about an hour and Melaya refreshes it at the start of each run. If Google still refuses mid-run the tool says access expired; re-running the task is usually enough. If it keeps failing, reconnect.
 
 Reconnect procedure:

@@ -118,7 +118,7 @@ Once the right app is open and you have read the screen, send the next steps in 
 - **Steps:** `click` (`target`: the text, description or resource id you read; optional `near` for identical labels), `type` (`into`: the field's label, its placeholder, or its resource id; `text`; `submit` presses Enter, which SENDS in chat apps), `press` (`Enter`, `back`, `home`, `recents`), `scroll` (`direction`, `times`), `wait` (`ms`), `expect` (`url_contains` = the app id, and/or `text`), `collect` and `for_each` exactly as in the browser (see `browser-setup-and-operation.md`). For `collect` on the phone, describe items by `name_contains` (feed cards carry a description such as "Posted in r/..."; ads say "Promoted post" instead), `rid` (resource id ending) or `role` (class).
 - **Notification banners:** before each step, a notification covering the screen is swiped up out of the way (it stays in the shade, unread), so it cannot catch the tap.
 - **Duplicates:** rows of identical buttons are tapped at their own position, not through a shared id.
-- **Statuses and options:** as in the browser (`completed`, `ambiguous`, `low_confidence`, `no_progress`, `unknown_outcome`, ...; `humanize`, `budget_s`, `steps_json`).
+- **Statuses and options:** as in the browser (`completed`, `ambiguous`, `low_confidence`, `no_progress`, `unknown_outcome`, ...; `budget_s`, `steps_json`).
 - **Safety:** every tap goes through the same path as `melaya_phone_click` / `melaya_phone_type`, so allowed apps, the on-device publish and payment gates and approvals apply. MCP phone control runs in `safe` mode: commit-like controls (send, post, follow, connect, register...) are handed back unless `allow_commit: true`, and even then the phone shows its approval card. Never put a publish in fast mode; use `melaya_phone_publish`.
 - **When not to use it:** a screen you have not read, games and video (no tree), and anything where each result decides the next step.
 
@@ -128,7 +128,6 @@ Once the right app is open and you have read the screen, send the next steps in 
 - An element marked as covered by another view should not be tapped by position; scroll it into view or click it by text or id.
 - One action, then verify. If the screen is not what you expected, press Back and re-read rather than tapping on.
 - A command that times out while the phone is alive is usually a slow wake-up: retry the SAME call once before concluding anything. If it still fails, call `melaya_phone_wake`.
-- Human pace. Rapid-fire actions on social apps look like a bot.
 
 ### Publishing and approvals on the phone
 
@@ -157,10 +156,10 @@ Waking never unlocks the phone or grants anything.
 
 Use it for long or repetitive phone work that should continue after the conversation ("go through my Instagram DMs and summarise them"). For short or exploratory tasks, driving directly is faster and the user sees each step.
 
-1. Check `melaya_setup_status`: the runner must be connected and Claude Code signed in on that computer. If not, call `melaya_runner_setup`; with shell access on the user's own computer run the returned command in the background, otherwise give it to the user to run on the computer that will host the runner. The command carries a live credential: do not write it to a file or repeat it later. Poll `melaya_runner_status` (the first start takes up to a minute). A connected runner with no Claude Code models means the user must run `claude` once to sign in, then restart the runner.
+1. Check `melaya_setup_status`: the runner must be connected and Claude Code signed in on that computer. If not, call `melaya_runner_setup` and show the user the pinned command it returns; with shell access on the user's own computer run it in the background only after they say yes, otherwise give it to the user to run on the computer that will host the runner. The command carries a live credential: do not write it to a file or repeat it later. Poll `melaya_runner_status` (the first start takes up to a minute). A connected runner with no Claude Code models means the user must run `claude` once to sign in, then restart the runner.
 2. Call `melaya_run_phone_agent` with:
    - `instruction`: a clear brief with the goal and what "done" looks like, including what NOT to do (for example "read only, do not reply to anyone");
-   - `hitl_mode`: leave `safe` (default) unless the user explicitly asked for unattended operation; `payments_only` gates only purchases; `autonomous` removes every on-device approval card;
+   - `hitl_mode`: leave `safe` (default) unless the user explicitly asked for publishing without approval; `payments_only` publishes without a card but still stops before every purchase or payment and before risky taps; `autonomous` is accepted but runs as `payments_only` (payments always stop for the user);
    - optional `model` (`sonnet` default, `opus`, `fable`, `haiku`), `name`, `project` (default `Melaya-Agents`).
 3. It returns a run id. Poll `melaya_run_status` and read `outcome`. While it runs, the phone shows a small Melaya overlay the user can use to stop it.
 4. To stop: `melaya_run_cancel` with `run_id` and `pipeline`, AND `melaya_phone_stop` to halt the device immediately.

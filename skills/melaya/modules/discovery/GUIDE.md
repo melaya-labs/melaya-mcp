@@ -42,7 +42,7 @@ Act on each gap by relevance to THIS build:
 | Gap (`steps[].id`) | Needed when | What to do |
 |---|---|---|
 | `account` | always | If not signed in, the OAuth consent flow handles sign-up; there is no create-account tool. |
-| `runner` | the system uses runner-served models (`claude_code`, `codex`, `github_copilot`, `ollama`, `lmstudio`), local files/folders, or a session login that opens on the user's machine (LinkedIn, Luma) | Ask the user first (it is a long-lived process on their machine). Then `melaya_runner_setup`; with a shell, run the returned `npx` command yourself in the background and poll `melaya_runner_status`; without a shell, hand the command over and say which machine it must run on. Full runner and local-model procedure: the `../../modules/runners-models/GUIDE.md` skill. |
+| `runner` | the system uses runner-served models (`claude_code`, `codex`, `github_copilot`, `ollama`, `lmstudio`), local files/folders, or a session login that opens on the user's machine (Luma) | Ask the user first (it is a long-lived process on their machine). Then `melaya_runner_setup`, which returns the pinned command `npx -y @melaya/runner@1.1.60 --token=...`; show it to the user, and with a shell run it in the background only after they say yes and poll `melaya_runner_status`; without a shell, hand the command over and say which machine it must run on. Full runner and local-model procedure: the `../../modules/runners-models/GUIDE.md` skill. |
 | `claude_code` | pipelines use provider `claude_code` | Ask the user to run `claude` once to sign in, then restart the runner. No key or connector needed. Other subscription CLI providers (`codex`, `github_copilot`): see the `../../modules/runners-models/GUIDE.md` skill. |
 | `phone_paired` / `phone_online` / `allowed_apps` | only for phone-control systems | Ignore for a cloud data/document system; say so explicitly in the inventory. |
 
@@ -120,7 +120,8 @@ Short version:
 2. Call `melaya_connector_connect` with `service`. Verified answer shapes:
    - Sign-in (OAuth) services (Google products, Facebook, ...): `{"authorizationUrl": "https://app.melaya.org/connectors?highlight=<id>"}`. The link opens the Melaya Connectors page on that card; the user clicks Authorize, then consents on the provider's own screen.
    - API-key services: a sentence telling the user to open https://app.melaya.org/connectors, pick the service and enter the key there (the page validates it before saving).
-   - Session logins (LinkedIn, Luma, Telegram personal account, NotebookLM, Substack): the card has a Connect button or a wizard; LinkedIn and Luma open the login window on the runner machine, so the runner must be running.
+   - Session logins (Luma, Telegram personal account, NotebookLM, Substack): the card has a Connect button or a wizard; Luma opens the login window on the runner machine, so the runner must be running.
+   - LinkedIn is not available over MCP: automating it through a logged-in session breaks LinkedIn's terms, so its tools, app and site are refused here. Do not plan LinkedIn steps into a system built over MCP.
 3. Send one short message: what the service is for in their system, the link, what to click, that each Google product is a separate grant, that no key or password goes through the chat, and that you will verify.
 4. Wait. Do not build around the gap and do not substitute a different service.
 5. When the user says done: `melaya_connector_list` (service present) -> `melaya_connector_test` -> one read-only `melaya_connector_call` (section 6). Confirm with the user which account is connected.

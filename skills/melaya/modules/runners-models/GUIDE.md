@@ -51,7 +51,7 @@ A run goes to the **user's runner** when ANY of these is true. Otherwise it runs
 
 One local agent moves the WHOLE pipeline to the runner. On the runner, cloud-model agents still work: their keys travel with the run and the calls go from the user's computer straight to the provider. So a mixed pipeline (one Ollama agent, one Qwen agent) is fine, but it needs the runner online.
 
-Some tools only work from a home internet connection (tools that reuse the user's own logged-in session on sites such as LinkedIn or Luma). A pipeline with such a tool is refused in the cloud with an error mentioning `local_runner_required`. Fix: set `force_local_runner: true` (or use only local models).
+Some tools only work from a home internet connection (tools that reuse the user's own logged-in session on sites such as Luma). A pipeline with such a tool is refused in the cloud with an error mentioning `local_runner_required`. Fix: set `force_local_runner: true` (or use only local models).
 
 ### What needs which side
 
@@ -98,8 +98,8 @@ Then:
 
 1. `melaya_runner_status {}`. If `connected: true`, stop: it is already running. Go to step 5.
 2. `melaya_runner_setup { "label": "<computer name>" }` once. Optional `expiry_days` (1-365, default 7). If a runner is already connected it returns `alreadyConnected: true` and mints nothing.
-3. The result has `command` (`npx @melaya/runner@latest --token=...`), `requirements` (Node.js 18 or newer, Python), and `runsOn`.
-   - **You have a shell on the user's own computer** (Claude Code on their laptop): after the user agrees, run the command as a background process in their terminal.
+3. The result has `command` (always `npx -y @melaya/runner@1.1.60 --token=...`, pinned to a reviewed release; if it has any other shape, do not run it and tell the user), `requirements` (Node.js 18 or newer, Python), and `runsOn`.
+   - **You have a shell on the user's own computer** (Claude Code on their laptop): show the user the exact command, and only after they say yes, run it as a background process in their terminal.
    - **You do not** (claude.ai, mobile, any hosted surface): give the command to the user, say "paste this into PowerShell (Windows) or Terminal (Mac/Linux) on the computer that should run your pipelines, and leave that window open". Never say you started it.
    - Either way: the command contains a live credential. Never write it to a file, a doc, a commit or a later message.
 4. Wait 20-60 seconds (first start builds its own Python environment), then poll `melaya_runner_status {}` until `connected: true`.
@@ -115,7 +115,7 @@ When it fails, see `references/failures.md` ("runner never connects").
 |---|---|---|---|
 | `claude_code` | Their Claude Pro/Max plan | Install Claude Code, run `claude` once in a terminal, sign in | Family aliases `sonnet`, `opus`, `haiku` (resolve to the newest of that family) or a full id listed in `claudeCodeModels` |
 | `codex` | Their ChatGPT plan | Install the Codex CLI, run `codex` and sign in with ChatGPT | An id listed by `melaya_runner_status` under provider `codex` |
-| `github_copilot` | Their GitHub Copilot plan | Signed in to Copilot in an editor plugin, or run `npx @melaya/runner@latest copilot login` and follow the code shown | `gpt-4.1` is the safe default; others as listed by the runner |
+| `github_copilot` | Their GitHub Copilot plan | Signed in to Copilot in an editor plugin, or have the user run `npx -y @melaya/runner@1.1.60 copilot login` and follow the code shown | `gpt-4.1` is the safe default; others as listed by the runner |
 
 Facts to tell the user plainly:
 

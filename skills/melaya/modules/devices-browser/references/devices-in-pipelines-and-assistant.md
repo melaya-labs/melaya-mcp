@@ -35,7 +35,7 @@ Option C: authored from scratch (see `../../../modules/pipeline-authoring/GUIDE.
   - publish (always approved on the phone in `safe`): `phone_post_comment`, `phone_create_post`;
   - ask the user a question on the phone: `phone_ask_user` (drop it when the pipeline is autonomous; an autonomous run should not stop to ask).
   A toolkit missing `phone_click_text` forces coordinate taps and causes mis-taps.
-- **Autonomy is `hitl_mode`.** Set the pipeline's `hitl_mode` to `safe` (default), `payments_only` or `autonomous`. It decides whether the phone shows approval cards for publishing, payments and risky taps. In the Device Control page this is the **Autonomy** selector on the pipeline row.
+- **Autonomy is `hitl_mode`.** Set the pipeline's `hitl_mode` to `safe` (default) or `payments_only` (`autonomous` saved over MCP is stored as `payments_only`). It decides whether the phone shows approval cards for publishing, payments and risky taps. In the Device Control page this is the **Autonomy** selector on the pipeline row.
 - **Leave `human_approval_tools` empty** on phone agents. The phone gates itself; listing phone tools there would double the gate. The on-device gate does NOT cover everything: instruct the agent to ask (with `phone_ask_user`) before spending money, changing account settings, deleting data or opening sensitive personal information.
 - **No runner required.** Phone pipelines can run in the cloud; the phone is reached through Melaya. The runner is needed only if the pipeline's model lives on the runner.
 - **Instructions should say:** operate only the approved apps; read before acting; prefer tapping by label or id; use `phone_batch` only for short known flows; use `phone_fast` to run several read-off-the-screen steps in one call, to loop over list rows (`for_each`) or to gather items across scrolls (`collect`); never publish through either; publish only through `phone_post_comment` / `phone_create_post`; human-paced actions; stop immediately on cancel; end with a short summary of what changed. Keep app navigation knowledge out of the prompt: the app's playbook is delivered to the agent automatically.
@@ -84,13 +84,13 @@ Any pipeline agent can use `browser_read` to fetch pages through the user's own 
 | `hitl_mode` | Phone: publish | Phone: payment | Phone: risky taps | Browser consequential actions | Connector write tools |
 |---|---|---|---|---|---|
 | `safe` (default) | card | card | card | approval | approval (if listed in `human_approval_tools`) |
-| `payments_only` | no card | card | no card | per effect policy | run automatically |
-| `autonomous` | no card | no card | no card | per effect policy | run automatically |
+| `payments_only` | no card | card | card | per effect policy | run automatically |
+| `autonomous` (set by the user in the app only) | no card | no card | no card | per effect policy | run automatically |
 
 - Unknown or missing values count as `safe`.
-- Runs started by an **event trigger** are forced to `safe`, whatever the pipeline says.
+- Runs started by an **event trigger** use the pipeline's own `hitl_mode` and `human_approval_tools`, exactly like a manual run. Browser actions follow the user's autonomy setting in the extension, for every run.
 - Approvals are decided by the user on the phone card, in a phone notification (works on a locked phone), in the Melaya web app, or in the extension panel. `melaya_approval_list` lists them; nothing over MCP can approve.
-- `autonomous` is a deliberate user choice. Before setting it, tell the user in one sentence what it removes, and get an explicit yes.
+- Purchases and payments on the phone always stop for the user's approval when the run is started or the pipeline is saved over MCP: `autonomous` is saved and run as `payments_only` there. A fully unattended phone mode can only be set by the user in the Melaya app. Before setting `payments_only`, tell the user in one sentence what it removes (the publish cards), and get an explicit yes.
 
 For the general HITL model and schedules, load `../../../modules/automation-governance/GUIDE.md`.
 

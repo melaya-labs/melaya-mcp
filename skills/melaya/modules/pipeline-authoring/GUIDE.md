@@ -256,7 +256,7 @@ Any local provider on any agent sends the whole pipeline to the user's runner (f
 |---|---|---|---|
 | Reference files must be attached | "Open https://app.melaya.org/builder, open <pipeline>, **Docs** tab, drop <files>. Tell me when they are listed." | `melaya_pipeline_get` lists them with non-zero loaded characters | A scanned PDF loads almost nothing: ask for a text version or paste key content as an inline doc |
 | A stale memory note steers runs | "In the builder, open <pipeline>, **Memory** tab, open the persistent memory node and delete these entries: <list>." | `melaya_agent_memory` no longer returns them | Only owners and editors can delete; ask the owner |
-| A session-bound tool (LinkedIn, Luma) is needed | "In **Configure**, turn on **Run Locally**, and keep the Melaya runner running on your computer." | Runs start on the runner | See `../../modules/runners-models/GUIDE.md` |
+| A session-bound tool (Luma) is needed | "In **Configure**, turn on **Run Locally**, and keep the Melaya runner running on your computer." | Runs start on the runner | See `../../modules/runners-models/GUIDE.md` |
 | A gated send is waiting | "An approval card is waiting in the app (or on your phone). Please review the exact text and approve or reject it." | The run continues | Never approve for them |
 
 ## 18. Pitfalls checklist (run before every save)

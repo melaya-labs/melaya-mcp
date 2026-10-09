@@ -51,7 +51,7 @@ Common facts:
 **User setup** (one of):
 
 - Already signed in to GitHub Copilot in an editor plugin that stores its sign-in in the usual place (Vim/Neovim plugin, JetBrains). Nothing more to do.
-- Otherwise: in a terminal on the runner computer run `npx @melaya/runner@latest copilot login`, open the GitHub page it shows, enter the code, approve. The sign-in is saved for the runner.
+- Otherwise: the user runs, in a terminal on the runner computer, `npx -y @melaya/runner@1.1.60 copilot login`, open the GitHub page it shows, enter the code, approve. The sign-in is saved for the runner.
 
 The standalone GitHub Copilot command-line app's sign-in cannot be read; use one of the two options above.
 

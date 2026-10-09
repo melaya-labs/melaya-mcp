@@ -139,7 +139,7 @@ Pipeline field `hitl_mode`: `"safe"` (default), `"autonomous"`, `"payments_only"
 |---|---|
 | `safe` | exactly the tools listed in each agent's `human_approval_tools` (`phone_*` excluded: the phone shows its own on-device approval) |
 | `autonomous` | NOTHING from the per-agent list; only form tools that need a human to fill a form (today `luma_register_event`) |
-| `payments_only` | same as autonomous at the tool layer; on-device phone actions gate purchases only |
+| `payments_only` | same as autonomous at the tool layer; on the phone, purchases, payments and risky taps still ask (a phone pipeline saved over MCP with `autonomous` is stored as this) |
 | forced safe: any trading crew | `safe` (their order rails only run on gated tools) |
 
 Triggered runs and woken crews use the pipeline's own mode, like a manual run. Browser actions (Melaya extension) follow the user's own autonomy setting in the extension, for every run.
