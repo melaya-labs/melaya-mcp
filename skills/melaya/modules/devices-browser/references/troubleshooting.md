@@ -42,6 +42,11 @@ Tell the user the cause in plain words and one next action. Never ask them to de
 | `blocked_origin` | The site is not on the allow-list | Ask the user. If they want it, `melaya_browser_allow_sites` with that one origin, then `melaya_browser_attach` again. Never work around it |
 | A tab action or `melaya_browser_read` is refused | The panel is on This tab only | Ask the user to switch the panel to All tabs (only they can) |
 | `stale_target` / refs not found | The page changed or navigated; old `@eN` refs are invalid | `melaya_browser_screen` again and use the new refs |
+| `tab_busy` ("in use by another Melaya agent ... Nothing was done") | Another Melaya agent (another conversation, a pipeline, the panel) is working in that tab | Do not retry or wait. Open your own tab (`melaya_browser_tabs` `action: "open"`) or switch to a tab not marked as held |
+| "8 Melaya agents are already working in this browser" | Every agent slot is taken by an active agent | Wait for one to finish, or ask the user to release one in the extension panel (agents chip -> Release) |
+| "Another Melaya agent is using this browser right now" | An older extension works one agent at a time and another agent is mid-task | Wait about 90 seconds and attach again, or ask the user to update the extension |
+| "No browser is attached to this connection" although you attached | The call went without your `agent`, or with a wrong or expired one | Pass the `agent` id attach returned on every browser call; if it expired, attach again without `agent` |
+| "Your previous tab ... is gone or no longer controllable (you were idle ...)" | You were idle 10 minutes and the tab was closed or taken by another agent | Open your own tab with `melaya_browser_tabs` `action: "open"` |
 | An action timed out | The page was slow; the action may or may not have happened | Re-read the page and verify before retrying, to avoid a double submit |
 | Clicking a dropdown does nothing | Native dropdowns cannot be clicked open by automation | `melaya_browser_select_option` |
 | A menu does not open when clicked | It opens on hover | `melaya_browser_hover`; if still nothing, it is a pure-CSS menu and cannot be opened this way |

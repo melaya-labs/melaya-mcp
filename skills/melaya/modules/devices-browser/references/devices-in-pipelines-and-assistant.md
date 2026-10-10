@@ -117,6 +117,8 @@ For the general HITL model and schedules, load `../../../modules/automation-gove
 | A quick phone action ("open Spotify and play X") | Event triggers must start it |
 | Proving a phone flow works before saving it | The flow must be validated, versioned and handed over |
 
+**Sharing one browser.** The extension panel, MCP conversations, pipeline runs that use the extension and the Assistant can all work in the user's browser at the same time, each in its own tab (up to 8). A pipeline run on the extension gets its own tab and releases it when the run ends. An agent that meets a tab held by another gets a `tab_busy` result and should open its own tab instead of retrying.
+
 **The extension cockpit** is the browser twin: the side panel of the Melaya extension, where the user picks Cloud (a cloud model; no runner needed) or Local (a model on their runner), selects connectors and autonomy, and chats while the agent works in the attached tab. Approvals appear in the panel.
 
 From an MCP conversation you cannot talk to the Assistant (there is no bridge, on purpose). Point the user to it when it is the better fit.

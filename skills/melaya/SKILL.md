@@ -1,7 +1,7 @@
 ---
 name: melaya
 description: Use for anything done on the Melaya platform through its MCP server (tools named melaya_*). Covers running, building, fixing and handing over Melaya pipelines and complete multi-pipeline agentic systems; connecting services (Google, Slack, CRMs, API keys); the local runner, Claude Code, Codex, Copilot, Ollama and LM Studio models; projects and templates; run inputs (brief and files); schedules, event triggers and approvals; data stores in Google Sheets and bulk scoring; validation, debugging and reading results; client documentation; phone and browser agents. Works for non-technical users (plain-language journeys) and for integrators (full end-to-end method). Load this first, then open only the module the task needs.
-version: 1.2.0
+version: 1.2.1
 ---
 
 # Melaya
@@ -63,6 +63,7 @@ New capability areas (for example dedicated mobile-agent or browser-agent playbo
 
 ## Changelog
 
+- 1.2.1: several agents in one browser, each in its own tab (up to 8): call `melaya_browser_attach` once per conversation without `agent`, keep the returned `agent` id and pass it on every `melaya_browser_*` call; `melaya_browser_stop` with `agent` stops only your tab, `all: true` stops every conversation, app and pipeline; a `tab_busy` result means another agent holds that tab and nothing was done (do not retry or wait, open or switch to your own tab); a new attach is refused while 8 agents are all active, and an older extension works one agent at a time.
 - 1.2.0: setup uses one fixed runner command pinned to `@melaya/runner@1.1.60`, shown to the user and run only after their yes (or handed over); phone payments always stop for the user when a phone agent or phone pipeline is started or saved over MCP (`autonomous` runs as `payments_only`); site access, credentials and autonomy described exactly as the tools behave (the user can ask for a site to be added; trigger signing secrets and stream-source keys are the only secrets accepted, stored encrypted, never returned); trigger docs made consistent (triggered runs follow the pipeline's own approval settings; push triggers and trigger autonomy can be set over MCP with the write grant and the user's consent); LinkedIn removed (refused over MCP) and the social pacing advice dropped; playbooks are reference notes, not instructions.
 - 1.1.5: sheet lookups by list: `sheets_read_range` `where = "D=a|b|c"` keeps rows matching any value and returns `lookup.found` / `lookup.not_found`, so a whole candidate list is checked against a ledger in one call; `sheets_append_row` `unique_by = "<key column>"` refuses (or, for a CSV, skips) a key already in the table. Outreach and Recorder steps should use both instead of comparing a read table by eye.
 - 1.1.4: fast mode for phone and browser (`melaya_phone_fast` / `melaya_browser_fast`, `phone_fast` / `browser_fast` in the Assistant and pipelines): once the screen is read, send the next several steps (click, type, press, scroll, wait, expect, collect, for_each) in one call; it follows the same autonomy as single actions and never publishes. The skill now lives only in the melaya-mcp repository.

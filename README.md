@@ -179,7 +179,7 @@ Melaya ships navigation playbooks for common apps, so the agent arrives knowing 
 
 ### Operate a browser
 
-The same read-act-verify loop on a desktop site, through the Melaya extension on Chrome or Edge. **You attach the tab; the model never picks one.**
+The same read-act-verify loop on a desktop site, through the Melaya extension on Chrome or Edge. **You attach the tab; the model never picks one.** Several conversations, pipelines and the extension panel can work in the same browser at once, each in its own tab (up to 8): attach returns an `agent` id that the conversation passes on every browser call, and a tab another agent is using is never touched.
 
 <p align="center">
   <img src="assets/screens/live-session.webp" width="680" alt="A live browser session, driven step by step">
