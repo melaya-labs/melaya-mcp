@@ -27,7 +27,7 @@ Read the symptom from the tool result, `melaya_run_status`, `melaya_run_diagnosi
 | Run fails asking to run `claude` once to refresh | "Your Claude sign-in expired." | Open `claude` in a terminal (it refreshes), restart the runner, run again. |
 | Many 429 / rate-limit errors on `claude_code`, `codex` or `github_copilot` | "Your subscription's usage limit is reached for now; it is shared with your other use of that plan." | Wait for the plan's window to reset; reduce parallel agents; move heavy agents to a cloud key (`anthropic`, `qwen`, ...). |
 | No `codex` models in `melaya_runner_status` | "Codex is not signed in on that computer." | User runs `codex` and signs in with ChatGPT; restart the runner. |
-| No `github_copilot` models | "Copilot is not signed in where the helper can see it." | The user runs `npx -y @melaya/runner@1.1.60 copilot login`, approves on GitHub, restarts the runner. |
+| No `github_copilot` models | "Copilot is not signed in where the helper can see it." | The user runs `npx -y @melaya/runner@1.1.65 copilot login`, approves on GitHub, restarts the runner. |
 | Copilot Claude/Gemini model fails or is missing | "That model is switched off in your Copilot settings." | Enable it in the GitHub Copilot feature settings, or use `gpt-4.1`. |
 | Copilot agent loses its instructions on long inputs | "Copilot limits how much that model can read." | Use `gpt-4.1` or a larger-cap model; avoid `gpt-4o-mini`. |
 | `claude_code` wanted on a cloud run | "Claude Code subscriptions only work on your own computer." | Runner, or provider `anthropic` with an API key for the cloud. |

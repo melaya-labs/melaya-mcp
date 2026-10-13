@@ -8,13 +8,14 @@ Four separate ways a pipeline gives its agents knowledge. Pick deliberately; the
 | Retrieval (RAG) | A searchable index; the agent calls `rag_retrieve` when it needs a passage | A per-pipeline vector index | `rag_mode_retrieval`, `rag_embedder_provider`, `rag_embedder_model`, per agent `include_rag_tool` |
 | Persistent (cross-run) memory | Notes the pipeline keeps from one run to the next | One memory store per user and pipeline | `persistent_memory` |
 | Working memory | The conversation inside one run; older turns are summarised when it grows | Only during the run | automatic |
+| Obsidian vaults | The user's own Obsidian notes, searched and read by agents with Obsidian's own search, links and properties | Where the user keeps the vault (their computer, an uploaded copy, a Git repository) | `context_vaults` |
 
 A shared data store (a Google Sheet, see the `../../../modules/data-spine/GUIDE.md` skill) is the fifth option and usually the right "memory" for business records.
 
 ## 1. Static context
 
 ### What agents see
-- Every document is read at run start, each capped at 50,000 characters, joined with `=== <file name> ===` headers, and the whole block is capped at 60,000 characters.
+- Every document is read at run start. A small library (up to about 32,000 characters) is pasted whole. Above that, the documents that fit stay whole and each longer one is listed with its size, an outline and its opening lines; the agent reads it page by page with `context_read` and finds passages with `context_search`. Nothing is cut silently. An agent with no tools gets the whole library up to an announced ceiling.
 - The block is appended to the message of every agent with `include_context: true`, at every step (not only the first).
 - `include_context` DEFAULTS TO TRUE when absent. Set `false` on agents that do not need the documents (fetchers, mailers): it saves tokens and stops irrelevant text from steering them.
 - Static context is data, never power: it cannot grant a tool, change a permission or relax a safety rule.
@@ -33,7 +34,7 @@ Procedure: asking the user to upload documents (there is no MCP upload)
 2. Say to the user: "Please open https://app.melaya.org/builder, open the pipeline <name>, go to the **Docs** tab and drop these files: <list>. Tell me when the list shows them."
 3. Success: `melaya_pipeline_get` lists the files; the Docs tab shows a non-zero loaded character count for each.
 4. If a file shows 0 or very few characters: it is probably a scanned PDF. Ask for a text version, or paste its key content into an `inline_rag_docs` entry.
-5. If the total exceeds 60,000 characters, the end is cut off. Move the large corpus to retrieval (section 2).
+5. A long library is still fully readable (agents page through it), but each read costs a tool call. For a very large corpus searched by meaning, use retrieval (section 2).
 
 ### What belongs in static context
 Small, always-relevant reference text: the client's thesis, a brand-voice guide, an ICP definition, a scoring rubric, a compliance checklist, a glossary. Not the subject of a run (that is a run input), not credentials (never), not large corpora (retrieval).
@@ -110,7 +111,36 @@ A long run's conversation is compacted: older turns are summarised to fit the mo
 - Agents should keep the lines the next step needs in their FINAL reply, not only early in the conversation.
 - Big tool outputs are better saved to files (`save_to`) than read into the conversation (see the data-spine skill).
 
-## 5. Decision table
+## 5. Obsidian vaults
+
+A vault is connected by the USER in the app (Connectors, Obsidian). There is no MCP tool to connect or upload one. Once connected, a pipeline or a chat lists the vaults its agents may use; nothing is shared until a vault is selected.
+
+```json
+"context_vaults": [
+  {"scope": "user", "vault_id": "vlt_...", "folders": ["Projects/"], "write": false}
+]
+```
+
+| Field | Meaning |
+|---|---|
+| `scope` | `user` for the user's own vault, `project` for a vault owned by or shared with the pipeline's project |
+| `vault_id` | The id shown in the app. Never guess one: ask the user which vault to use |
+| `folders` | Optional. Agents cannot see, search or count notes outside these folders. Empty means the whole vault the user allowed |
+| `write` | `true` lets agents propose edits. Every edit follows the pipeline's approval and autonomy settings, like any other write tool |
+
+What agents get:
+- Agents with `include_context: true` receive the `obsidian_*` reading tools: search (Obsidian's full search syntax, including `/regex/`), read in pages, outline, backlinks and links, tags, properties, tasks, daily notes, Bases and Canvas. With `write: true` they also get the editing tools (create, append, patch a heading or property, move, rename with link updates, and more).
+- `obsidian_guide` explains the vault conventions to the agent; tell it in the instruction to call it first when the task depends on how the vault is organised.
+- An edit always carries the revision of the note it read. If the note changed in the meantime the edit is refused with `conflict` instead of overwriting: re-read and redo the edit.
+- Each run re-checks access. A vault the user removed, or a share that was revoked, is skipped with a clear error.
+
+Where a vault lives matters:
+- A vault on the user's computer is read through their runner. If the vault owner keeps it on that computer only, runs that need it are routed to that computer; if it is offline the run says so. Do not promise a cloud run can read it.
+- Vault excerpts are not kept in chat history by default. Do not rely on an earlier turn still holding note text; read it again.
+
+Over MCP (this conversation): `melaya_connector_tools` lists the `obsidian_*` tools when the user has at least one personal vault. Call them with `melaya_connector_call`, naming `vault` on every call (use `obsidian_vaults` first when there may be several). Project vaults are not reachable over MCP. Edits need the `melaya:connectors.write` permission and run at once with no approval card: show the user the exact change and get their yes first.
+
+## 6. Decision table
 
 | Need | Use |
 |---|---|
@@ -119,3 +149,4 @@ A long run's conversation is compacted: older turns are summarised to fit the mo
 | Never repeat what a scheduled pipeline already posted | Persistent memory with `USED:` lines |
 | The list of companies and their statuses across pipelines | A data store (Sheet) |
 | Documents that must never leave the user's machine | Local folder + local providers on every agent, or local embedder |
+| The user's Obsidian notes (linked notes, properties, daily notes) | `context_vaults`, with `folders` limited to what the task needs |

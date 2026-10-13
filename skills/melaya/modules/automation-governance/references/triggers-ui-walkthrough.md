@@ -158,7 +158,7 @@ After creation, the "Setup" tab of an instant trigger shows:
 | "Zendesk ticket changes" | - | Zendesk administrator. |
 | "Zoom meeting events" | "Label" | Manual (event subscription in your Zoom app, secret token into the Zoom connector, "Resync"). |
 
-No instant version today (use a regular app check, a webhook, or email plus the Gmail instant trigger): Reddit, Medium, Substack, Search Console, Analytics, most ad platforms other than Meta Ads, Zoho Mail, HubSpot, LinkedIn, X, Outlook and other Microsoft 365 apps, public-data sources.
+No instant version today (use a regular app check, a webhook, or email plus the Gmail instant trigger): Reddit, Medium, Substack, Search Console, Analytics, most ad platforms other than Meta Ads, Zoho Mail, HubSpot connected with a private app token (HubSpot portals connected with Sign in with HubSpot have instant contact, company, deal and ticket events), LinkedIn, X, Outlook and other Microsoft 365 apps, public-data sources.
 
 ### 2.2 Webhook triggers (a service calls a URL)
 

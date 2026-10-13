@@ -42,7 +42,7 @@ Act on each gap by relevance to THIS build:
 | Gap (`steps[].id`) | Needed when | What to do |
 |---|---|---|
 | `account` | always | If not signed in, the OAuth consent flow handles sign-up; there is no create-account tool. |
-| `runner` | the system uses runner-served models (`claude_code`, `codex`, `github_copilot`, `ollama`, `lmstudio`), local files/folders, or a session login that opens on the user's machine (Luma) | Ask the user first (it is a long-lived process on their machine). Then `melaya_runner_setup`, which returns the pinned command `npx -y @melaya/runner@1.1.60 --token=...`; show it to the user, and with a shell run it in the background only after they say yes and poll `melaya_runner_status`; without a shell, hand the command over and say which machine it must run on. Full runner and local-model procedure: the `../../modules/runners-models/GUIDE.md` skill. |
+| `runner` | the system uses runner-served models (`claude_code`, `codex`, `github_copilot`, `ollama`, `lmstudio`), local files/folders, or a session login that opens on the user's machine (Luma) | Ask the user first (it is a long-lived process on their machine). Then `melaya_runner_setup`, which returns the pinned command `npx -y @melaya/runner@1.1.65 --token=...`; show it to the user, and with a shell run it in the background only after they say yes and poll `melaya_runner_status`; without a shell, hand the command over and say which machine it must run on. Full runner and local-model procedure: the `../../modules/runners-models/GUIDE.md` skill. |
 | `claude_code` | pipelines use provider `claude_code` | Ask the user to run `claude` once to sign in, then restart the runner. No key or connector needed. Other subscription CLI providers (`codex`, `github_copilot`): see the `../../modules/runners-models/GUIDE.md` skill. |
 | `phone_paired` / `phone_online` / `allowed_apps` | only for phone-control systems | Ignore for a cloud data/document system; say so explicitly in the inventory. |
 
@@ -156,6 +156,7 @@ After any connect, and before relying on a service in a design, prove it with on
 | gmail | `gmail_my_address` | `{}` | the address the mailer step will send from |
 | melaya_core | `fetch_rss` | `{"url": "https://www.bing.com/news/search?format=rss&q=<query>", "max_items": 3}` | keyless news feed works from the platform |
 | melaya_core | `web_fetch` / `scrape_page` | `{"url": "<known page>"}` | a known URL is readable |
+| obsidian | `obsidian_vaults`, then `obsidian_search` | `{"vault": "<vault id>", "query": "tag:#project", "limit": 5}` | a personal vault is connected and searchable; returns note paths only |
 
 Rules:
 - Always look up the exact parameters first with `melaya_connector_tools` `tool=<name>`; the table above is a starting point, not a contract.
