@@ -87,7 +87,7 @@ Projects are created with `melaya_project_create` (needs the user's `melaya:proj
 
 - Agents live EMBEDDED in `steps[]` (`step.agent`, or `step.agents[]` for parallel). The builder reads those copies. Do not author the flat top-level `agents[]` list; if an existing config has one, it is only a mirror: edit the step copies.
 - `edges: []` = steps run in list order and every kind compiles. Non-empty edges switch to graph routing, which silently skips `condition` and `loop` steps (step-kinds.md section 6).
-- `tools: []` always: an agent whose `agent_tools` is empty INHERITS this whole pool (a synthesis agent once inherited a send tool and emailed twice).
+- `tools: []` always: an agent with no `agent_tools` key at all shares this whole pool (a synthesis agent once inherited a send tool and emailed twice). An explicit `agent_tools: []` means no tools.
 
 ## 4. Step kinds (summary; exact behaviour in step-kinds.md)
 
@@ -108,7 +108,7 @@ Parallel join caveat (the most common silent bug): the next step receives ONLY t
 | `name` | "Deal Scout" | Unique per pipeline |
 | `role` | "Venture sourcing analyst" | Short persona |
 | `instruction` | the brief (SINGULAR) | `instructions` is not read |
-| `agent_tools` | `["rss_search_entries", "decide_batch"]` | Always explicit and minimal. Empty = inherits `tools`. `["__none__"]` = no tools |
+| `agent_tools` | `["rss_search_entries", "decide_batch"]` | Always explicit and minimal. `[]` or `["__none__"]` = no tools. Key missing = shares `tools` |
 | `human_approval_tools` | `["gmail_send"]` | Gated only when `hitl_mode` is `"safe"` |
 | `model_provider` / `model_name` | `"qwen"` / `"qwen3.7-plus"` | Per agent; falls back to the pipeline model |
 | `include_context` | `false` unless the agent needs the static documents | Defaults to TRUE when absent |

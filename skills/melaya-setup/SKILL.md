@@ -47,10 +47,10 @@ Browser control needs at least one allowed origin. The user adds sites on the Me
 **5. The local runner**, only for autonomous agent runs, not for driving a device directly. Call `melaya_runner_setup`. It mints a token and returns exactly this command, pinned to a reviewed release:
 
 ```
-npx -y @melaya/runner@1.1.65 --token=<token>
+npx -y @melaya/runner@1.1.68 --token=<token>
 ```
 
-If what you received does not match that shape (package `@melaya/runner`, version `1.1.65`, one `--token` argument), do not run it; tell the user. Otherwise show the user the command and what it does: it starts a long-lived background process on their computer that uses their own model subscription. With shell access, run it in a background shell **only after they say yes**, then poll `melaya_runner_status` until connected. Without shell access, give the user the command and say plainly that it runs on their own machine, not on a server. First start takes up to a minute while it builds a Python virtualenv; it needs Node 18+ and Python 3.11+ on PATH. Treat the token as a credential: do not write it anywhere they might commit. `melaya_runner_revoke` kills one.
+If what you received does not match that shape (package `@melaya/runner`, version `1.1.68`, one `--token` argument), do not run it; tell the user. Otherwise show the user the command and what it does: it starts a long-lived background process on their computer that uses their own model subscription. With shell access, run it in a background shell **only after they say yes**, then poll `melaya_runner_status` until connected. Without shell access, give the user the command and say plainly that it runs on their own machine, not on a server. First start takes up to a minute while it builds a Python virtualenv; it needs Node 18+ and Python 3.11+ on PATH. Treat the token as a credential: do not write it anywhere they might commit. `melaya_runner_revoke` kills one.
 
 **6. Claude Code signed in on the runner machine**, if phone agents will use the user's own Claude subscription. If `melaya_setup_status` reports it unavailable on a connected runner, the fix is `claude` once in a terminal, then restart the runner. No API key, no connector.
 

@@ -16,7 +16,7 @@ Builder = https://app.melaya.org/builder. Its tabs: **Pipeline** (the canvas of 
 | `project` | string | All pipelines of one system share a project. `project` on the save call overrides it. Projects are created with `melaya_project_create` (projects permission) or in the app | Project selector |
 | `steps` | array | The step list; agents are EMBEDDED here (see step-kinds.md) | Pipeline canvas |
 | `edges` | array | Leave `[]`. Non-empty edges switch to graph routing, which does not compile `condition` or `loop` steps (step-kinds.md section 6) | Arrows drawn on the canvas |
-| `tools` | array | Legacy pipeline-wide pool. Leave `[]`: an agent with an empty tool list INHERITS this whole pool | none (derived) |
+| `tools` | array | Legacy pipeline-wide pool. Leave `[]`: an agent with no `agent_tools` key shares this whole pool | none (derived) |
 | `model_provider` / `model_name` | string | Fallback model for agents that set none | Configure: Model, plus **Apply to all agents** (on = every agent follows the pipeline model; off = per-agent overrides kept) |
 | `hitl_mode` | `"safe"` / `"autonomous"` / `"payments_only"` | Only `"safe"` honours per-agent `human_approval_tools` (section 3) | Pipeline tab: **Autonomy** (Safe / Autonomous / Payments-only) |
 | `persistent_memory` | bool | Cross-run memory (context-and-memory.md). Default false | Configure: **Persistent memory** toggle |
@@ -55,7 +55,7 @@ Credentials never go in a config: services are connected under Connectors.
 | `name` | Unique per pipeline; duplicates are suffixed "Name 2" | card title |
 | `role` | Short persona line | role |
 | `instruction` | SINGULAR. The per-step directive placed at the top of the agent's message. Supports `{{brief}}` and `{{inputs.<key>}}`. `instructions` (plural) is not read | Instruction box |
-| `agent_tools` | The agent's tools. Missing or empty = inherits the pipeline `tools` pool (none when that pool is `[]`). `["__none__"]` = explicitly no tools | tool chips |
+| `agent_tools` | The agent's tools. `[]` or `["__none__"]` = no tools. Missing = shares the pipeline `tools` pool (none when that pool is `[]`) | tool chips |
 | `human_approval_tools` | Tools that pause for approval (subset of `agent_tools`; others are dropped). Honoured only with `hitl_mode: "safe"` | approval toggle on a tool chip |
 | `model_provider` + `model_name` | Both needed, else the pipeline model. `model: {"provider", "name"}` is also accepted | **Model** (per-agent override; "inherits pipeline" when empty) |
 | `include_context` | Default TRUE when absent: static documents are appended. Set false where not needed | static context switch |
@@ -120,4 +120,4 @@ The preview is the generated program. Read it for:
 - A scoring call after every agent (it mentions "observe" or "enforce"): proof that `loop_policy` was read.
 - An approval list on agents whose tools you gated.
 - Your instruction text, with each `{{inputs.<key>}}` turned into a run-input lookup.
-- No agent that should not send holds the shared pipeline toolkit (a sign that `agent_tools` was empty and `tools` was not).
+- No agent that should not send holds the shared pipeline toolkit (a sign that `agent_tools` was missing and `tools` was not).

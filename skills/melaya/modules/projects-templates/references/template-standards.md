@@ -41,7 +41,7 @@ agents.
 | Area | Rule |
 |---|---|
 | Topology | Agents embedded in `steps[]`. Step kinds: `agent`, `parallel` (`agents[]` + `joinStrategy` concat / last / vote), `loop` (singular `agent`, bounded iterations, stop keyword), `condition` (`rules` of `{keyword, agent}` + `defaultAgent`), `decide` (System One gate, never first unless it judges a trigger payload). Use `loop` only for genuine iteration. |
-| Tools | Every agent has its own explicit minimal `agent_tools`. An agent with an empty list inherits the pipeline-level `tools` list (can silently gain a send tool and double-send). Leave top-level `tools` empty. |
+| Tools | Every agent has its own explicit minimal `agent_tools`; `[]` means no tools. Only an agent with no `agent_tools` key at all shares the pipeline-level `tools` list (it can silently gain a send tool and double-send), so always write the key. Leave top-level `tools` empty. |
 | Evals | Every agent: `loop_policy {"mode":"observe_only","evaluator":"default"}` (an object; a string is ignored). `enforce` only for a step that should retry, and a write step only with `sideEffectClass "non_idempotent_write"`. |
 | Context | Set `include_context` deliberately per agent (false when no docs are attached); `include_rag_tool` false unless retrieval is used. |
 | HITL | Every send / post / external write listed in that agent's `human_approval_tools`; pipeline `hitl_mode "safe"` (other modes drop the per-agent list). Local artifact creation (files, documents) is the deliverable and is not gated. Put the send step last. |

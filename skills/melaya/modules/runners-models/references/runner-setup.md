@@ -29,7 +29,7 @@ It opens no ports and works behind home routers and company firewalls.
 
 ## Updating
 
-The command is pinned to one reviewed release (`@melaya/runner@1.1.65`), so restarting the runner (Ctrl+C, run the same command again) restarts that same version; it never updates itself. A newer runner comes with a new Melaya plugin release that pins the new version: the user updates the plugin, then runs the new command `melaya_runner_setup` returns.
+The command is pinned to one reviewed release (`@melaya/runner@1.1.68`), so restarting the runner (Ctrl+C, run the same command again) restarts that same version; it never updates itself. A newer runner comes with a new Melaya plugin release that pins the new version: the user updates the plugin, then runs the new command `melaya_runner_setup` returns.
 
 If the user has lost the command and the token has expired or was never connected, call `melaya_runner_setup` again (it only mints when no runner is connected).
 

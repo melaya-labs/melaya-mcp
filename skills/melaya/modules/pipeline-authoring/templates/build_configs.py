@@ -223,7 +223,7 @@ def pipeline(slug, name, description, steps, *, persistent_memory=False, schedul
         "display_name": name,
         "description": description,
         "project": PROJECT,
-        "tools": [],                      # keep EMPTY: an agent with no agent_tools would inherit this pool
+        "tools": [],                      # keep EMPTY: an agent with no agent_tools key would share this pool
         "steps": step_list,
         "edges": [],                      # linear order; see the docstring
         "schedule": schedule,             # arm with melaya_pipeline_schedule action "set"
