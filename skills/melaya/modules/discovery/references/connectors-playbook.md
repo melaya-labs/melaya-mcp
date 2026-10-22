@@ -32,7 +32,7 @@ Keyless services (public registers, news feeds, sanctions lists, on-chain data, 
 1. Never ask for, accept or repeat a key, token, password, SMS code or 2FA code in the chat. If the user pastes one anyway: do not use it, tell them it is now in the chat history, ask them to revoke it at the provider and create a new one, and to enter the new one only in Melaya Connectors.
 2. Never work around a missing connection (no scraping their logged-in page, no "just export a CSV for now" unless the user chooses that). Ask, wait, verify.
 3. Connect only what the system needs, one service at a time, and say why each is needed.
-4. You verify with reads. A write from the conversation needs the user's `melaya:connectors.write` permission, runs at once with no approval card, and is audit-logged: confirm it with the user first, and put anything recurring inside a pipeline, behind approvals. Money-moving and trading tools are refused from the conversation at every level.
+4. You verify with reads. A write from the conversation needs the user's `melaya:connectors.write` permission, runs at once with no approval card, and is audit-logged: confirm it with the user first, and put anything recurring inside a pipeline, behind approvals. Money-moving and trading tools run the same way with that permission: confirm the exact action and amount first.
 5. Do not copy account emails, file ids or data you read during verification into shared documents. Record "verified <date>, tool X returned N rows".
 
 ## 3. Procedure: connect one service
@@ -155,7 +155,7 @@ There are two separate permission layers. Explain them when the user asks "why c
    - Drive: only files Melaya creates or that are opened through Melaya, not the whole Drive.
    - Sheets / Docs: read and edit the spreadsheets or documents you point it to.
    - Meet: read meeting spaces only.
-2. This assistant connection (MCP consent): what the AI assistant in this chat may do in Melaya. It was chosen, box by box, when the user connected the assistant to Melaya. The "connectors" permission lets it list connected services, test them and run read tools. The separate "connectors.write" permission adds write tools (send an email, create or update a record or a file); each such write runs at once and is audit-logged, so the assistant confirms it with the user first. Tools that move money or trade (payments, refunds, purchases, transfers, ad budget or bid changes, orders) are refused from the chat whatever is granted; the user approves them in the Melaya app. If a whole capability is missing from your tools, the user left that box unticked (or connected before that permission existed); offer to have them reconnect the assistant to Melaya with it ticked. Never look for another route.
+2. This assistant connection (MCP consent): what the AI assistant in this chat may do in Melaya. It was chosen, box by box, when the user connected the assistant to Melaya. The "connectors" permission lets it list connected services, test them and run read tools. The separate "connectors.write" permission adds write tools (send an email, create or update a record or a file); each such write runs at once and is audit-logged, so the assistant confirms it with the user first. That includes tools that move money or trade (payments, refunds, purchases, transfers, ad budget or bid changes, orders), so the assistant confirms the exact action and amount first. If a whole capability is missing from your tools, the user left that box unticked (or connected before that permission existed); offer to have them reconnect the assistant to Melaya with it ticked. Never look for another route.
 
 Ready-to-send explanation:
 
@@ -163,7 +163,7 @@ Ready-to-send explanation:
 Good question. From this chat I can READ your connected services to check things and look up
 data. I can only send or change something there if you gave this assistant the extra
 "connectors.write" permission, and even then I ask you first and every write is logged.
-Anything that moves money is never done from here: it waits for your approval in Melaya.
+Anything that moves money is done from here only if you granted connectors.write, and only after you confirm the exact action and amount.
 Work that repeats is done by your Melaya pipeline, where every outside action waits for your
 "Approve" click unless you decide otherwise.
 ```

@@ -5,7 +5,7 @@ description: Use for anything involving Melaya. Connecting for the first time; s
 
 # Operating Melaya
 
-Melaya gives you the user's own account: their Android phone, a browser they connected, their agent pipelines, the services they authorised, and the record of what every run did. Eighty-eight tools across ten permissions.
+Melaya gives you the user's own account: their Android phone, a browser they connected, the apps on their own computer, their agent pipelines, the services they authorised, and the record of what every run did. 125 tools across eleven permissions.
 
 This skill is the operating discipline. Read the section for what you are about to do; the traps in it are real failures, not hypotheticals.
 
@@ -47,10 +47,10 @@ Browser control needs at least one allowed origin. The user adds sites on the Me
 **5. The local runner**, only for autonomous agent runs, not for driving a device directly. Call `melaya_runner_setup`. It mints a token and returns exactly this command, pinned to a reviewed release:
 
 ```
-npx -y @melaya/runner@1.1.68 --token=<token>
+npx -y @melaya/runner@1.1.71 --token=<token>
 ```
 
-If what you received does not match that shape (package `@melaya/runner`, version `1.1.68`, one `--token` argument), do not run it; tell the user. Otherwise show the user the command and what it does: it starts a long-lived background process on their computer that uses their own model subscription. With shell access, run it in a background shell **only after they say yes**, then poll `melaya_runner_status` until connected. Without shell access, give the user the command and say plainly that it runs on their own machine, not on a server. First start takes up to a minute while it builds a Python virtualenv; it needs Node 18+ and Python 3.11+ on PATH. Treat the token as a credential: do not write it anywhere they might commit. `melaya_runner_revoke` kills one.
+If what you received does not match that shape (package `@melaya/runner`, version `1.1.71`, one `--token` argument), do not run it; tell the user. Otherwise show the user the command and what it does: it starts a long-lived background process on their computer that uses their own model subscription. With shell access, run it in a background shell **only after they say yes**, then poll `melaya_runner_status` until connected. Without shell access, give the user the command and say plainly that it runs on their own machine, not on a server. First start takes up to a minute while it builds a Python virtualenv; it needs Node 18+ and Python 3.11+ on PATH. Treat the token as a credential: do not write it anywhere they might commit. `melaya_runner_revoke` kills one.
 
 **6. Claude Code signed in on the runner machine**, if phone agents will use the user's own Claude subscription. If `melaya_setup_status` reports it unavailable on a connected runner, the fix is `claude` once in a terminal, then restart the runner. No API key, no connector.
 
@@ -68,7 +68,9 @@ Before working in an unfamiliar phone app, call `melaya_phone_playbook`. Melaya 
 
 `melaya_phone_batch` and `melaya_browser_batch` exist for sequences you are confident about. Keep them short: each step is re-gated server-side and the batch aborts at the first failure, so a long batch that fails early wastes more than it saved.
 
-If the user says stop, call `melaya_phone_stop` or `melaya_browser_stop` immediately.
+On the user's computer (the Melaya desktop app) the loop is the same: `melaya_computer_status` first, then `melaya_computer_screen` and act by the `@eN` refs it returns. Only apps the user allowed on the Computer Control page, at the level they set, can be used; a refusal means ask the user, never another route.
+
+If the user says stop, call `melaya_phone_stop`, `melaya_browser_stop` or `melaya_computer_stop` immediately.
 
 ## Building a pipeline
 
@@ -121,7 +123,7 @@ All enforced by the device or the platform, not by these instructions. If an act
 1. **The allow-list.** Apps on the phone, origins in the browser. Only the user widens it: phone apps on their device or in the Melaya app; browser sites on the Melaya Browser Control page, or through `melaya_browser_allow_sites` when they ask you for that exact access. You can always hand access back.
 2. **Payments on the phone.** Direct phone control from here runs in safe mode, so publishing and paying stage an approval and wait for a person; you see the exact text first, and so do they. Phone agents and phone pipelines started or saved from here keep the payment card in every mode (`autonomous` runs as `payments_only`, which publishes without a card but still asks before paying). In the browser, the user's autonomy setting in the Melaya extension decides: `safe` asks before purchases, publishing and other consequential actions; `payments_only` asks before purchases; `autonomous` asks nothing.
 3. **Approvals are listed, never decided.** `melaya_approval_list` shows the queue. The user approves in the Melaya app or on their phone.
-4. **No trading, no money-moving connector calls, no administration.** Not gaps to work around; they are not on this surface at any permission.
+4. **No administration, no LinkedIn session tools.** Not gaps to work around; they are not on this surface at any permission. Money-moving and trading connector tools are: they run only with `melaya:connectors.write`, at once and audit-logged, so confirm the exact action and amount with the user first.
 5. **Credentials.** Connector credentials are never read, set or returned here: services are connected by the user in the app. Two trigger fields do take a secret, only when the user chooses to give it to you instead of pasting it in the app: a provider's webhook signing secret (`melaya_pipeline_trigger` `create` / `rotate_secret`, field `secret`) and a stream source's auth value (`auth_value`). Both are stored encrypted and never returned. Prefer the app.
 6. **No LinkedIn.** Automating LinkedIn through a logged-in session breaks LinkedIn's terms, so the MCP server refuses its tools, the LinkedIn app and linkedin.com. Do not look for another route.
 

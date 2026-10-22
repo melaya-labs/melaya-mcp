@@ -14,7 +14,7 @@
 [![Smithery](https://img.shields.io/badge/Smithery-listed-8B5CF6)](https://smithery.ai/servers/info-h530/melaya)
 [![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/melaya-labs/melaya-mcp)
 [![Glama MCP server](https://glama.ai/mcp/servers/@melaya-labs/melaya-mcp/badge)](https://glama.ai/mcp/servers/@melaya-labs/melaya-mcp)
-[![Tools](https://img.shields.io/badge/tools-88_across_9_domains-22D3EE)](#what-it-can-do)
+[![Tools](https://img.shields.io/badge/tools-125_across_10_domains-22D3EE)](#what-it-can-do)
 [![Auth](https://img.shields.io/badge/auth-OAuth_2.1_%2B_PKCE-10B981)](#permissions)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-for_any_AI-EC4899)](#give-your-ai-the-melaya-skill)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
@@ -199,7 +199,7 @@ Create a project for the work (one per client pilot, say), list the template lib
 
 Mail, documents, your ERP. **Read-only by default, structurally**: without the separate write permission the write path is blocked in two independent places, so a write stays blocked even if Melaya's own tool catalog is out of date.
 
-Grant `melaya:connectors.write` as well and the assistant can act for you there too: send an email, create or update a record or a file. **Anything that moves money or trades is excluded at every permission level**: payments, refunds, purchases, transfers, ad-spend changes and orders are refused by the server, and again by the executor, and stay with you in the Melaya app. Every write made this way is audit-logged.
+Grant `melaya:connectors.write` as well and the assistant can act for you there too: send an email, create or update a record or a file. **That includes tools that move money or trade** (payments, refunds, purchases, transfers, ad-spend changes, orders): the consent screen says so, discovery labels them, and your assistant should confirm the exact action and amount with you first. Every write runs at once, with no second prompt, and is audit-logged. LinkedIn session tools are never reachable over MCP, at any permission.
 
 ### Manage projects
 
@@ -247,13 +247,13 @@ Password fields are excluded from screen reads.
 
 LinkedIn is not available on this surface: automating it through a logged-in session breaks LinkedIn's terms, so the server refuses the LinkedIn tools, the LinkedIn app on your phone and linkedin.com in your browser.
 
-Also deliberately absent, and enforced by tests rather than by convention: **trading and moving money through a connector** (they write against live exchange keys and payment accounts), **administration** (no honest consent sentence exists for it), and **reading or setting connector credentials** (you connect services in the app). Two event-trigger fields are the exception, used only if you choose to hand a secret to your assistant instead of pasting it in the app: a provider's webhook signing secret and a stream source's key. Both are stored encrypted and never returned.
+Also deliberately absent, and enforced by tests rather than by convention: **administration** (no honest consent sentence exists for it), and **reading or setting connector credentials** (you connect services in the app). Two event-trigger fields are the exception, used only if you choose to hand a secret to your assistant instead of pasting it in the app: a provider's webhook signing secret and a stream source's key. Both are stored encrypted and never returned.
 
 ---
 
 ## Permissions
 
-Ten scopes. You grant them individually.
+Eleven scopes. You grant them individually.
 
 | Scope | What it allows |
 |---|---|
@@ -262,13 +262,14 @@ Ten scopes. You grant them individually.
 | `melaya:runner` | Set up and check the Melaya runner on your computer |
 | `melaya:phone` | Operate your paired Android phone, inside apps you allow-listed |
 | `melaya:browser` | Operate a connected browser, on sites you allowed |
+| `melaya:computer` | Operate the apps on your own computer through the Melaya desktop app, inside apps you allowed, at the level you set |
 | `melaya:pipelines` | Create, edit, schedule, run and cancel agent pipelines |
 | `melaya:projects` | Create projects, rename them and edit descriptions, delete an empty project you created |
 | `melaya:connectors` | Read data from connected services. Read only |
-| `melaya:connectors.write` | Act through connected services: send emails, create or update records and files. Needs `melaya:connectors`. Never moves money or trades |
+| `melaya:connectors.write` | Act through connected services: send emails, create or update records and files, including actions that move money or trade (payments, refunds, subscriptions, orders). Needs `melaya:connectors`. Writes run at once and are audit-logged |
 | `melaya:team` | Read project membership, and invite people you name |
 
-The tool list your assistant receives is filtered to what you granted, so connecting for phone control alone shows **23 tools rather than all 88**. If a capability seems missing, you declined it; reconnect and approve it.
+The tool list your assistant receives is filtered to what you granted, so connecting for phone control alone shows **24 tools rather than all 125**. If a capability seems missing, you declined it; reconnect and approve it.
 
 > [!NOTE]
 > **If you also use the Melaya SDK**, "connectors" means something different there. In the SDK it is project credential storage. Here, `melaya:connectors` is reading data from services you already connected, and `melaya:connectors.write` is acting through them. This surface cannot read, set or delete a connector credential (the trigger signing secret and stream-source key above are the only secrets it accepts, and it never returns them).
@@ -278,7 +279,7 @@ The tool list your assistant receives is filtered to what you granted, so connec
 - A Melaya account — free at [melaya.org](https://melaya.org)
 - An Android phone (Android 8 or newer) for phone control. There is no iOS build.
 - The Melaya extension on Chrome or Edge for browser control
-- For autonomous agents: Node 18+, Python 3.11+, and a signed-in CLI on the machine hosting the runner. The runner starts from one command pinned to a reviewed release (`npx -y @melaya/runner@1.1.60 --token=...`); your assistant shows it to you and runs it only after you say yes, or hands it to you to run
+- For autonomous agents: Node 18+, Python 3.11+, and a signed-in CLI on the machine hosting the runner. The runner starts from one command pinned to a reviewed release (`npx -y @melaya/runner@1.1.71 --token=...`); your assistant shows it to you and runs it only after you say yes, or hands it to you to run
 
 ## Privacy
 
@@ -309,6 +310,7 @@ behind them, so if a scope is useful the product page explains what it reaches:
 | [Melaya Assistant](https://melaya.org/en/product/assistant) | The governed operating layer over those agents | `platform` |
 | [Device Control](https://melaya.org/en/product/agentic-device-control) | Android phone control through the accessibility tree | `phone` |
 | [Melaya Browser Control](https://melaya.org/en/product/agentic-browser-control) | Origin-scoped control of a paired browser | `browser` |
+| [Melaya Computer Control](https://melaya.org/en/product/agentic-computer-control) | Desktop app control on Windows, macOS and Linux through the accessibility tree, per-app access levels | `computer` |
 | [Melaya Marketing](https://melaya.org) | Ads, search consoles, analytics, DNS and site in one cockpit, with approval before anything touches real money or your live site | `connectors` |
 | [Melaya MCP Server](https://melaya.org/en/product/mcp) | This server | all of the above |
 

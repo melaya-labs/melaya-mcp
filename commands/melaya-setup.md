@@ -12,10 +12,10 @@ Check the user's Melaya setup and get it working.
    c. **Runner not connected:** call `melaya_runner_setup`. It returns exactly this command, with a fresh token:
 
       ```
-      npx -y @melaya/runner@1.1.60 --token=<token>
+      npx -y @melaya/runner@1.1.71 --token=<token>
       ```
 
-      Check that the command you received matches that shape (package `@melaya/runner`, version `1.1.60`, one `--token` argument). If it does not, do not run it: tell the user. Then show the user the command and what it does (it starts the Melaya runner, a long-lived background process on their computer that uses their own model subscription; it needs Node 18+ and Python 3.11+).
+      Check that the command you received matches that shape (package `@melaya/runner`, version `1.1.71`, one `--token` argument). If it does not, do not run it: tell the user. Then show the user the command and what it does (it starts the Melaya runner, a long-lived background process on their computer that uses their own model subscription; it needs Node 18+ and Python 3.11+).
       - With shell access on the user's own computer: run it in a background shell **only after the user says yes**, then poll `melaya_runner_status`.
       - Without shell access (claude.ai, mobile, any hosted surface): give the user the command to run on the computer that will host the runner. Never report starting a runner you could not start.
       - The command contains a 7-day credential: do not write it to a file or repeat it later.

@@ -73,7 +73,7 @@ For every social platform: posting, replying, liking, messaging and deleting are
 | Zoho Mail | `zoho_mail` | per the card | |
 | GitHub | `github` | sign-in tab or personal token | Connecting also lifts the low anonymous rate limit of the GitHub scorecard tools |
 
-General advice: the least privilege that works. A read-only system gets read-only keys. A key with write access can write from this chat only if the user also granted the assistant `melaya:connectors.write`; money-moving actions never run from the chat; inside pipelines, writes follow the approval rules.
+General advice: the least privilege that works. A read-only system gets read-only keys. A key with write access can write from this chat only if the user also granted the assistant `melaya:connectors.write`; that includes money-moving actions, so confirm the exact action and amount first; inside pipelines, writes follow the approval rules.
 
 ## 6. Data providers
 

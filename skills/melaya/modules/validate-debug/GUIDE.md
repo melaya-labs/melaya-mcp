@@ -33,7 +33,8 @@ Reference files (load when needed):
 4. **Artifact checks are read-only.** Use only read tools with
    `melaya_connector_call`. Even when the user granted `melaya:connectors.write`
    (which lets it run write tools), never "fix" data by hand from the MCP side;
-   fix the pipeline and re-run. Money-moving tools are refused over MCP anyway.
+   fix the pipeline and re-run. That goes double for money-moving tools, which
+   that permission also unlocks.
 5. **Cancel runaways.** A run that is looping, retyping data or past its budget
    gets `melaya_run_cancel`, not patience. Work already done is not undone.
 6. **Fix at the source.** Config/prompt defect: regenerate the config from the

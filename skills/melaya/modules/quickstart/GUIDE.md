@@ -37,8 +37,8 @@ References in this module:
 7. **Confirm before anything irreversible or shared:** deleting a pipeline or a project, inviting a
    person, arming a schedule, cancelling a run, and any send or change you make through a connected
    service from the chat (possible only if the user gave the assistant the "connectors.write"
-   permission; it runs at once, with no approval card). Anything that moves money is never done from
-   the chat: it waits for the user's approval in the Melaya app.
+   permission; it runs at once, with no approval card). That includes anything that moves money or
+   trades: confirm the exact action and amount with the user first.
 8. **Every tool call counts.** Assistant tool calls are counted against the plan's allowance.
    If the user plans a lot of work, check `melaya_account_usage` first.
 9. **Use the pipeline's exact name.** Names come from `melaya_pipeline_list`. The name the user

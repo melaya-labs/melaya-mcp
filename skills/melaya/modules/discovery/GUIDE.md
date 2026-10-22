@@ -19,7 +19,7 @@ Do not start designing pipelines until the mapping table has no "unverified" row
 - Every model id must come from `melaya_model_list` (hosted) or `melaya_runner_status` (runner-local). A guessed id is accepted by the builder and fails only at run time.
 - Never ask the user to paste a key, token or password into the chat. `melaya_connector_connect` has no field for one, on purpose.
 - Never work around a missing grant (no scraping a logged-in page instead of Gmail, no asking for a CSV export "for now" unless the user chooses that). Ask, wait, verify.
-- Connector access over MCP has three levels. Reads need the connectors permission. Writes (send an email, create or update a record or a file) need the user's `melaya:connectors.write` permission too; without it they are refused, and with it each one runs at once with no approval card and is audit-logged, so confirm it with the user first. Anything that moves money or trades (payments, refunds, purchases, transfers, ad budget or bid changes, orders) is refused at every level and stays an approval in the Melaya app. Repeated or unattended writes belong in a Melaya pipeline, under its approval rules. Never look for another route around a refusal.
+- Connector access over MCP has three levels. Reads need the connectors permission. Writes (send an email, create or update a record or a file) need the user's `melaya:connectors.write` permission too; without it they are refused, and with it each one runs at once with no approval card and is audit-logged, so confirm it with the user first. That includes tools that move money or trade (payments, refunds, purchases, transfers, ad budget or bid changes, orders): they run with the write permission too, so confirm the exact action and amount with the user first. Repeated or unattended writes belong in a Melaya pipeline, under its approval rules. Never look for another route around a refusal.
 - Pass `reason` (and `user_intent` when you know it) on every melaya_* call; it is optional but makes the audit trail readable.
 
 ## 1. Setup status first
@@ -42,7 +42,7 @@ Act on each gap by relevance to THIS build:
 | Gap (`steps[].id`) | Needed when | What to do |
 |---|---|---|
 | `account` | always | If not signed in, the OAuth consent flow handles sign-up; there is no create-account tool. |
-| `runner` | the system uses runner-served models (`claude_code`, `codex`, `github_copilot`, `ollama`, `lmstudio`), local files/folders, or a session login that opens on the user's machine (Luma) | Ask the user first (it is a long-lived process on their machine). Then `melaya_runner_setup`, which returns the pinned command `npx -y @melaya/runner@1.1.68 --token=...`; show it to the user, and with a shell run it in the background only after they say yes and poll `melaya_runner_status`; without a shell, hand the command over and say which machine it must run on. Full runner and local-model procedure: the `../../modules/runners-models/GUIDE.md` skill. |
+| `runner` | the system uses runner-served models (`claude_code`, `codex`, `github_copilot`, `ollama`, `lmstudio`), local files/folders, or a session login that opens on the user's machine (Luma) | Ask the user first (it is a long-lived process on their machine). Then `melaya_runner_setup`, which returns the pinned command `npx -y @melaya/runner@1.1.71 --token=...`; show it to the user, and with a shell run it in the background only after they say yes and poll `melaya_runner_status`; without a shell, hand the command over and say which machine it must run on. Full runner and local-model procedure: the `../../modules/runners-models/GUIDE.md` skill. |
 | `claude_code` | pipelines use provider `claude_code` | Ask the user to run `claude` once to sign in, then restart the runner. No key or connector needed. Other subscription CLI providers (`codex`, `github_copilot`): see the `../../modules/runners-models/GUIDE.md` skill. |
 | `phone_paired` / `phone_online` / `allowed_apps` | only for phone-control systems | Ignore for a cloud data/document system; say so explicitly in the inventory. |
 
@@ -64,7 +64,7 @@ Write the relevant subset into the inventory. Typical ids for a document-produci
 - `search`: plain business keywords ("unread email", "spreadsheet rows", "drive files"). Required for searching; the catalogue is thousands of entries. Single words match more than phrases.
 - `tool`: an exact name, returns the full parameter list and its access label.
 
-Results show `[service]` plus one label: `[read-only]` (callable with the connectors permission), `[write - requires the connectors.write scope]` (callable only when the user granted it) or `[moves money or trades - Melaya app approval only]` (never callable over MCP). Existing MCP connections made before these permissions existed must re-authorise to get them.
+Results show `[service]` plus one label: `[read-only]` (callable with the connectors permission), `[write - requires the connectors.write scope]` (callable only when the user granted it) or `[write - moves money or trades; requires the connectors.write scope]` (callable with the write permission; confirm the exact action and amount with the user first). Existing MCP connections made before these permissions existed must re-authorise to get them.
 
 ### 2.3 Test what the system depends on
 
@@ -84,7 +84,7 @@ Important difference between the two catalogues:
 | Catalogue | Tool | Contains | Callable from the conversation |
 |---|---|---|---|
 | Pipeline registry | `melaya_pipeline_registry` | every tool a pipeline agent can use (thousands, including all keyless domain tools such as sanctions, GLEIF, EDGAR, GDELT, DefiLlama, deal-DB, decide) | No. Only inside a pipeline run. |
-| Connector catalogue | `melaya_connector_tools` | tools of connected services + the `melaya_core` family (e.g. `web_search`, `web_fetch`, `scrape_page`, `scrape_links`, `fetch_rss`) | Yes, via `melaya_connector_call`: reads always, writes with `melaya:connectors.write`, money-moving never. |
+| Connector catalogue | `melaya_connector_tools` | tools of connected services + the `melaya_core` family (e.g. `web_search`, `web_fetch`, `scrape_page`, `scrape_links`, `fetch_rss`) | Yes, via `melaya_connector_call`: reads always, writes (money-moving included) with `melaya:connectors.write`. |
 
 So a keyless domain tool (e.g. `sanctions_screen`, `gleif_search_entities`, `edgar_form_d_search`) is verified by: (1) registry search shows the id, (2) a small validation run proves the output (see the validate-debug skill). Do not expect `melaya_connector_call` to run it; it answers "Unknown tool".
 
@@ -129,7 +129,7 @@ Short version:
 Explaining MCP consent (say it plainly when the user asks why you can or cannot send the email or write the sheet from the chat):
 - Reading connected services needs the connectors permission. Writing through them from the chat needs the extra "connectors.write" permission the user ticks when connecting the assistant to Melaya. Without it, write tools are refused in the MCP tool and again server-side, whatever the instructions.
 - With it, a write from the chat runs immediately, with no approval card, and is recorded in the audit log. Confirm the exact send or change with the user before calling it.
-- Anything that moves money or trades is refused from the chat at every level; the user approves it in the Melaya app.
+- Anything that moves money or trades runs from the chat only with `melaya:connectors.write`, at once and audit-logged: confirm the exact action and amount with the user first.
 - Writes the system must repeat (every run, on a schedule, on an event) belong inside a Melaya pipeline, where the user controls approval gates (HITL).
 - If a capability is missing from your tool list entirely, the user did not grant that scope when connecting the MCP (connections made before a permission existed must re-authorise); offer to have them reconnect with it. Do not look for another route.
 
@@ -209,7 +209,7 @@ Full table with tool ids and what each proves: `references/keyless-tool-catalogu
 - [ ] Every tool in the mapping table has an exact id from `melaya_pipeline_registry` or `melaya_connector_tools`.
 - [ ] Keyless-first: each requirement that public data can answer uses a keyless tool, with a reliability order noted.
 - [ ] Model provider + model id copied from `melaya_model_list` (status `ok`) or `melaya_runner_status`.
-- [ ] Write tools listed separately for HITL gating in the authoring phase; money-moving tools flagged as app-approval only.
+- [ ] Write tools listed separately for HITL gating in the authoring phase; money-moving tools flagged so the user confirms each one.
 - [ ] Gaps listed with a proposed resolution (connect, free key, run input, code change request).
 
 Next: create or choose the project (projects-templates skill), then design and author (pipeline-authoring skill).

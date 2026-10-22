@@ -25,7 +25,7 @@ First call for anything that looks like setup: `melaya_setup_status`. First call
 | Test is green but a tool still fails | The grant is fine but that action needs more permission, or the tool itself failed | `melaya_run_diagnosis` names the tool and error; reconnect with all boxes ticked; if it persists, report it |
 | The assistant cannot see pipeline, phone or browser tools | That permission was not granted when Melaya was connected to the assistant | Reconnect Melaya to the assistant and tick the missing permission |
 | The assistant says it cannot send, create or update something through a connected service, or cannot create a project | The "connectors.write" or "projects" permission was not granted (connections made before these permissions existed lack them) | Reconnect Melaya to the assistant and tick that permission; or let a pipeline do the send |
-| The assistant refuses a payment, refund, purchase, transfer, ad budget change or order | Anything that moves money or trades is never run from the chat, whatever the permissions | The user approves it in the Melaya app |
+| The assistant refuses a payment, refund, purchase, transfer, ad budget change or order | Like every connector write from the chat, it needs the `melaya:connectors.write` permission, which this connection does not have | Reconnect the assistant with connectors.write ticked (then confirm the exact action and amount before each one), or approve it in the Melaya app |
 
 ## Runner (the user's own computer)
 

@@ -35,7 +35,7 @@ Derive every row from `hitl_mode` and `human_approval_tools` in the configs. In 
 
 Triggered runs (webhooks, events): <state the approval behaviour for triggered runs as enforced by the platform>.
 
-AI assistants connected to Melaya (MCP): <state what the client's assistants were granted, in plain words>. Reading connected services needs the connectors permission. Sending or changing data through a connected service from the chat needs the separate "connectors.write" permission; each such action runs at once and is recorded in the audit log. Anything that moves money or trades (payments, refunds, purchases, transfers, ad budget or bid changes, orders) is refused from any assistant at every permission level and is approved only in the Melaya app.
+AI assistants connected to Melaya (MCP): <state what the client's assistants were granted, in plain words>. Reading connected services needs the connectors permission. Sending or changing data through a connected service from the chat needs the separate "connectors.write" permission; each such action runs at once and is recorded in the audit log. That permission also covers actions that move money or trade (payments, refunds, purchases, transfers, ad budget or bid changes, orders); an assistant without it cannot run them, and one with it confirms the exact action and amount with the user first.
 
 ### The approval card
 

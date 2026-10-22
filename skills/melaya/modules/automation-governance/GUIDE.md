@@ -201,7 +201,7 @@ Auto-pause: 10 failed events in a row, 3 permanent run failures, project access 
 ## 8. Security and data boundaries
 
 - MCP consent is scoped; a missing tool means not granted: say so and offer a reconnect.
-- `melaya_connector_call` runs read tools with the connectors permission, and write tools (send, create, update) only when the user also granted `melaya:connectors.write`; those writes run at once, with no approval card, and are audit-logged, so confirm each one first. Anything that moves money or trades is refused at every level and stays an approval in the Melaya app. Recurring or unattended sends belong in a gated pipeline.
+- `melaya_connector_call` runs read tools with the connectors permission, and write tools (send, create, update) only when the user also granted `melaya:connectors.write`; those writes run at once, with no approval card, and are audit-logged, so confirm each one first. That includes tools that move money or trade: confirm the exact action and amount first. Recurring or unattended sends belong in a gated pipeline.
 - Connectors hold credentials; pipelines reference tools. Missing connector: `melaya_connector_connect` link, then wait.
 - Webhook secrets and stream-source keys are stored encrypted and never returned; never put credentials in a URL (`auth_header_name` + `auth_value`, or better, the user types it in the app).
 - `allow_egress_proxy` off unless a tool needs Melaya's residential proxy.

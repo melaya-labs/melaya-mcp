@@ -44,7 +44,7 @@ Second trap: `safe` is not "gate every write". In every run, triggered included,
 | Trigger `tool_call` write | approval card with the stored, signed arguments; edits to arguments are ignored; expires after `approval_ttl_s`; max 20 pending per trigger, 50 per user |
 | Trigger with UI-granted autonomy | writes run without a card only if every templated argument meets its constraint and the daily write cap allows; else a card is raised |
 
-Not a pipeline approval: a connector write the assistant runs over MCP (`melaya_connector_call` with the user's `melaya:connectors.write` permission) executes at once, with no card, and is audit-logged. The assistant must confirm it with the user in the chat first. Anything that moves money or trades is refused over MCP at every level and is approved only in the Melaya app.
+Not a pipeline approval: a connector write the assistant runs over MCP (`melaya_connector_call` with the user's `melaya:connectors.write` permission) executes at once, with no card, and is audit-logged. The assistant must confirm it with the user in the chat first. That includes tools that move money or trade, so the exact action and amount must be confirmed first.
 
 Where humans decide (never over MCP):
 - approvals inside a run (manual, scheduled or triggered): the Melaya app approval queue, or the phone (cards reach a locked phone); `melaya_approval_list` shows them;

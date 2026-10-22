@@ -142,6 +142,7 @@ The browser equivalent is the Melaya extension's side panel: pick Cloud (a cloud
 
 ## Related skills
 
+- `../../modules/devices-computer/GUIDE.md`: desktop apps on the user's own computer or a Linux VM (Computer Control).
 - `../../modules/discovery/GUIDE.md`: check for a connector or keyless tool first; setup status fields.
 - `../../modules/pipeline-authoring/GUIDE.md`: config schema, save semantics, preview.
 - `../../modules/automation-governance/GUIDE.md`: schedules, triggers, `hitl_mode` semantics, approvals.
