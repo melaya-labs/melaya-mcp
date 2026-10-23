@@ -12,7 +12,7 @@ Check the user's Melaya setup and get it working.
    c. **Runner not connected:** call `melaya_runner_setup`. It returns exactly this command, with a fresh token:
 
       ```
-      npx -y @melaya/runner@1.1.72 --token=<token>
+      npx -y @melaya/runner@1.1.74 --token=<token>
       ```
 
       Check that the command you received matches that shape (package `@melaya/runner`, version `1.1.72`, one `--token` argument). If it does not, do not run it: tell the user. Then show the user the command and what it does (it starts the Melaya runner, a long-lived background process on their computer that uses their own model subscription; it needs Node 18+ and Python 3.11+).
