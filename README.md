@@ -14,7 +14,7 @@
 [![Smithery](https://img.shields.io/badge/Smithery-listed-8B5CF6)](https://smithery.ai/servers/info-h530/melaya)
 [![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/melaya-labs/melaya-mcp)
 [![Glama MCP server](https://glama.ai/mcp/servers/@melaya-labs/melaya-mcp/badge)](https://glama.ai/mcp/servers/@melaya-labs/melaya-mcp)
-[![Tools](https://img.shields.io/badge/tools-125_across_10_domains-22D3EE)](#what-it-can-do)
+[![Tools](https://img.shields.io/badge/tools-130_across_10_domains-22D3EE)](#what-it-can-do)
 [![Auth](https://img.shields.io/badge/auth-OAuth_2.1_%2B_PKCE-10B981)](#permissions)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-for_any_AI-EC4899)](#give-your-ai-the-melaya-skill)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
@@ -269,7 +269,7 @@ Eleven scopes. You grant them individually.
 | `melaya:connectors.write` | Act through connected services: send emails, create or update records and files, including actions that move money or trade (payments, refunds, subscriptions, orders). Needs `melaya:connectors`. Writes run at once and are audit-logged |
 | `melaya:team` | Read project membership, and invite people you name |
 
-The tool list your assistant receives is filtered to what you granted, so connecting for phone control alone shows **24 tools rather than all 125**. If a capability seems missing, you declined it; reconnect and approve it.
+The tool list your assistant receives is filtered to what you granted, so connecting for phone control alone shows **25 tools rather than all 130**. If a capability seems missing, you declined it; reconnect and approve it.
 
 > [!NOTE]
 > **If you also use the Melaya SDK**, "connectors" means something different there. In the SDK it is project credential storage. Here, `melaya:connectors` is reading data from services you already connected, and `melaya:connectors.write` is acting through them. This surface cannot read, set or delete a connector credential (the trigger signing secret and stream-source key above are the only secrets it accepts, and it never returns them).
