@@ -1,0 +1,118 @@
+{
+ "2": {
+  "prefilter": {
+   "saturation": 1.5,
+   "gamma": 0.8
+  },
+  "layers": [
+   {
+    "type": "ground",
+    "color": "#f6eab0",
+    "width": 64
+   },
+   {
+    "type": "dots",
+    "tool": "brush",
+    "width": 9,
+    "spacing": 7,
+    "jitter": 0.25,
+    "complement": 0.06
+   },
+   {
+    "type": "dots",
+    "tool": "brush",
+    "width": 6,
+    "spacing": 5,
+    "jitter": 0.3,
+    "thresh": 7,
+    "complement": 0.04
+   },
+   {
+    "type": "dots",
+    "tool": "brush",
+    "width": 4,
+    "spacing": 4,
+    "jitter": 0.3,
+    "thresh": 9,
+    "mask": "detail"
+   }
+  ]
+ },
+ "3": {
+  "palette": {
+   "colors": [
+    "#4a4f55",
+    "#5b4a36",
+    "#7d6446",
+    "#a07a48",
+    "#c49a5c",
+    "#dcbf8a",
+    "#eddcb5",
+    "#f6efdc",
+    "#6b7480",
+    "#8b919a",
+    "#9a9c94",
+    "#c4c2b6"
+   ],
+   "include": [
+    "#2a241e"
+   ]
+  },
+  "prefilter": {
+   "saturation": 0.75,
+   "contrast": 1.25,
+   "gamma": 0.5
+  },
+  "layers": [
+   {
+    "type": "cells",
+    "partition": "voronoi",
+    "n": 300,
+    "edge_bias": 0.5,
+    "focus_density": 5,
+    "color": "shade",
+    "bands": 3,
+    "shade_step": 18,
+    "shade_dir": "edge",
+    "fill": "regions",
+    "tool": "brush",
+    "scale": 2,
+    "tips": [
+     15,
+     7,
+     3,
+     1
+    ],
+    "density_gamma": 0.9,
+    "split": "edge_line",
+    "split_depth": 2,
+    "split_min_dL": 7,
+    "value_weight": 1.3,
+    "colors": [
+     "#4a4f55",
+     "#5b4a36",
+     "#7d6446",
+     "#a07a48",
+     "#c49a5c",
+     "#dcbf8a",
+     "#eddcb5",
+     "#f6efdc",
+     "#6b7480",
+     "#8b919a",
+     "#9a9c94",
+     "#c4c2b6"
+    ],
+    "render": "auto"
+   },
+   {
+    "type": "outline",
+    "tool": "pencil",
+    "width": 2,
+    "color": "#2a241e",
+    "source": "labels",
+    "min_len": 4,
+    "simplify": 1.2
+   }
+  ]
+ }
+}

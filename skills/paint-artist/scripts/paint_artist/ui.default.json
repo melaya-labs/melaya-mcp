@@ -1,24 +1,116 @@
 {
-  "_doc": "Microsoft Paint (Windows 11) at 1920x1080, display scale 100%, Paint maximised, zoom 100%, dark or light theme. Screen pixels. Re-derive on another resolution / DPI with the calibration procedure (references/calibration.md) and save as ui.json in the job folder (or pass --ui).",
-  "app": "mspaint-win11",
-  "screen": [1920, 1080],
-  "scale": 1.0,
-  "canvas_center": [960, 584],
-  "canvas_origin": null,
-  "viewport": [0, 176, 1920, 990],
-  "pencil": [262, 88],
-  "picker": [302, 127],
-  "brushes": [405, 127],
-  "brush_items": {
-    "brush": [500, 165], "calligraphy": [500, 211], "airbrush": [500, 303], "oil": [500, 349],
-    "crayon": [500, 395], "marker": [500, 441], "natural_pencil": [500, 487], "watercolour": [500, 533]
+ "_doc": "Microsoft Paint (Windows 11) at 1920x1080, display scale 100%, Paint maximised, zoom 100%, dark or light theme. Screen pixels. Re-derive on another resolution / DPI with the calibration procedure (references/calibration.md) and save as ui.json in the job folder (or pass --ui).",
+ "app": "mspaint-win11",
+ "screen": [
+  1920,
+  1080
+ ],
+ "scale": 1.0,
+ "canvas_center": [
+  960,
+  584
+ ],
+ "canvas_origin": null,
+ "viewport": [
+  0,
+  176,
+  1920,
+  990
+ ],
+ "pencil": [
+  262,
+  88
+ ],
+ "picker": [
+  302,
+  127
+ ],
+ "brushes": [
+  405,
+  127
+ ],
+ "brush_items": {
+  "brush": [
+   500,
+   165
+  ],
+  "calligraphy": [
+   500,
+   211
+  ],
+  "airbrush": [
+   500,
+   303
+  ],
+  "oil": [
+   500,
+   349
+  ],
+  "crayon": [
+   500,
+   395
+  ],
+  "marker": [
+   500,
+   441
+  ],
+  "natural_pencil": [
+   500,
+   487
+  ],
+  "watercolour": [
+   500,
+   533
+  ]
+ },
+ "size_slider": {
+  "label": "Size",
+  "role": "slider"
+ },
+ "opacity_slider": {
+  "label": "Opacity",
+  "role": "slider"
+ },
+ "size_map": "v = px - 1 if px <= 22 else (px + 23) // 2",
+ "max_px": 64,
+ "waits_ms": {
+  "after_pencil": 200,
+  "after_brushes_open": 450,
+  "after_brush_item": 300
+ },
+ "edge_clear_px": 5,
+ "path": {
+  "speed": 8000,
+  "ground_speed": 6000,
+  "strokeGapMs": 2,
+  "max_strokes_per_step": 200
+ },
+ "fill": [
+  302,
+  88
+ ],
+ "timing_profile": "recorded",
+ "timing_profiles": {
+  "recorded": {
+   "per_long_s": 0.016,
+   "per_short_s": 0.0358,
+   "per_point_s": 0.0,
+   "per_pick_s": 0.2794,
+   "per_kpx16_s": 0.5516,
+   "per_kpx4_s": 0.0,
+   "per_fill_s": 0.1,
+   "fitted_on": "recorded runs (screen recording with ffmpeg at 30 fps running): the 4 cells of the split-face grid (593 s total; 9,195 one-pixel dots took 345 s) and the 17,386-stroke master run (512 s); max error 11 %. per_fill_s (0.10) is a placeholder until speed-calib measures it."
   },
-  "size_slider": {"label": "Size", "role": "slider"},
-  "opacity_slider": {"label": "Opacity", "role": "slider"},
-  "size_map": "v = px - 1 if px <= 22 else (px + 23) // 2",
-  "max_px": 64,
-  "waits_ms": {"after_pencil": 200, "after_brushes_open": 450, "after_brush_item": 300},
-  "edge_clear_px": 5,
-  "path": {"speed": 8000, "ground_speed": 6000, "strokeGapMs": 2, "max_strokes_per_step": 200},
-  "timing_model": {"per_stroke_s": 0.0119, "per_point_s": 0.0011, "per_pick_s": 0.334, "per_kpx_s": 0.131, "fitted_on": "9 live Mona Lisa runs 2026-10-24 (mondrian, sumi-e, pencil-sketch, stained-glass, pop-art, ukiyo-e, watercolour, pixel-art, fauvism), tool-reported seconds, relative error mean 5 %, max 17 %; per_kpx_s = per 1000 px of ink at stepPx > 4 (stepPx 4 ink is not slower); plus every wait step. The older 17,386-stroke master run took 17 % longer than this predicts (older runner): plan caps time at 500 s by default for that margin."}
+  "unrecorded": {
+   "per_long_s": 0.0119,
+   "per_short_s": 0.0119,
+   "per_point_s": 0.0011,
+   "per_pick_s": 0.334,
+   "per_kpx16_s": 0.131,
+   "per_kpx4_s": 0.0,
+   "per_fill_s": 0.1,
+   "fitted_on": "9 unrecorded live runs 2026-10-24, mean error 5 %, max 17 %"
+  }
+ },
+ "_doc_timing": "Estimates use timing_profiles[timing_profile] ('recorded' by default: demo runs are recorded and run slower, short strokes and dots most). plan refuses a single plan whose estimate exceeds its --seconds cap (480 by default); --profile unrecorded for runs without a screen recorder."
 }

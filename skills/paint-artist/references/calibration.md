@@ -57,3 +57,21 @@ and for the Calligraphy brush the nib angle and nib length, fitted on the four d
 `--install` writes `alpha`, `width_scale` (thickness / 16), the nib and `measured: true` into `scripts/paint_artist/paint_tools.json`; without it the result goes to `JOB/tools.json` only, which you copy into a job folder to use for that job. After installing, re-run `plan` for the styles that use the re-measured tools (sumi-e uses Calligraphy), and keep the skill's installed copy in sync.
 
 Reference values (live, Windows 11 Paint, 2026-10-24): Brush 1.00, Oil 0.81, Watercolour 0.70 one pass / 0.89 two passes (12 px wide at size 16), Pencil at 35 % = 0.349, Calligraphy 1.00 with a 14 px nib at 135 deg, Airbrush 0.11, Crayon 0.70, Marker 0.75 (18.5 px wide), Natural pencil 0.34. Full table: [paint-win11.md](paint-win11.md). `calib-measure` also writes `calib_live.png` (the painted strokes) and `calib_measured.json` (all numbers).
+
+## 4. Speed calibration (fastest safe pointer settings, Fill connectivity)
+
+```bash
+cd "SKILL_DIR/scripts"; C=$(cygpath -m "$HOME/paint-jobs/speed_calib")
+python -m paint_artist speed-calib --job "$C"                # canvas + 6 plans: pa_speed_setup, pa_speed_s0 .. s4
+cp "$C/canvas.png" "$C/pa_speed.png"; powershell -NoProfile -Command "Start-Process mspaint -ArgumentList '\"$(cygpath -w "$C/pa_speed.png")\"'"
+# pre-flight, then:
+python -m paint_artist locate --job "$C" --take --write-ui && python -m paint_artist speed-calib --job "$C"   # re-emit at the real origin
+# 6 batch calls in order, Paint in front, no window_id: pa_speed_setup.json, pa_speed_s0.json ... pa_speed_s4.json; note each duration
+python -m paint_artist speed-measure --job "$C" --take --times T0,T1,T2,T3,T4 [--install]
+```
+
+- **Setup plan** (slow reference): closed boxes around every test cell, so a leaking fill stays contained; the 1 px rings to be filled; and a 1 px diagonal diamond probe.
+- **Rows s0..s4:** the same Brush (6 px) and Pencil (2 px) pattern (zigzag, short strokes, dots) and three Fill clicks, at increasing settings: (speed, stepPx, strokeGapMs) = (1500, 2, 10), (8000, 16, 2), (12000, 16, 1), (16000, 16, 0), (20000, 16, 0).
+- **speed-measure** compares every row with the slow s0 row (missing pixels with a 1 px tolerance) and counts the filled rings. It reads the probe: an 8-connected bucket leaks out of the diagonal diamond, a 4-connected one stays inside. It recommends, per tool, the fastest setting (by your measured durations) with under 1 % missing pixels and all fills done.
+- **`--install`** writes `speed`, `stepPx`, `strokeGapMs` for brush and pencil, the fill `strokeGapMs`, and the fill `connectivity` / `fill_conn` into `paint_tools.json`. The emitter uses per-tool settings from there.
+- **Timing:** re-fit the timing profile when the settings change: the durations of the rows are in `speed_measured.json`.

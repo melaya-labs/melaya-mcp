@@ -20,7 +20,8 @@
    "dither": 7,
    "fill": "rects",
    "rect_width": 4,
-   "tool": "pencil"
+   "tool": "pencil",
+   "render": "auto"
   }
  ]
 }

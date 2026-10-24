@@ -61,7 +61,8 @@
     "#8c8c84",
     "#c2bfb2",
     "#6b6b3a"
-   ]
+   ],
+   "render": "auto"
   },
   {
    "type": "outline",

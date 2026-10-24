@@ -58,7 +58,9 @@ class Emitter:
         self.ink = 0.0
         self.ink_time = 0.0
         self.ink16 = 0.0
+        self.ink4 = 0.0
         self.n_points = 0
+        self.n_long = self.n_short = self.n_fill = 0
         self.clamped = 0
 
     # --- coordinates
@@ -94,8 +96,8 @@ class Emitter:
         if t == self.cur_tool:
             return
         w = self.ui.get('waits_ms', {})
-        if t == 'pencil':
-            x, y = self.ui['pencil']
+        if t in ('pencil', 'fill'):
+            x, y = self.ui[t]
             self.steps.append({'kind': 'click', 'target': {'x': x, 'y': y}, 'onError': 'continue'})
             self.wait(w.get('after_pencil', 200))
         else:
@@ -134,7 +136,7 @@ class Emitter:
                        {'kind': 'mouse', 'target': {'x': x, 'y': y}, 'state': 'up'}]
         self.n_picks += 1
 
-    def paths(self, strokes, speed, step_px):
+    def paths(self, strokes, speed, step_px, gap_ms=None, fill=False):
         p = self.ui.get('path', {})
         n = p.get('max_strokes_per_step', 200)
         v_eff = min(speed, step_px * 1000.0)
@@ -143,28 +145,42 @@ class Emitter:
             self.ink += L
             self.ink_time += L / v_eff
             self.n_points += len(st)
+            if fill:
+                self.n_fill += 1
+                continue
+            if L < 4:
+                self.n_short += 1
+            else:
+                self.n_long += 1
             if step_px > 4:
                 self.ink16 += L
+            else:
+                self.ink4 += L
+        gap = p.get('strokeGapMs', 2) if gap_ms is None else gap_ms
         for k in range(0, len(strokes), n):
             self.steps.append({'kind': 'path', 'strokes': strokes[k:k + n], 'speed': speed, 'stepPx': step_px,
-                               'strokeGapMs': p.get('strokeGapMs', 2)})
+                               'strokeGapMs': gap})
         self.n_strokes += len(strokes)
 
     # --- layers
     def layer(self, L):
         t = L['tool']
+        spec = self.tools[t]
         self.tool(t)
-        self.opacity(L.get('opacity', 1.0))
-        self.size(L['width'])
+        if t != 'fill':                                   # the Fill tool has no size or opacity
+            self.opacity(L.get('opacity', 1.0))
+            self.size(L['width'])
         p = self.ui.get('path', {})
-        is_ground = L.get('name', '').startswith('ground') or L.get('name', '').endswith('-base')
-        speed = L.get('speed') or (p.get('ground_speed', 6000) if is_ground else p.get('speed', 8000))
-        step_px = L.get('stepPx') or self.tools[t].get('stepPx', 16)
+        nm = L.get('name', '')
+        is_ground = nm.startswith('ground') or '-ground' in nm or nm.endswith('-base')
+        speed = L.get('speed') or spec.get('speed') or (p.get('ground_speed', 6000) if is_ground else p.get('speed', 8000))
+        step_px = L.get('stepPx') or spec.get('stepPx', 16)
+        gap_ms = L.get('strokeGapMs', spec.get('strokeGapMs'))
         group, ck = [], None
         for k, pts in L['strokes']:
             if k != ck:
                 if group:
-                    self.paths(group, speed, step_px)
+                    self.paths(group, speed, step_px, gap_ms, t == 'fill')
                 group, ck = [], k
                 self.pick(k)
             q = [self.scr(*self.canvas_pt(x, y, L['width'], L.get('name', '').startswith('frame'))) for x, y in pts]
@@ -173,7 +189,7 @@ class Emitter:
                 q.append([q[0][0] + 1, q[0][1]])
             group.append(q)
         if group:
-            self.paths(group, speed, step_px)
+            self.paths(group, speed, step_px, gap_ms, t == 'fill')
 
     def emit(self, plan):
         self.steps.append({'kind': 'set_value', 'target': dict(self.ui['opacity_slider']), 'value': '100', 'onError': 'continue'})
@@ -182,13 +198,18 @@ class Emitter:
                 self.layer(L)
         return {'surface': 'computer', 'kind': 'batch', 'steps': self.steps}
 
-    def estimate(self):
-        tm = self.ui.get('timing_model', {})
+    def estimate(self, profile=None):
+        """Seconds for the steps emitted so far, with a timing profile from ui['timing_profiles'] ('recorded', the
+        default and conservative one, or 'unrecorded')."""
+        profs = self.ui.get('timing_profiles') or {}
+        name = profile or self.ui.get('timing_profile', 'recorded')
+        tm = profs.get(name) or next(iter(profs.values()), {})
         waits = sum(s['ms'] for s in self.steps if s['kind'] == 'wait') / 1000
         nset = sum(1 for s in self.steps if s['kind'] == 'set_value')
-        return (self.n_strokes * tm.get('per_stroke_s', 0.0119) + self.n_points * tm.get('per_point_s', 0.0011)
-                + self.n_picks * tm.get('per_pick_s', 0.334) + self.ink16 / 1000 * tm.get('per_kpx_s', 0.131)
-                + nset * tm.get('per_set_value_s', 0.0) + waits)
+        return (self.n_long * tm.get('per_long_s', 0.016) + self.n_short * tm.get('per_short_s', 0.036)
+                + self.n_points * tm.get('per_point_s', 0.0) + self.n_picks * tm.get('per_pick_s', 0.28)
+                + self.ink16 / 1000 * tm.get('per_kpx16_s', 0.55) + self.ink4 / 1000 * tm.get('per_kpx4_s', 0.0)
+                + self.n_fill * tm.get('per_fill_s', 0.30) + nset * tm.get('per_set_value_s', 0.0) + waits)
 
 
 def emit(plan, meta, ui, tools, out_path):
@@ -203,5 +224,6 @@ def emit(plan, meta, ui, tools, out_path):
     summary = {'file': out_path, 'steps': len(doc['steps']), 'kinds': kinds, 'strokes': em.n_strokes,
                'picks': em.n_picks, 'tool_switches': em.n_switch, 'ink_px': int(em.ink), 'clamped_points': em.clamped,
                'canvas_origin': list(em.org), 'bytes': os.path.getsize(out_path), 'est_seconds': round(em.estimate()),
+               'est_seconds_unrecorded': round(em.estimate('unrecorded')), 'timing_profile': ui.get('timing_profile', 'recorded'),
                'max_steps_ok': len(doc['steps']) <= 5000, 'size_ok': os.path.getsize(out_path) <= 2 * 1024 * 1024}
     return summary

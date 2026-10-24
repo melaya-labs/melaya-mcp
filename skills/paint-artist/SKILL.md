@@ -17,6 +17,8 @@ Plan a painting as strokes (app-agnostic), simulate it with Paint's measured too
 | This PNG/JPG painted as faithfully as possible | 1. Reproduce 1:1 | `prepare SRC --style master` (+ `--focus` on the face) |
 | Subject X painted like reference painting Y | 2. Style from a reference | `analyse Y --out style.json`, look at Y, fix the JSON, `prepare X --style style.json --reference Y --transfer` |
 | Subject X "as Monet / Van Gogh / Seurat / Picasso / Matisse / Munch / Klimt / Mondrian / watercolour / sketch / woodblock / stained glass / pixel art / ink wash / pop art / old master" | 3. Named style | `prepare X --style <style>`; see [styles/](styles/) |
+| One picture split into cells, each in another style (a style grid, e.g. half Leonardo half Warhol through the face) | 5. Grid composite | `prepare --subject mona_lisa --grid 2x2 --styles master,pop-art,pointillism,cubism [--split-x 0.45 --split-y 0.37]`, then plan, open `canvas.png` (written by plan), locate, emit, one batch call; see [references/grid.md](references/grid.md) |
+| Each part painted as its own full painting, assembled into one ultra-detailed picture (zoomed boxes) | 6. Boxes | `prepare --subject mona_lisa --boxes 2x2 --styles ...`, plan, open the box canvases, locate once, emit, one batch call per box, save each, `assemble`; see [references/grid.md](references/grid.md) |
 | A new picture with no source image | 4. Fresh composition | `compose landscape|still_life|portrait|scene.json --out ref.png`, then mode 1 or 3 |
 
 Styles (17): [master](styles/master.md), [impressionist](styles/impressionist.md), [van-gogh](styles/van-gogh.md), [pointillism](styles/pointillism.md), [watercolour](styles/watercolour.md), [pencil-sketch](styles/pencil-sketch.md), [ukiyo-e](styles/ukiyo-e.md), [pop-art](styles/pop-art.md), [chiaroscuro](styles/chiaroscuro.md), [cubism](styles/cubism.md), [fauvism](styles/fauvism.md), [expressionism](styles/expressionism.md), [klimt](styles/klimt.md), [stained-glass](styles/stained-glass.md), [mondrian](styles/mondrian.md), [pixel-art](styles/pixel-art.md), [sumi-e](styles/sumi-e.md). All of them on the Mona Lisa: [assets/examples/contact_sheet.png](assets/examples/contact_sheet.png).
@@ -80,7 +82,8 @@ Options: canvas size (`--height`, `--width`), detail (`--detail`, `--budget` str
 - [ ] Canvas opened in Paint; `melaya_computer_list_windows`: every OTHER Paint window minimised (a pause once sent strokes into another maximised Paint window).
 - [ ] Target Paint window focused and maximised, zoom 100 % (status bar), in front: `melaya_computer_current_app` shows the title `<N>.png - Paint`.
 - [ ] `melaya_computer_screenshot` (scope display): the canvas is fully visible with its palette strip, nothing over it. Then `locate --take --write-ui`: origin (690, 239 for a 540x690 canvas at 1920x1080), scale 1.0, `swatch_err` under 2.5. Emit AFTER this, so the plan uses the measured origin.
-- [ ] `plan` estimate under 500 s and under 5000 steps (the batch runs up to 10 minutes; the estimate is within about 7 % on recent runs).
+- [ ] `plan` estimate under 480 s (the `recorded` timing profile, default: recording slows Paint, dots most) and under 5000 steps; `emit` refuses a plan above the cap. Without a recorder, `--profile unrecorded`.
+- [ ] New machine, Paint build or speed settings: run `speed-calib` once ([references/calibration.md](references/calibration.md)) to find the fastest safe pointer settings and the Fill tool's connectivity.
 - [ ] Recording wanted: recorder and stopwatch started, start flag touched right before the call ([references/recording.md](references/recording.md)).
 
 ## Failure table
@@ -114,4 +117,5 @@ Options: canvas size (`--height`, `--width`), detail (`--detail`, `--budget` str
 - [references/planner.md](references/planner.md): the planner, layer types, masks, preset JSON schema.
 - [references/style-transfer.md](references/style-transfer.md): modes 2 and 4 (analyse a reference, compose a scene).
 - [references/scoring.md](references/scoring.md) and [references/recording.md](references/recording.md).
+- [references/grid.md](references/grid.md): grid composites (several styles in one picture), `cells.json` for the video edit.
 - [references/adapters.md](references/adapters.md): the app-agnostic plan and what a macOS or Linux adapter needs.

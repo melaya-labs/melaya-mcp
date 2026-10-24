@@ -30,6 +30,7 @@ import numpy as np
 from scipy import ndimage as ndi
 
 from . import cells as cl
+from . import fastpaint as fp
 from . import color as col
 from . import simulate as sim
 from .prepare import ellipse_mask, load_rgb
@@ -623,7 +624,77 @@ def layer_flat(ctx, L, seed):
     full = np.kron(lbl, np.ones((s, s), int))
     pad = np.pad(full, ((0, max(0, ctx.H - full.shape[0])), (0, max(0, ctx.W - full.shape[1]))), mode='edge')
     ctx.labels = pad[:ctx.H, :ctx.W]
-    return paint_label_grid(ctx, L, lbl, s)
+    return choose_render(ctx, L, lambda: paint_label_grid(ctx, L, lbl, s), ctx.labels.copy())
+
+
+def quick_cost(ctx, sublayers):
+    """Seconds for a list of (layer, strokes) with the default timing profile: picks, tool switches, strokes,
+    ink and fill clicks (the same terms as the emitter's estimate)."""
+    import math
+    from . import emit_paint as ep
+    ui = ep.load_ui()
+    tm = ui['timing_profiles'][ui.get('timing_profile', 'recorded')]
+    t, tool = 0.0, None
+    for L, S in sublayers:
+        if L['tool'] != tool:
+            t += 0.5
+            tool = L['tool']
+        last = None
+        spec = ctx.tools.get(L['tool'], {})
+        step = L.get('stepPx') or spec.get('stepPx', 16)
+        for k, pts in S:
+            if k != last:
+                t += tm['per_pick_s']
+                last = k
+            if spec.get('flood'):
+                t += tm.get('per_fill_s', 0.1)
+                continue
+            ln = sum(math.dist(a, b) for a, b in zip(pts, pts[1:]))
+            t += tm['per_short_s'] if ln < 4 else tm['per_long_s']
+            t += ln / 1000 * (tm['per_kpx16_s'] if step > 4 else tm.get('per_kpx4_s', 0.0))
+    return t
+
+
+def choose_render(ctx, L, stroke_fn, cmap):
+    """render: strokes | fill | auto (plan both, keep the cheaper by the timing model)."""
+    mode = L.get('render', 'strokes')
+    if mode == 'strokes':
+        return stroke_fn()
+    f = fill_layers(ctx, L, cmap)
+    if mode == 'fill':
+        return f
+    s_ = stroke_fn()
+    cf, cs = quick_cost(ctx, f), quick_cost(ctx, s_)
+    ctx.render_choice = {'fill_s': round(cf), 'strokes_s': round(cs), 'chosen': 'fill' if cf <= cs else 'strokes'}
+    return f if cf <= cs else s_
+
+
+def fill_layers(ctx, L, cmap):
+    """Outline + bucket-fill rendering of a full-resolution palette-index map (see fastpaint.fill_render)."""
+    r = fp.fill_render(cmap, L.get('fill_min_area', 12), L.get('fill_conn', ctx.tools.get('fill', {}).get('fill_conn', 'both')))
+    name = L.get('name', L.get('type', 'flat'))
+    out = []
+    if r['outline']:
+        out.append(({'tool': 'pencil', 'width': 1, 'opacity': 1.0, 'name': name + '-rings', 'no_merge': True},
+                    sorted(r['outline'], key=lambda s: s[0])))
+    if r['fills']:
+        out.append(({'tool': 'fill', 'width': 1, 'opacity': 1.0, 'name': name + '-fills', 'no_merge': True, 'no_optimise': True},
+                    sorted(r['fills'], key=lambda s: s[0])))
+    fb = r['fallback_mask']
+    if fb.any():                                    # tiny or leaking regions: 1 px pencil rows, exact
+        runs = []
+        ys, xs = np.nonzero(fb)
+        for y in np.unique(ys):
+            row = np.where(fb[y])[0]
+            for seg in np.split(row, np.where(np.diff(row) > 1)[0] + 1):
+                ks = cmap[y, seg]
+                for part in np.split(np.arange(len(seg)), np.where(np.diff(ks) != 0)[0] + 1):
+                    a, b = seg[part[0]], seg[part[-1]]
+                    runs.append((int(ks[part[0]]), [[float(a), float(y)], [float(b), float(y)]]))
+        out.append(({'tool': 'pencil', 'width': 1, 'opacity': 1.0, 'name': name + '-small', 'no_merge': True},
+                    sorted(runs, key=lambda s: s[0])))
+    ctx.fill_stats = r['stats']
+    return out
 
 
 def paint_labels(ctx, L, cmap):
@@ -816,10 +887,16 @@ def plan(job, preset, tools, detail=1.0, seed=0, frame=None, log=print):
             return S
         return [(k, [(min(max(x, x_lo), x_hi), min(max(y, y_lo), y_hi)) for x, y in pts]) for k, pts in S]
 
+    merge_dE = preset.get('colour_merge_dE', 2.0)
+
     def add(L, S, name=None):
         L = dict(L)
         L.setdefault('opacity', 1.0)
         S = inside(S, L['width'], name or L.get('name') or '')
+        if preset.get('optimise', True) and not L.get('no_optimise') and not (name or '').startswith('frame'):
+            spec = tools.get(L['tool'], {})
+            S, _ = fp.optimise_layer(S, can_reverse=not spec.get('side_ramp') and not spec.get('nib'),
+                                     merge_dE=0.0 if L.get('no_merge') else merge_dE, pal_lab=ctx.pal_lab)
         ctx.render(L, S, seed + len(layers))
         sc = score_view(ctx)
         entry = {'name': name or L.get('name') or L.get('type'), 'tool': L['tool'], 'width': L['width'],
@@ -857,6 +934,8 @@ def plan(job, preset, tools, detail=1.0, seed=0, frame=None, log=print):
             add(L, layer_hatch(ctx, L, sd), L.get('name', 'hatch'))
         elif t == 'dots':
             L.setdefault('width', 6)
+            if ctx.detail < 1:                       # fewer dots -> bigger dots, same coverage
+                L['width'] = int(round(L['width'] / ctx.detail ** 0.5))
             add(L, layer_dots(ctx, L, sd), L.get('name', 'dots-w%d' % L['width']))
         elif t == 'flat':
             for sub, S in layer_flat(ctx, L, sd):

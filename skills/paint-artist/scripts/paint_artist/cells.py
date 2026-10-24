@@ -364,16 +364,16 @@ def layer_cells(ctx, L, seed, paint_labels):
     cmap = colour_cells(ctx, L, lab, grid, rng)
     out = []
     tool = L.get('tool', 'brush')
-    if L.get('fill', 'regions') == 'rects' and rects is not None:
-        k_of = [int(np.bincount(cmap[int(y0):max(int(y0) + 1, int(y1)), int(x0):max(int(x0) + 1, int(x1))].ravel()).argmax())
-                for x0, y0, x1, y1 in rects]
-        w = L.get('rect_width', 8)
-        S = rect_fill(rects, k_of, w, merge_rows=(part == 'grid'), overlap=L.get('rect_overlap', 1.0))
-        if L.get('first_is_ground', False):
-            pass
-        out.append(({'tool': tool, 'width': w, 'name': L.get('name', 'cells') + '-rects'}, S))
-    else:
-        out += paint_labels(ctx, L, cmap)
+    def strokes():
+        if L.get('fill', 'regions') == 'rects' and rects is not None:
+            k_of = [int(np.bincount(cmap[int(y0):max(int(y0) + 1, int(y1)), int(x0):max(int(x0) + 1, int(x1))].ravel()).argmax())
+                    for x0, y0, x1, y1 in rects]
+            w = L.get('rect_width', 8)
+            S = rect_fill(rects, k_of, w, merge_rows=(part == 'grid'), overlap=L.get('rect_overlap', 1.0))
+            return [({'tool': tool, 'width': w, 'name': L.get('name', 'cells') + '-rects'}, S)]
+        return paint_labels(ctx, L, cmap)
+    ctx.labels = lab
+    out = list(paint_labels.__globals__['choose_render'](ctx, L, strokes, cmap))
     ctx.labels = lab
     if lines:
         ln = L.get('lines', {})

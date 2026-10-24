@@ -63,3 +63,30 @@ Edit `JOB/preset.json` and re-run `plan` to iterate without re-preparing (palett
 
 - With the old sim assumptions (opaque brush, antialiased pencil, flat mean ground, the original palette) the package reproduces the original Mona Lisa plan: sim dE 5.28 inset 16 (original 5.29). The default tool model uses the live-measured tools (Brush 1.00 with its measured width, Oil 0.81, Watercolour 0.70 and narrower, aliased Pencil, the real ground stroke) and gives 5.61 for the bundled subject with the frame lines that fall inside the 16 px inset; the reference live run scored 6.30 on the same crop.
 - `strokes` colour choice is translucency-aware: with the Watercolour (0.70) it picks a darker paint so the blend lands right.
+
+## Fast rendering (scripts/paint_artist/fastpaint.py)
+
+Every layer goes through a stroke optimiser before it is simulated, so the simulation shows exactly what will be painted:
+
+- **Colour merge:** colours of one layer closer than `colour_merge_dE` (preset key, default 2.0 Lab) become the most used of them, so there are fewer picks.
+- **Collinear pruning:** exactly collinear points are dropped, with no change to the pixels.
+- **Chaining:** strokes whose ends touch (within 0.6 px) are joined, which paints the same pixels with fewer presses.
+- **Ordering:** within each colour, strokes are ordered by nearest neighbour, then 2-opt on the pen-up travel. Strokes are reversed only for direction-free tools (never Watercolour with its wet-edge ramp, nor the Calligraphy nib).
+
+Preset key `optimise: false` turns it off.
+
+`render` on `flat` and `cells` layers chooses how the flat regions are painted:
+
+| `render` | How |
+|---|---|
+| `strokes` | serpentine region fills (tip cascade) or rectangle lines, as before |
+| `fill` | outline + bucket fill: each connected region of one colour gets a 1 px Pencil ring in its own colour along its inner border, then ONE click of Paint's Fill tool inside each interior part |
+| `auto` | plan both, price both with the timing model, keep the cheaper (set on pop-art, stained-glass, cubism, ukiyo-e, mondrian, pixel-art) |
+
+**Fill safety.** The Fill tool's connectivity (`fill_conn` in `paint_tools.json`) decides the ring:
+- `both` (default, safe for either kind of bucket): the 8-neighbour border is ringed (no leak even for an 8-connected bucket), and every 4-connected interior part gets its own seed (full coverage even for a 4-connected one).
+- `4` or `8`, once `speed-measure` has read Paint's real connectivity; 4 is the leanest.
+
+Every fill is verified in the simulator (pencil rasterisation plus flood). A region that would leak, or a tiny one, is painted with 1 px Pencil rows instead, and the simulator models the bucket exactly (`simulate.flood_fill`).
+
+Measured on the Mona Lisa (recorded profile, same detail): pop-art 156 -> 73 s (box), 141 -> 92 s (full canvas); ukiyo-e 155 -> 95 s; stained-glass 151 -> 114 s; mondrian 62 -> 37 s; pixel-art 123 -> 104 s. Cubism keeps strokes: its banded facets make too many tiny regions. Painterly styles gain only a few percent from ordering: their cost is the number of presses, and dots are the slowest (about 36 ms each when recorded).

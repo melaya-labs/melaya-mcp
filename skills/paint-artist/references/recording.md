@@ -7,17 +7,33 @@ Two PowerShell helpers in `scripts/`:
 
 ## Recipe
 
+`Start-Process` joins `-ArgumentList` WITHOUT quoting: a value with spaces (the subtitle, a path) splits into several arguments, the script gets broken parameters and exits silently (a whole recorded run once had no stopwatch). Wrap the script path and every value that may contain spaces in escaped double quotes inside the single-quoted items, as below.
+
 ```bash
-S=$(cygpath -w "$SKILL_DIR/scripts"); F=C:\\tmp\\run1          # any folder for the flag files
+S=$(cygpath -w "$SKILL_DIR/scripts"); F='C:\tmp\run1'        # any folder for the flag files (must exist)
 rm -f /c/tmp/run1.start /c/tmp/run1.stop /c/tmp/run1.rec.stop
-powershell -NoProfile -Command "Start-Process powershell -WindowStyle Hidden -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-File','$S\\record.ps1','-Out','C:\\Users\\<user>\\Downloads\\run1.mp4','-StopFlag','$F.rec.stop'"
-powershell -NoProfile -Command "Start-Process powershell -WindowStyle Hidden -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-STA','-File','$S\\timer.ps1','-StartFlag','$F.start','-StopFlag','$F.stop','-Subtitle','Mona Lisa | one call'"
+powershell -NoProfile -Command "Start-Process powershell -WindowStyle Hidden -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-File','\"$S\\record.ps1\"','-Out','\"C:\\Users\\<user>\\Downloads\\run1.mp4\"','-StopFlag','\"$F.rec.stop\"'"
+powershell -NoProfile -Command "Start-Process powershell -WindowStyle Hidden -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-STA','-File','\"$S\\timer.ps1\"','-StartFlag','\"$F.start\"','-StopFlag','\"$F.stop\"','-Subtitle','\"Mona Lisa  |  4 boxes\"'"
 ```
+
+Check both helpers BEFORE touching the start flag:
+
+```bash
+powershell -NoProfile -Command "Get-CimInstance Win32_Process -Filter \"Name='powershell.exe'\" | Where-Object { (\$_.CommandLine -like '*timer.ps1*' -or \$_.CommandLine -like '*record.ps1*') -and \$_.CommandLine -notlike '*Get-CimInstance*' } | Select-Object ProcessId, CommandLine | Format-List"
+powershell -NoProfile -Command "Get-Process ffmpeg -ErrorAction SilentlyContinue | Select-Object Id"
+ffmpeg -y -loglevel error -f gdigrab -i desktop -frames:v 1 /c/tmp/run1_check.png   # look at it: the stopwatch shows 00:00.0
+```
+
+Both `timer.ps1` and `record.ps1` must be listed with their full arguments, ffmpeg must be running, and the stopwatch window must be visible in the grab (Melaya screenshots black it out: it is not an allowed app, so use the ffmpeg grab). If the timer is missing, read its arguments in the CommandLine, fix the quoting, and relaunch.
 
 1. Run the pre-flight. Make sure Paint is still in front after starting the helpers (both are no-activate, but check `melaya_computer_current_app`).
 2. In ONE short Bash call, touch the start flag: `touch /c/tmp/run1.start`. Your very next tool call is `melaya_computer_batch` with the stored plan.
 3. Collect with `run_id` until the summary arrives. The moment it arrives, your very next tool call is ONE Bash command that only touches both stop flags: `touch /c/tmp/run1.stop /c/tmp/run1.rec.stop`. Put nothing before it in that command (no sleep, no kill, no remux).
 4. `record.ps1` keeps recording 3 s, stops ffmpeg cleanly and writes the MP4.
+
+For several plans in a row (boxes, a split grid), keep one recorder running for the whole sequence and touch its stop flag after the last plan; restart the stopwatch per plan or let it run across them.
+
+Recording slows the run itself (the screen capture competes with Paint): dots and short strokes run about 3x slower than unrecorded. The `recorded` timing profile (the default) accounts for it.
 
 ## What the stopwatch shows
 

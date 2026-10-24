@@ -105,9 +105,32 @@ def stroke_mask(pts, width, spec, rng):
     return np.clip(mm, 0, 1), x0, y0
 
 
+def flood_fill(canvas, strokes, palette, offset=(0, 0), conn=4):
+    """Paint's Fill (bucket): each stroke's first point floods the connected area of exactly that pixel's colour."""
+    from scipy import ndimage as ndi
+    H, W = canvas.shape[:2]
+    q = np.round(canvas * 255).astype(np.int32)
+    key = (q[..., 0] << 16) | (q[..., 1] << 8) | q[..., 2]
+    st = ndi.generate_binary_structure(2, 1 if conn == 4 else 2)
+    for k, pts in strokes:
+        x, y = int(round(pts[0][0] + offset[0])), int(round(pts[0][1] + offset[1]))
+        if not (0 <= x < W and 0 <= y < H):
+            continue
+        v = key[y, x]
+        comp, _ = ndi.label(key == v, st)
+        m = comp == comp[y, x]
+        col = np.asarray(palette[k], np.float32)
+        canvas[m] = col
+        c8 = np.round(col * 255).astype(np.int32)
+        key[m] = (c8[0] << 16) | (c8[1] << 8) | c8[2]
+    return canvas
+
+
 def render(canvas, strokes, width, tool, opacity, palette, tools, offset=(0, 0), seed=0):
     """Composite strokes [(k, pts)] onto canvas (HxWx3 float, modified in place). offset: added to pts."""
     spec = tools[tool]
+    if spec.get('flood'):
+        return flood_fill(canvas, strokes, palette, offset, spec.get('connectivity', 4))
     a = effective_alpha(tool, opacity, tools)
     width = width * spec.get('width_scale', 1.0)          # measured ink thickness / nominal size
     rng = np.random.default_rng(seed)

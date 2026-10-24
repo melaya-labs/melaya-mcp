@@ -7,6 +7,7 @@ Measured live at 1920x1080, display scale 100 %, Paint maximised, zoom 100 %. Th
 | Control | Position | Notes |
 |---|---|---|
 | Pencil button | (262, 88) | Tools group |
+| Fill (bucket) | (302, 88) | Tools group, top row middle (verified on screenshots; confirm with `melaya_computer_find` `query: "Fill"` on another build). One click floods the connected area of exactly the clicked colour; no tolerance setting |
 | Colour picker (eyedropper) | (302, 127) | Returns to the previous tool after one pick |
 | Brushes dropdown | (405, 127) | Opens a SEPARATE popup window: never pin `window_id` |
 | Brushes popup items, x = 500 | Brush 165, Calligraphy 211, Airbrush 303, Oil brush 349, Crayon 395, Marker 441, Natural pencil 487, Watercolour 533 | Click the dropdown (foreground), wait 450 ms, click the item, wait 300 ms |
@@ -53,3 +54,8 @@ The Edit Colours dialog hangs Paint: never open it. Colours come from a palette 
 - The first click after a ribbon click and very fast consecutive actions are handled by the Melaya helper; tool-switch clicks are still `onError: "continue"` with waits.
 - Brushes popup: if a tool switch is missed, the next strokes are painted with the previous tool. Raise `waits_ms` in `ui.json` on a slow machine.
 - After the run Paint shows the result unsaved. Save at once: check the window title first (`melaya_computer_current_app`), then Ctrl+S; in the live runs it saved without an approval prompt. Never send keys to a Paint window whose title changed.
+
+## Tools considered for speed and not used
+
+- **Shapes (Rectangle, Ellipse with a solid fill):** reachable without a dialog: the Shapes gallery, the Fill dropdown set to Solid colour, and the fill colour is Colour 2 (set by right-clicking with the colour picker). Not used. Each shape stays a selected, editable object until the next action commits it, needs a separate drag and colour-2 handling, and is not faster than a Pencil ring plus one bucket click for flat regions, nor than a Brush dab for dots. Not measured live; add it to speed-calib before relying on it.
+- **Ribbon colour slots:** the 20 fixed colours could set black or white in one click instead of a 5-step pick. The custom slots can only be filled through Edit Colours, which hangs Paint, so the palette strip stays the colour source.

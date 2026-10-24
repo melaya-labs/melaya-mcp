@@ -81,7 +81,8 @@
    "split": "value",
    "split_depth": 1,
    "split_min_dL": 9,
-   "value_weight": 1.5
+   "value_weight": 1.5,
+   "render": "auto"
   },
   {
    "type": "outline",

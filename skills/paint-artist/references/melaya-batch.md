@@ -13,7 +13,7 @@
 | Limit | Value | What the skill does |
 |---|---|---|
 | Steps per batch | 5000 | `plan` keeps a 4900-step margin |
-| Run time | up to 10 minutes | `plan --seconds 500` default (margin for the time model) |
+| Run time | up to 10 minutes | `plan --seconds 480` default with the recorded timing profile; `emit` refuses above it |
 | Stored plan size | 2 MB (id / url) | the Mona Lisa plan is about 0.95 MB |
 | Strokes per path step | 200 worked well | the emitter chunks at 200 |
 

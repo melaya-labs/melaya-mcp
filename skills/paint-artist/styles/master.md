@@ -26,7 +26,7 @@ Fidelity, not a look: as many colours as the strip holds (40, k-means in Lab wei
 
 ## Do / don't
 
-- Do keep the estimate under 500 s (the plan default trims detail automatically); about 18,000 strokes at 672 px.
+- Do keep the estimate under 480 s (recorded profile; the plan default trims detail automatically).
 - Do score with `score` (identical crops) and report live and sim.
 - Don't add outlines or colour jitter: they cost fidelity.
 - Don't lower the palette below 32 colours for a photo-real subject.

@@ -9,7 +9,9 @@
    "opacity_setting": true,
    "stepPx": 16,
    "measured": true,
-   "width_scale": 0.94
+   "width_scale": 0.94,
+   "speed": 12000,
+   "strokeGapMs": 1
   },
   "oil": {
    "alpha": 0.81,
@@ -19,7 +21,9 @@
    "opacity_setting": false,
    "stepPx": 4,
    "measured": true,
-   "width_scale": 0.96
+   "width_scale": 0.96,
+   "speed": null,
+   "strokeGapMs": null
   },
   "watercolour": {
    "alpha": 0.75,
@@ -37,7 +41,9 @@
    "bristle_renorm": false,
    "side_ramp": 0.8,
    "coverage": 0.55,
-   "fitted": "2026-10-24: calibration stroke (core 0.70, two passes 0.89, 12 px area-width at size 16) + fit to the live watercolour and sumi-e Mona Lisa crops (wet-edge ramp over 80 % of the width, hair streaks); live_vs_sim on those plans 14.8 -> 10.8 and 12.1 -> 8.0"
+   "fitted": "2026-10-24: calibration stroke (core 0.70, two passes 0.89, 12 px area-width at size 16) + fit to the live watercolour and sumi-e Mona Lisa crops (wet-edge ramp over 80 % of the width, hair streaks); live_vs_sim on those plans 14.8 -> 10.8 and 12.1 -> 8.0",
+   "speed": null,
+   "strokeGapMs": null
   },
   "pencil": {
    "alpha": 1.0,
@@ -48,7 +54,9 @@
    "stepPx": 16,
    "measured": true,
    "width_scale": 1.0,
-   "alpha_at_35": 0.349
+   "alpha_at_35": 0.349,
+   "speed": 12000,
+   "strokeGapMs": 1
   },
   "calligraphy": {
    "alpha": 0.995,
@@ -60,7 +68,9 @@
    "stepPx": 4,
    "measured": true,
    "width_scale": 0.88,
-   "nib_min_px": 1.5
+   "nib_min_px": 1.5,
+   "speed": null,
+   "strokeGapMs": null
   },
   "airbrush": {
    "alpha": 0.107,
@@ -70,7 +80,9 @@
    "opacity_setting": false,
    "stepPx": 4,
    "measured": true,
-   "width_scale": 0.76
+   "width_scale": 0.76,
+   "speed": null,
+   "strokeGapMs": null
   },
   "crayon": {
    "alpha": 0.695,
@@ -80,7 +92,9 @@
    "opacity_setting": false,
    "stepPx": 4,
    "measured": true,
-   "width_scale": 0.66
+   "width_scale": 0.66,
+   "speed": null,
+   "strokeGapMs": null
   },
   "marker": {
    "alpha": 0.753,
@@ -90,7 +104,9 @@
    "opacity_setting": false,
    "stepPx": 4,
    "measured": true,
-   "width_scale": 1.16
+   "width_scale": 1.16,
+   "speed": null,
+   "strokeGapMs": null
   },
   "natural_pencil": {
    "alpha": 0.342,
@@ -100,7 +116,25 @@
    "opacity_setting": false,
    "stepPx": 4,
    "measured": true,
-   "width_scale": 0.79
+   "width_scale": 0.79,
+   "speed": null,
+   "strokeGapMs": null
+  },
+  "fill": {
+   "alpha": 1.0,
+   "aa": false,
+   "soft": 0,
+   "bristles": 0,
+   "opacity_setting": false,
+   "stepPx": 16,
+   "measured": true,
+   "flood": true,
+   "connectivity": 4,
+   "note": "Paint's Fill (bucket): one click floods the connected area of exactly the clicked colour. connectivity = what the simulator floods with (4, most likely for Paint); fill_conn = what plans are made safe for ('both' until speed-calib measures it, then 4 or 8).",
+   "speed": null,
+   "strokeGapMs": 0,
+   "fill_conn": 4
   }
- }
+ },
+ "_doc_speed": "speed (px/s), stepPx and strokeGapMs per tool override the emitter defaults (8000, the tool stepPx, 2 ms); null = default. speed-calib / speed-measure find the fastest setting with no missing pixels."
 }

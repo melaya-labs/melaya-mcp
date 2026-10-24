@@ -44,7 +44,8 @@
    ],
    "smooth": 2,
    "minsize": 30,
-   "blur": 2.0
+   "blur": 2.0,
+   "render": "auto"
   },
   {
    "type": "bokashi",
