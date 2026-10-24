@@ -93,7 +93,7 @@ Once you have read the window and can name the next steps, send them in one `mel
 
 ## Headless servers and VMs
 
-A Linux server or VM without the desktop app is linked by the user on the Computer Control page ("Link a server or VM"), which shows a one-time command of the shape `npx -y @melaya/runner@1.1.74 --token=<token> --computer`. The user runs it on that machine (Node.js 18 or later; with no monitor, inside a virtual display); it then appears in `melaya_computer_status` and everything in this module applies. You never run it: it belongs to another machine, and the token is a credential the user keeps out of the chat. Keep it running under a process manager so scheduled runs find it online.
+A Linux server or VM without the desktop app is linked by the user on the Computer Control page ("Link a server or VM"), which shows a one-time command of the shape `npx -y @melaya/runner@1.1.75 --token=<token> --computer`. The user runs it on that machine (Node.js 18 or later; with no monitor, inside a virtual display); it then appears in `melaya_computer_status` and everything in this module applies. You never run it: it belongs to another machine, and the token is a credential the user keeps out of the chat. Keep it running under a process manager so scheduled runs find it online.
 
 ## Definition of done
 

@@ -279,7 +279,7 @@ The tool list your assistant receives is filtered to what you granted, so connec
 - A Melaya account — free at [melaya.org](https://melaya.org)
 - An Android phone (Android 8 or newer) for phone control. There is no iOS build.
 - The Melaya extension on Chrome or Edge for browser control
-- For autonomous agents: Node 18+, Python 3.11+, and a signed-in CLI on the machine hosting the runner. The runner starts from one command pinned to a reviewed release (`npx -y @melaya/runner@1.1.74 --token=...`); your assistant shows it to you and runs it only after you say yes, or hands it to you to run
+- For autonomous agents: Node 18+, Python 3.11+, and a signed-in CLI on the machine hosting the runner. The runner starts from one command pinned to a reviewed release (`npx -y @melaya/runner@1.1.75 --token=...`); your assistant shows it to you and runs it only after you say yes, or hands it to you to run
 
 ## Privacy
 
