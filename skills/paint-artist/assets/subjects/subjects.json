@@ -1,0 +1,29 @@
+{
+ "mona_lisa": {
+  "file": "assets/subjects/mona_lisa.jpg",
+  "title": "Mona Lisa (Leonardo da Vinci, public domain)",
+  "width": 450,
+  "height": 672,
+  "fit": "stretch",
+  "focus": [
+   [
+    0.47,
+    0.27,
+    0.13,
+    0.14
+   ],
+   [
+    0.47,
+    0.79,
+    0.26,
+    0.09
+   ]
+  ],
+  "face_box": [
+   0.32,
+   0.12,
+   0.62,
+   0.42
+  ]
+ }
+}

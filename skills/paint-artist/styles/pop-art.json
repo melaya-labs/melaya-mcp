@@ -1,0 +1,54 @@
+{
+ "name": "pop-art",
+ "description": "Pop art (Warhol / Lichtenstein): the subject posterised into 5 luminance bands, each band one bold flat colour (black, blue, red, pink, yellow), Ben-Day dots over one band, thick black outlines on every band boundary.",
+ "palette": {
+  "mode": "bands",
+  "colors": [
+   "#111111",
+   "#1f4fbf",
+   "#e8202a",
+   "#f7a1c4",
+   "#ffe01a"
+  ]
+ },
+ "prefilter": {
+  "contrast": 1.2
+ },
+ "layers": [
+  {
+   "type": "flat",
+   "tool": "brush",
+   "labels": "bands",
+   "scale": 2,
+   "tips": [
+    15,
+    7,
+    3,
+    1
+   ],
+   "smooth": 2,
+   "minsize": 30,
+   "blur": 2.5
+  },
+  {
+   "type": "dots",
+   "tool": "brush",
+   "width": 4,
+   "spacing": 8,
+   "grid": "square",
+   "jitter": 0,
+   "color": "#e8202a",
+   "mask": "band:3"
+  },
+  {
+   "type": "outline",
+   "tool": "brush",
+   "width": 4,
+   "color": "#111111",
+   "source": "labels",
+   "min_len": 12,
+   "simplify": 1.0,
+   "smooth": 2
+  }
+ ]
+}

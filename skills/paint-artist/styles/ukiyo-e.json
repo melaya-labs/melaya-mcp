@@ -1,0 +1,83 @@
+{
+ "name": "ukiyo-e",
+ "description": "Japanese woodblock print (ukiyo-e): few flat colour areas pulled toward a period palette (Prussian blue, indigo, vermilion, ochre, sage, paper cream), every area filled flat with no shading inside it, crisp dark sumi contour lines on every boundary.",
+ "palette": {
+  "mode": "kmeans",
+  "k": 12,
+  "snap": {
+   "colors": [
+    "#1f3a5f",
+    "#263a5a",
+    "#5b7fa3",
+    "#a9c2cf",
+    "#d9452b",
+    "#c9a063",
+    "#8da67a",
+    "#3e5e4a",
+    "#d58a7e",
+    "#6e4b3a",
+    "#f2e6ce",
+    "#8c8c84"
+   ],
+   "amount": 0.75
+  },
+  "include": [
+   "#1a1a1a",
+   "#f2e6ce"
+  ]
+ },
+ "prefilter": {
+  "saturation": 1.15,
+  "gamma": 0.85,
+  "contrast": 1.05
+ },
+ "layers": [
+  {
+   "type": "flat",
+   "tool": "brush",
+   "scale": 2,
+   "tips": [
+    15,
+    7,
+    3,
+    1
+   ],
+   "smooth": 2,
+   "minsize": 30,
+   "blur": 2.0
+  },
+  {
+   "type": "bokashi",
+   "tool": "watercolour",
+   "color": "#1f3a5f",
+   "y0": 0.0,
+   "y1": 0.16,
+   "passes": 3,
+   "width": 20,
+   "spacing": 0.45
+  },
+  {
+   "type": "outline",
+   "tool": "pencil",
+   "width": 2,
+   "color": "#1a1a1a",
+   "source": "labels",
+   "min_len": 12,
+   "simplify": 1.2,
+   "smooth": 2
+  },
+  {
+   "type": "outline",
+   "tool": "pencil",
+   "width": 1,
+   "color": "#1a1a1a",
+   "source": "luminance:6",
+   "blur": 1.2,
+   "mask": "primary",
+   "edge_pct": 70,
+   "min_len": 6,
+   "simplify": 0.8,
+   "smooth": 1
+  }
+ ]
+}

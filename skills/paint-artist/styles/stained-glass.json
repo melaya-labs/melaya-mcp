@@ -1,0 +1,97 @@
+{
+ "name": "stained-glass",
+ "description": "Stained glass: the picture cut into cells of saturated jewel-coloured glass (ruby, sapphire, emerald, amber, amethyst), each pane with a slight light gradient, every pane held by thick black lead lines.",
+ "palette": {
+  "mode": "fixed",
+  "colors": [
+   "#5a0a12",
+   "#9b111e",
+   "#c8102e",
+   "#e4572e",
+   "#ffbf00",
+   "#ffd97a",
+   "#e1a95f",
+   "#f5d7a1",
+   "#f3e5ab",
+   "#0b3d1a",
+   "#046307",
+   "#3aa655",
+   "#0b2a66",
+   "#0f52ba",
+   "#1e3f99",
+   "#30b0c0",
+   "#3b1f5c",
+   "#6a3d9a",
+   "#e48aa3",
+   "#f2b8c6",
+   "#e8eef0",
+   "#141414"
+  ]
+ },
+ "prefilter": {
+  "saturation": 1.7,
+  "contrast": 1.1,
+  "gamma": 0.9
+ },
+ "layers": [
+  {
+   "type": "cells",
+   "partition": "voronoi",
+   "n": 300,
+   "edge_bias": 0.4,
+   "focus_density": 5,
+   "color": "shade",
+   "bands": 2,
+   "shade_step": 6,
+   "shade_dir": -120,
+   "fill": "regions",
+   "tool": "brush",
+   "scale": 2,
+   "tips": [
+    15,
+    7,
+    3,
+    1
+   ],
+   "colors": [
+    "#5a0a12",
+    "#9b111e",
+    "#c8102e",
+    "#e4572e",
+    "#ffbf00",
+    "#ffd97a",
+    "#e1a95f",
+    "#f5d7a1",
+    "#f3e5ab",
+    "#0b3d1a",
+    "#046307",
+    "#3aa655",
+    "#0b2a66",
+    "#0f52ba",
+    "#1e3f99",
+    "#30b0c0",
+    "#3b1f5c",
+    "#6a3d9a",
+    "#e48aa3",
+    "#f2b8c6",
+    "#e8eef0"
+   ],
+   "jitter": 0,
+   "density_gamma": 0.8,
+   "split": "value",
+   "split_depth": 1,
+   "split_min_dL": 9,
+   "value_weight": 1.5
+  },
+  {
+   "type": "outline",
+   "tool": "brush",
+   "width": 3,
+   "color": "#141414",
+   "source": "labels",
+   "min_len": 3,
+   "simplify": 0.8,
+   "smooth": 0
+  }
+ ]
+}

@@ -1,0 +1,91 @@
+{
+ "name": "expressionism",
+ "description": "Expressionism (Munch, Kirchner): forms distorted by waves, long wavy strokes that swirl through everything, intense clashing colour (blood orange against acid green and Prussian blue), heavy dark outlines around the figure.",
+ "palette": {
+  "mode": "fixed",
+  "colors": [
+   "#c0261d",
+   "#e8641c",
+   "#f2b51b",
+   "#f5e6a8",
+   "#9cc63a",
+   "#2e8b57",
+   "#1d3c78",
+   "#3a5fcd",
+   "#5b2a86",
+   "#d94f8a",
+   "#141414",
+   "#7a3b1e"
+  ]
+ },
+ "prefilter": {
+  "saturation": 1.8,
+  "contrast": 1.25,
+  "warp": {
+   "amp": 12,
+   "wavelength": 150
+  }
+ },
+ "layers": [
+  {
+   "type": "ground",
+   "color": "#e8641c",
+   "width": 64
+  },
+  {
+   "type": "strokes",
+   "tool": "brush",
+   "width": 13,
+   "thresh": 0,
+   "max_len": 16,
+   "fixed_len": true,
+   "direction": "flow",
+   "flow_sigma": 12,
+   "swirl": 0.85,
+   "swirl_n": 7,
+   "step": 0.55,
+   "fc": 0.8,
+   "color_jitter": 26,
+   "grid": 0.95,
+   "seed_jitter": 0.4
+  },
+  {
+   "type": "strokes",
+   "tool": "brush",
+   "width": 7,
+   "thresh": 6,
+   "max_len": 14,
+   "fixed_len": true,
+   "direction": "flow",
+   "flow_sigma": 8,
+   "swirl": 0.6,
+   "step": 0.6,
+   "fc": 0.8,
+   "color_jitter": 22,
+   "seed_jitter": 0.4
+  },
+  {
+   "type": "strokes",
+   "tool": "brush",
+   "width": 4,
+   "thresh": 9,
+   "max_len": 8,
+   "fixed_len": true,
+   "direction": "flow",
+   "flow_sigma": 5,
+   "swirl": 0.3,
+   "mask": "finest",
+   "use_fine": false
+  },
+  {
+   "type": "outline",
+   "tool": "brush",
+   "width": 5,
+   "color": "#141414",
+   "source": "luminance:4",
+   "edge_pct": 78,
+   "min_len": 30,
+   "simplify": 1.5
+  }
+ ]
+}

@@ -1,0 +1,58 @@
+{
+ "name": "mondrian",
+ "description": "De Stijl (Mondrian, 1920s): the image abstracted into a grid of rectangles split along its strongest straight structure, black lines of two thicknesses, each cell only primary red, blue or yellow (the most saturated cells) or white and light grey.",
+ "palette": {
+  "mode": "fixed",
+  "colors": [
+   "#121212",
+   "#6b6b6b",
+   "#d6d4cc",
+   "#f2f0e9",
+   "#d62718",
+   "#1d4fa0",
+   "#f7d02c"
+  ]
+ },
+ "prefilter": {},
+ "layers": [
+  {
+   "type": "cells",
+   "partition": "mondrian",
+   "min_px": 8,
+   "min_frac": 0.2,
+   "color": "nearest",
+   "fill": "rects",
+   "rect_width": 8,
+   "tool": "pencil",
+   "lines": {
+    "color": "#121212",
+    "width": 3,
+    "thick_width": 6,
+    "thick_levels": 2,
+    "tool": "brush"
+   },
+   "n": 170,
+   "detail_power": 1.0,
+   "value_weight": 1.5,
+   "colors": [
+    "#121212",
+    "#6b6b6b",
+    "#d6d4cc",
+    "#f2f0e9",
+    "#d62718",
+    "#1d4fa0",
+    "#f7d02c"
+   ],
+   "jitter": 5,
+   "match": {
+    "#121212": "#0a0806",
+    "#1d4fa0": "#2a2219",
+    "#6b6b6b": "#4f5040",
+    "#d6d4cc": "#7d8068",
+    "#f2f0e9": "#a3a88c",
+    "#f7d02c": "#d8ae6c",
+    "#d62718": "#8a5428"
+   }
+  }
+ ]
+}

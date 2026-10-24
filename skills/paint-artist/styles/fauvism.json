@@ -1,0 +1,84 @@
+{
+ "name": "fauvism",
+ "description": "Fauvism (Matisse, Derain 1905-1908): pure, saturated, non-naturalistic colour straight from the tube, complementary shadows (green and violet in skin), broad flat strokes with the light ground showing between them, a few cobalt contours.",
+ "palette": {
+  "mode": "fixed",
+  "colors": [
+   "#e63b2e",
+   "#f28c28",
+   "#f7d038",
+   "#7ac943",
+   "#2bb24c",
+   "#1f7a5a",
+   "#00a0b0",
+   "#2c5fd6",
+   "#3a2a8c",
+   "#8e44ad",
+   "#f49ac1",
+   "#fdf5e6",
+   "#c0392b",
+   "#1b1b3a"
+  ]
+ },
+ "prefilter": {
+  "saturation": 1.9,
+  "contrast": 1.1,
+  "gamma": 0.85,
+  "complement_shadows": {
+   "L": 78,
+   "strength": 0.85,
+   "soft": 22
+  }
+ },
+ "layers": [
+  {
+   "type": "ground",
+   "color": "#fdf5e6",
+   "width": 64
+  },
+  {
+   "type": "strokes",
+   "tool": "brush",
+   "width": 26,
+   "thresh": 0,
+   "max_len": 3,
+   "min_len": 1,
+   "grid": 1.45,
+   "seed_jitter": 0.45,
+   "color_jitter": 5,
+   "blur": 0.7
+  },
+  {
+   "type": "strokes",
+   "tool": "brush",
+   "width": 14,
+   "thresh": 9,
+   "max_len": 3,
+   "min_len": 1,
+   "grid": 1.35,
+   "seed_jitter": 0.45,
+   "color_jitter": 5
+  },
+  {
+   "type": "strokes",
+   "tool": "brush",
+   "width": 7,
+   "thresh": 10,
+   "max_len": 3,
+   "min_len": 1,
+   "mask": "detail",
+   "grid": 1.2,
+   "seed_jitter": 0.4
+  },
+  {
+   "type": "outline",
+   "tool": "brush",
+   "width": 3,
+   "color": "#2c5fd6",
+   "source": "luminance:4",
+   "edge_pct": 85,
+   "min_len": 30,
+   "simplify": 1.2
+  }
+ ]
+}

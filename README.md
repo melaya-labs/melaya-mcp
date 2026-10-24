@@ -295,7 +295,7 @@ Disconnecting in Melaya settings immediately revokes the connection's ability to
 |---|---|
 | `server.json` | Manifest for the [official MCP Registry](https://registry.modelcontextprotocol.io) |
 | `.mcp.json` | Remote server declaration |
-| `.claude-plugin/`, `skills/`, `commands/` | Claude Code plugin packaging — one distribution of the same server. `skills/melaya` is the [Melaya skill](./skills/melaya) (its only source); `skills/melaya-setup` is the first-run setup skill |
+| `.claude-plugin/`, `skills/`, `commands/` | Claude Code plugin packaging — one distribution of the same server. `skills/melaya` is the [Melaya skill](./skills/melaya) (its only source); `skills/melaya-setup` is the first-run setup skill; `skills/paint-artist` paints in Microsoft Paint through Computer Control in one stored-plan call (17 styles, the advanced drawing example of the Melaya skill's one-call plans) |
 
 The server itself runs as part of the Melaya platform; this repo is its public manifest, packaging and documentation.
 

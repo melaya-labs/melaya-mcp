@@ -1,0 +1,19 @@
+{
+ "name": "master",
+ "description": "1:1 reproduction (the Mona Lisa recipe): 40-colour Lab k-means palette weighted on the focus, mean-colour ground, coarse-to-fine contour strokes (brush 32/16, oil 8 off-focus, brush 8 on focus, brush 4 in smooth areas, pencil 4 on structure, pencil 2 on the finest structure and the face), watercolour sfumato glaze that never touches the face, painted frame.",
+ "palette": {"mode": "kmeans", "k": 40, "focus_weight": 4},
+ "prefilter": {},
+ "masks": {"detail_pct": 50, "finest_pct": 85},
+ "layers": [
+  {"type": "ground", "color": "mean", "width": 64, "spacing": 0.75},
+  {"type": "strokes", "tool": "brush", "width": 32, "thresh": 0, "max_len": 12},
+  {"type": "strokes", "tool": "brush", "width": 16, "thresh": 6, "max_len": 12},
+  {"type": "strokes", "tool": "oil", "width": 8, "thresh": 7, "max_len": 12, "mask": "~fine"},
+  {"type": "strokes", "tool": "brush", "width": 8, "thresh": 6, "max_len": 5, "mask": "fine"},
+  {"type": "strokes", "tool": "brush", "width": 4, "thresh": 8, "max_len": 8, "mask": "~detail"},
+  {"type": "strokes", "tool": "pencil", "width": 4, "thresh": 6.5, "max_len": 5, "mask": "detail"},
+  {"type": "strokes", "tool": "pencil", "width": 2, "thresh": 7.5, "max_len": 4, "mask": "finest"},
+  {"type": "glaze", "tool": "watercolour", "cell": 8, "gain": 3.0, "protect": "primary"}
+ ],
+ "frame": {"inset": 14, "band_width": 11}
+}

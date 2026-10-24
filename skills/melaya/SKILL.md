@@ -1,7 +1,7 @@
 ---
 name: melaya
-description: Use for anything done on the Melaya platform through its MCP server (tools named melaya_*). Covers running, building, fixing and handing over Melaya pipelines and complete multi-pipeline agentic systems; connecting services (Google, Slack, CRMs, API keys); the local runner, Claude Code, Codex, Copilot, Ollama and LM Studio models; projects and templates; run inputs (brief and files); schedules, event triggers and approvals; data stores in Google Sheets and bulk scoring; validation, debugging and reading results; client documentation; phone, browser and computer agents (desktop apps on the user's own computer). Works for non-technical users (plain-language journeys) and for integrators (full end-to-end method). Load this first, then open only the module the task needs.
-version: 1.2.7
+description: Use for anything done on the Melaya platform through its MCP server (tools named melaya_*). Covers running, building, fixing and handing over Melaya pipelines and complete multi-pipeline agentic systems; connecting services (Google, Slack, CRMs, API keys); the local runner, Claude Code, Codex, Copilot, Ollama and LM Studio models; projects and templates; run inputs (brief and files); schedules, event triggers and approvals; data stores in Google Sheets and bulk scoring; validation, debugging and reading results; client documentation; phone, browser and computer agents (desktop apps on the user's own computer), including bulk or repeated device work run as one stored plan in one call (tables of records, the same form for many rows, file lists, diagrams and drawings, admin flows, phone flows for a list). Works for non-technical users (plain-language journeys) and for integrators (full end-to-end method). Load this first, then open only the module the task needs.
+version: 1.2.8
 ---
 
 # Melaya
@@ -48,6 +48,7 @@ If you cannot tell, ask one question: "Do you want to run something that exists,
 | Documenting a system for a client or a non-technical owner, handover | `modules/client-handover/GUIDE.md` |
 | Operating an Android phone or a browser, device steps in pipelines, the Melaya Assistant | `modules/devices-browser/GUIDE.md` |
 | Operating desktop apps on the user's own computer or a headless Linux VM (Computer Control): access levels, the read-act-verify loop, fast mode, computer steps in pipelines | `modules/devices-computer/GUIDE.md` |
+| Repetitive or long device work in ONE call on the computer, browser or phone: entering a table of records, the same form for N rows, renaming many files, drawing a diagram from data, repetitive admin flows, a phone flow for a list; choosing fast mode vs batch vs stored plans, background vs foreground, verifying and resuming | `modules/one-call-plans/GUIDE.md` |
 
 Each module starts with a "Use when" line, then its method; deeper material sits in its `references/` (and `templates/`) folder. Read those only when the module points you there.
 
@@ -58,6 +59,7 @@ Each module starts with a "Use when" line, then its method; deeper material sits
 - Build a full client system: agentic-systems drives every phase and names the module for each.
 - Phone or browser work: devices-browser (plus runners-models when a browser runs on the user's computer).
 - Desktop app work on the user's computer: devices-computer (after checking discovery for a connector, and devices-browser for a website or phone app).
+- Bulk or repeated device work (many rows, files, pages or strokes): the device module for setup and safety, then one-call-plans for the plan, the single call and the verification.
 
 ## Adding a module
 
@@ -65,6 +67,7 @@ New capability areas (for example dedicated mobile-agent or browser-agent playbo
 
 ## Changelog
 
+- 1.2.8: new module one-call-plans: the method proven by painting the Mona Lisa in one call, generalised to any computer, browser or phone work (read and calibrate, plan offline in code, preview, store the plan and run it in one call, verify against the data, resume from the failed step), with the exact step shapes and caps of every batch, fast and plan tool, what runs in the background without taking the user's mouse, verification per surface, a failure table, six recipes and the `plankit.py` plan builder; validated live on a 30-row table in a desktop editor (one call, 2.8 s, background) and a public test web form (one stored plan per call).
 - 1.2.7: runner command pinned to `@melaya/runner@1.1.75` (computer runs pause while the user uses the mouse or keyboard and resume where they stopped; batch and path take `resume_from`; faster consecutive strokes).
 - 1.2.6: runner command pinned to `@melaya/runner@1.1.74` (stored plans: grouped-step tools take `plan` from a saved id, an https URL or a file in `~/.melaya/plans/` read by the runner; runner-hosted Assistant chats get the computer tools when a computer is on in Devices).
 - 1.2.5: runner command pinned to `@melaya/runner@1.1.72` (the desktop app tells the runner its version, and per-machine update notices in Account > Devices).

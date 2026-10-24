@@ -1,0 +1,87 @@
+{
+ "name": "sumi-e",
+ "description": "Japanese ink wash (sumi-e): greyscale ink only, washes in three dilutions with the Watercolour tool, expressive thick-thin contour strokes with the Calligraphy brush, most of the paper left untouched, a red seal.",
+ "palette": {
+  "mode": "fixed",
+  "colors": [
+   "#111111",
+   "#2b2b29",
+   "#6e6e69",
+   "#a8a8a2",
+   "#d9d9d4",
+   "#b3261e"
+  ]
+ },
+ "prefilter": {
+  "saturation": 0,
+  "gamma": 0.5,
+  "contrast": 1.1,
+  "fade_edges": {
+   "width": 0.18,
+   "noise": 0.45
+  }
+ },
+ "layers": [
+  {
+   "type": "strokes",
+   "tool": "watercolour",
+   "width": 36,
+   "thresh": 28,
+   "max_len": 7,
+   "min_len": 2,
+   "grid": 1.5,
+   "seed_jitter": 0.5,
+   "fc": 0.35,
+   "step": 0.5
+  },
+  {
+   "type": "strokes",
+   "tool": "watercolour",
+   "width": 18,
+   "thresh": 24,
+   "max_len": 6,
+   "min_len": 2,
+   "grid": 1.4,
+   "seed_jitter": 0.5,
+   "step": 0.5,
+   "fc": 0.4
+  },
+  {
+   "type": "strokes",
+   "tool": "watercolour",
+   "width": 8,
+   "thresh": 22,
+   "max_len": 5,
+   "min_len": 1,
+   "mask": "finest",
+   "grid": 1.2,
+   "seed_jitter": 0.4,
+   "step": 0.6
+  },
+  {
+   "type": "outline",
+   "tool": "calligraphy",
+   "width": 5,
+   "color": "#111111",
+   "source": "luminance:4",
+   "edge_pct": 80,
+   "min_len": 25,
+   "simplify": 1.6,
+   "mask": "~paper"
+  },
+  {
+   "type": "ornament",
+   "motif": "seal",
+   "at": [
+    0.9,
+    0.93
+   ],
+   "size": 22,
+   "width": 5,
+   "colors": [
+    "#b3261e"
+   ],
+   "tool": "pencil"
+  }
+ ]
+}

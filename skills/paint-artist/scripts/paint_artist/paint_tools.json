@@ -1,0 +1,106 @@
+{
+ "_doc": "Tool model of Microsoft Paint (Windows 11). alpha = fraction of the stroke colour laid on white in one pass (measured live: black stroke on white). opacity_setting = the Opacity slider applies to this tool (pencil and brush only). Re-measure with `cli.py calib-plan` / `calib-measure` and save a copy as tools.json next to ui.json. coverage = mean share of alpha a stroke actually lays (ramped / streaky tools); the planner uses alpha x coverage to pick colours.",
+ "tools": {
+  "brush": {
+   "alpha": 1.0,
+   "aa": true,
+   "soft": 0,
+   "bristles": 0,
+   "opacity_setting": true,
+   "stepPx": 16,
+   "measured": true,
+   "width_scale": 0.94
+  },
+  "oil": {
+   "alpha": 0.81,
+   "aa": true,
+   "soft": 0,
+   "bristles": 1,
+   "opacity_setting": false,
+   "stepPx": 4,
+   "measured": true,
+   "width_scale": 0.96
+  },
+  "watercolour": {
+   "alpha": 0.75,
+   "aa": true,
+   "soft": 0.04,
+   "bristles": 1,
+   "opacity_setting": false,
+   "stepPx": 4,
+   "measured": true,
+   "width_scale": 1.0,
+   "alpha_two_passes": 0.891,
+   "bristle_lo": 0.8,
+   "bristle_hi": 1.0,
+   "bristle_px": 2.0,
+   "bristle_renorm": false,
+   "side_ramp": 0.8,
+   "coverage": 0.55,
+   "fitted": "2026-10-24: calibration stroke (core 0.70, two passes 0.89, 12 px area-width at size 16) + fit to the live watercolour and sumi-e Mona Lisa crops (wet-edge ramp over 80 % of the width, hair streaks); live_vs_sim on those plans 14.8 -> 10.8 and 12.1 -> 8.0"
+  },
+  "pencil": {
+   "alpha": 1.0,
+   "aa": false,
+   "soft": 0,
+   "bristles": 0,
+   "opacity_setting": true,
+   "stepPx": 16,
+   "measured": true,
+   "width_scale": 1.0,
+   "alpha_at_35": 0.349
+  },
+  "calligraphy": {
+   "alpha": 0.995,
+   "aa": true,
+   "soft": 0,
+   "bristles": 0,
+   "nib": 135,
+   "opacity_setting": false,
+   "stepPx": 4,
+   "measured": true,
+   "width_scale": 0.88,
+   "nib_min_px": 1.5
+  },
+  "airbrush": {
+   "alpha": 0.107,
+   "aa": true,
+   "soft": 0.35,
+   "bristles": 0,
+   "opacity_setting": false,
+   "stepPx": 4,
+   "measured": true,
+   "width_scale": 0.76
+  },
+  "crayon": {
+   "alpha": 0.695,
+   "aa": true,
+   "soft": 0,
+   "bristles": 1,
+   "opacity_setting": false,
+   "stepPx": 4,
+   "measured": true,
+   "width_scale": 0.66
+  },
+  "marker": {
+   "alpha": 0.753,
+   "aa": true,
+   "soft": 0,
+   "bristles": 0,
+   "opacity_setting": false,
+   "stepPx": 4,
+   "measured": true,
+   "width_scale": 1.16
+  },
+  "natural_pencil": {
+   "alpha": 0.342,
+   "aa": true,
+   "soft": 0,
+   "bristles": 1,
+   "opacity_setting": false,
+   "stepPx": 4,
+   "measured": true,
+   "width_scale": 0.79
+  }
+ }
+}

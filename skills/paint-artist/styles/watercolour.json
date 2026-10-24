@@ -1,0 +1,62 @@
+{
+ "name": "watercolour",
+ "description": "Watercolour wash: only the Watercolour tool (57 % per pass), light to dark wet glazes from big to small, soft edges, paper white kept where the subject is light (no ground), colour chosen for how it lands over what is already there.",
+ "palette": {
+  "mode": "kmeans",
+  "k": 20,
+  "saturation": 1.1
+ },
+ "prefilter": {
+  "gamma": 0.62,
+  "contrast": 0.9,
+  "saturation": 1.2,
+  "fade_edges": {
+   "width": 0.11,
+   "noise": 0.4
+  }
+ },
+ "layers": [
+  {
+   "type": "strokes",
+   "tool": "watercolour",
+   "width": 44,
+   "thresh": 18,
+   "max_len": 3,
+   "min_len": 1,
+   "blur": 0.6,
+   "fc": 0.5,
+   "grid": 1.5,
+   "seed_jitter": 0.5
+  },
+  {
+   "type": "strokes",
+   "tool": "watercolour",
+   "width": 24,
+   "thresh": 15,
+   "max_len": 4,
+   "min_len": 1,
+   "grid": 1.4,
+   "seed_jitter": 0.5
+  },
+  {
+   "type": "strokes",
+   "tool": "watercolour",
+   "width": 12,
+   "thresh": 13,
+   "max_len": 4,
+   "min_len": 1,
+   "grid": 1.3,
+   "seed_jitter": 0.4
+  },
+  {
+   "type": "strokes",
+   "tool": "watercolour",
+   "width": 5,
+   "thresh": 13,
+   "max_len": 4,
+   "min_len": 1,
+   "mask": "detail",
+   "use_fine": false
+  }
+ ]
+}

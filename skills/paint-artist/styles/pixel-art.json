@@ -1,0 +1,26 @@
+{
+ "name": "pixel-art",
+ "description": "8-bit pixel art: the picture on a coarse grid of square blocks (36 across), a small 14-colour palette, ordered (Bayer) dithering for in-between tones, every block crisp and flat, painted with the aliased Pencil.",
+ "palette": {
+  "mode": "kmeans",
+  "k": 14,
+  "saturation": 1.25,
+  "focus_weight": 3
+ },
+ "prefilter": {
+  "saturation": 1.2,
+  "contrast": 1.1
+ },
+ "layers": [
+  {
+   "type": "cells",
+   "partition": "grid",
+   "cols": 36,
+   "color": "dither",
+   "dither": 7,
+   "fill": "rects",
+   "rect_width": 4,
+   "tool": "pencil"
+  }
+ ]
+}

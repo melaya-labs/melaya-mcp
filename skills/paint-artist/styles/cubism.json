@@ -1,0 +1,76 @@
+{
+ "name": "cubism",
+ "description": "Analytic cubism (Picasso, Braque 1909-1912): the subject broken into angular, edge-aligned facets, each facet graded light to dark in parallel bands, a muted palette of ochre, grey, umber and slate, dark facet edges.",
+ "palette": {
+  "mode": "fixed",
+  "colors": [
+   "#17130f",
+   "#2a241e",
+   "#4b3621",
+   "#6b5a3e",
+   "#8a5a2b",
+   "#b38b4d",
+   "#d1b07a",
+   "#e3d7b8",
+   "#5b6770",
+   "#8c8c84",
+   "#c2bfb2",
+   "#6b6b3a"
+  ]
+ },
+ "prefilter": {
+  "saturation": 0.75,
+  "contrast": 1.2,
+  "gamma": 0.85
+ },
+ "layers": [
+  {
+   "type": "cells",
+   "partition": "voronoi",
+   "n": 300,
+   "edge_bias": 0.5,
+   "focus_density": 5,
+   "color": "shade",
+   "bands": 3,
+   "shade_step": 7,
+   "shade_dir": "edge",
+   "fill": "regions",
+   "tool": "brush",
+   "scale": 2,
+   "tips": [
+    15,
+    7,
+    3,
+    1
+   ],
+   "density_gamma": 0.9,
+   "split": "edge_line",
+   "split_depth": 2,
+   "split_min_dL": 7,
+   "value_weight": 1.6,
+   "colors": [
+    "#17130f",
+    "#2a241e",
+    "#4b3621",
+    "#6b5a3e",
+    "#8a5a2b",
+    "#b38b4d",
+    "#d1b07a",
+    "#e3d7b8",
+    "#5b6770",
+    "#8c8c84",
+    "#c2bfb2",
+    "#6b6b3a"
+   ]
+  },
+  {
+   "type": "outline",
+   "tool": "pencil",
+   "width": 2,
+   "color": "#2a241e",
+   "source": "labels",
+   "min_len": 4,
+   "simplify": 1.2
+  }
+ ]
+}

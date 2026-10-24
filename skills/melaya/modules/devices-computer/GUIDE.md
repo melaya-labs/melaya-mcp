@@ -68,7 +68,7 @@ Once you have read the window and can name the next steps, send them in one `mel
 - **Long runs** (up to 100 steps, loops of 200 rows, 15 minutes) return "running (run_id ...)" after about 50 seconds. Call again with only `run_id` to wait for more or get the result; add `stop: true` to stop it. One fast run per computer at a time.
 - Other options: `done_url` (text the app id or window title must contain at the end, for a verified completion), `budget_s` (5 to 900), `computer_id`. A completed run returns its steps as a reusable workflow: offer it to the user.
 
-`melaya_computer_batch` runs raw action steps in the app without round trips; prefer fast mode for plain-word plans.
+`melaya_computer_batch` runs up to 5000 exact action steps in the app in one call (10 minutes), and every grouped tool takes a stored plan (`plan: {file}` from `~/.melaya/plans/`, `{id}` from `melaya_computer_plan`, or `{url}`) so a long list starts at once. For anything repetitive (a table of records, many files, a form per row, a diagram or drawing) use the one-call method: probe, generate the plan in code, preview, store, one call, verify by reading back, resume from the failed step. Background delivery (no cursor move, no focus steal) works for typing, `set_value` and control clicks; key chords and pointer drawing need the foreground. Load `../../modules/one-call-plans/GUIDE.md`.
 
 ## Common refusals, in plain words
 

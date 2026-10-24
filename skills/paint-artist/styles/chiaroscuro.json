@@ -1,0 +1,70 @@
+{
+ "name": "chiaroscuro",
+ "description": "Old-master chiaroscuro (Caravaggio, Rembrandt): dark umber ground laid first, then the lights built up dark to light with brush and oil only where the subject is lighter than the ground, finest modelling on the lit focus, a warm watercolour glaze to unify; strong value contrast, shadows left as ground.",
+ "palette": {
+  "mode": "kmeans",
+  "k": 28,
+  "focus_weight": 3,
+  "include": [
+   "#1b120c"
+  ]
+ },
+ "prefilter": {
+  "contrast": 1.4,
+  "gamma": 1.3,
+  "saturation": 0.9,
+  "vignette": {
+   "strength": 0.75,
+   "inner": 0.16,
+   "outer": 0.6
+  }
+ },
+ "layers": [
+  {
+   "type": "ground",
+   "color": "#1b120c",
+   "width": 64
+  },
+  {
+   "type": "strokes",
+   "tool": "brush",
+   "width": 24,
+   "thresh": 8,
+   "max_len": 8,
+   "color_order": "dark_first"
+  },
+  {
+   "type": "strokes",
+   "tool": "oil",
+   "width": 12,
+   "thresh": 7,
+   "max_len": 8,
+   "color_order": "dark_first"
+  },
+  {
+   "type": "strokes",
+   "tool": "brush",
+   "width": 6,
+   "thresh": 7,
+   "max_len": 6,
+   "mask": "detail",
+   "color_order": "dark_first"
+  },
+  {
+   "type": "strokes",
+   "tool": "pencil",
+   "width": 3,
+   "thresh": 7,
+   "max_len": 4,
+   "mask": "finest",
+   "color_order": "dark_first"
+  },
+  {
+   "type": "glaze",
+   "tool": "watercolour",
+   "cell": 10,
+   "gain": 2.5,
+   "protect": "primary"
+  }
+ ]
+}

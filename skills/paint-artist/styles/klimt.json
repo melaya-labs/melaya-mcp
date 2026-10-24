@@ -1,0 +1,173 @@
+{
+ "name": "klimt",
+ "description": "Klimt's golden phase (The Kiss, Adele Bloch-Bauer I): the face and hands painted naturally and softly, everything else turned into a gold ground with mosaic tesserae, spirals and small rings in gold, ochre, black and teal.",
+ "palette": {
+  "mode": "kmeans",
+  "k": 16,
+  "focus_weight": 6,
+  "include": [
+   "#c9a23a",
+   "#e2c46a",
+   "#a87b2a",
+   "#6e5220",
+   "#161310",
+   "#2f7f7a",
+   "#efe2b8",
+   "#8a2f2a"
+  ]
+ },
+ "prefilter": {},
+ "layers": [
+  {
+   "type": "ground",
+   "color": "#c9a23a",
+   "width": 64
+  },
+  {
+   "type": "ornament",
+   "motif": "squares",
+   "size": 6,
+   "spacing": 8,
+   "width": 2,
+   "grid": "square",
+   "jitter": 0.1,
+   "colors": [
+    "#a87b2a",
+    "#c9a23a",
+    "#e2c46a"
+   ],
+   "color_by": "random",
+   "mask": "light:42&~skin+5",
+   "density": 0.55,
+   "tool": "pencil",
+   "name": "gold-mosaic"
+  },
+  {
+   "type": "ornament",
+   "motif": "squares",
+   "size": 9,
+   "spacing": 11,
+   "width": 3,
+   "grid": "square",
+   "jitter": 0.08,
+   "colors": [
+    "#161310",
+    "#6e5220",
+    "#2f7f7a",
+    "#a87b2a",
+    "#efe2b8"
+   ],
+   "color_by": "luminance",
+   "mask": "dark:42&~skin+5",
+   "tool": "pencil",
+   "name": "dress-tesserae"
+  },
+  {
+   "type": "ornament",
+   "motif": "spirals",
+   "size": 26,
+   "spacing": 46,
+   "width": 2,
+   "turns": 2.5,
+   "grid": "hex",
+   "colors": [
+    "#6e5220"
+   ],
+   "color_by": "random",
+   "mask": "light:42&~skin+10",
+   "tool": "pencil"
+  },
+  {
+   "type": "ornament",
+   "motif": "rings",
+   "size": 14,
+   "spacing": 30,
+   "width": 2,
+   "grid": "hex",
+   "jitter": 0.4,
+   "colors": [
+    "#efe2b8",
+    "#161310",
+    "#2f7f7a"
+   ],
+   "color_by": "random",
+   "mask": "dark:42&~skin+8",
+   "density": 0.5,
+   "tool": "pencil"
+  },
+  {
+   "type": "ornament",
+   "motif": "dots",
+   "size": 4,
+   "spacing": 16,
+   "width": 4,
+   "grid": "hex",
+   "jitter": 0.4,
+   "colors": [
+    "#e2c46a"
+   ],
+   "color_by": "random",
+   "mask": "dark:42&~skin+5",
+   "density": 0.7,
+   "tool": "brush"
+  },
+  {
+   "type": "strokes",
+   "tool": "brush",
+   "width": 12,
+   "thresh": 0,
+   "max_len": 6,
+   "mask": "skin+3",
+   "clip_mask": true,
+   "use_fine": false
+  },
+  {
+   "type": "strokes",
+   "tool": "brush",
+   "width": 6,
+   "thresh": 5,
+   "max_len": 5,
+   "mask": "skin+2",
+   "clip_mask": true,
+   "use_fine": false
+  },
+  {
+   "type": "strokes",
+   "tool": "pencil",
+   "width": 3,
+   "thresh": 6,
+   "max_len": 4,
+   "mask": "skin+1",
+   "clip_mask": true,
+   "use_fine": false
+  },
+  {
+   "type": "strokes",
+   "tool": "pencil",
+   "width": 2,
+   "thresh": 7,
+   "max_len": 3,
+   "mask": "skin&primary+6",
+   "clip_mask": true,
+   "use_fine": false
+  },
+  {
+   "type": "ornament",
+   "motif": "dots",
+   "size": 3,
+   "spacing": 9,
+   "width": 3,
+   "grid": "hex",
+   "jitter": 0.3,
+   "colors": [
+    "#e2c46a",
+    "#a87b2a"
+   ],
+   "color_by": "random",
+   "mask": "skin+9&~skin+3",
+   "density": 0.8,
+   "tool": "brush",
+   "name": "halo-dots"
+  }
+ ]
+}

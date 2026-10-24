@@ -1,0 +1,71 @@
+{
+ "name": "pencil-sketch",
+ "description": "Graphite pencil drawing: values built by hatching density and direction (one more crossing direction per darker value level), Pencil at partial opacity so crossings darken like graphite, contour lines on the strongest edges, paper left white.",
+ "palette": {
+  "mode": "fixed",
+  "colors": [
+   "#26262a",
+   "#4d4d52",
+   "#77777c"
+  ]
+ },
+ "prefilter": {
+  "saturation": 0,
+  "contrast": 1.3,
+  "gamma": 0.85,
+  "fade_edges": {
+   "width": 0.08,
+   "noise": 0.4
+  }
+ },
+ "layers": [
+  {
+   "type": "hatch",
+   "tool": "pencil",
+   "width": 1,
+   "opacity": 0.55,
+   "color": "#4d4d52",
+   "jitter": 0.6,
+   "min_run": 5,
+   "levels": [
+    {
+     "L": 78,
+     "angle": 45,
+     "spacing": 6
+    },
+    {
+     "L": 62,
+     "angle": -45,
+     "spacing": 5
+    },
+    {
+     "L": 46,
+     "angle": 0,
+     "spacing": 4
+    },
+    {
+     "L": 32,
+     "angle": 90,
+     "spacing": 3
+    },
+    {
+     "L": 20,
+     "angle": 30,
+     "spacing": 3
+    }
+   ]
+  },
+  {
+   "type": "outline",
+   "tool": "pencil",
+   "width": 1,
+   "opacity": 0.85,
+   "color": "#26262a",
+   "source": "luminance:5",
+   "min_len": 14,
+   "edge_pct": 75,
+   "simplify": 0.8,
+   "mask": "~paper"
+  }
+ ]
+}
