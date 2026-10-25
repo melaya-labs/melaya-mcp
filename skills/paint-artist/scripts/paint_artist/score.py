@@ -25,7 +25,7 @@ def scores(img, target, face_box=None, inset=16):
     if face_box:
         f = np.zeros((H, W), bool)
         x0, y0, x1, y1 = face_box
-        f[int(y0 * H):int(y1 * H), int(x0 * W):int(x1 * W)] = True
+        f[max(0, int(y0 * H)):max(0, int(y1 * H)), max(0, int(x0 * W)):max(0, int(x1 * W))] = True   # clipped (no wrap)
         out['face'] = float(d[f & m].mean()) if (f & m).any() else None
         out['rest'] = float(d[~f & m].mean())
     else:

@@ -5,9 +5,13 @@
   prepare  SRC|--subject mona_lisa --job DIR --style STYLE|preset.json   target.png, palette, canvas.png, meta.json
            [--height 672] [--width W] [--fit crop|stretch] [--focus cx,cy,rx,ry ...] [--face-box x0,y0,x1,y1]
            [--reference REF --transfer] [--no-frame]
+           boxes: --boxes RxC --styles a,b,.. [--name PREFIX] [--crop x0,y0,x1,y1] [--split-at x,y] [--fit crop|stretch]
+                  [--bleed 8] [--cell-override JSON|file]
   plan     --job DIR [--detail 1.0] [--budget N] [--seconds 480] [--profile recorded|unrecorded] [--seed 0]   plan.json + sim + preview
+           boxes: [--box-detail 0.6,1,1,1] [--box-seconds 440,0,0,0] [--only 0,2]
   preview  --job DIR [--ui ui.json]                   estimate (time, steps) and preview.png without emitting
   emit     --job DIR --name NAME [--ui ui.json]       write ~/.melaya/plans/NAME.json (the one batch call)
+           boxes: [--name PREFIX] [--title --artist --year --source-url --labels a,b,c,d]   + job_card.json
   locate   --job DIR --grab grab.png [--write-ui]     find the canvas on a screenshot (origin, DPI scale, swatch check)
   score    --job DIR [--file saved.png | --grab grab.png | --take]   live vs sim and vs source, Lab dE all/face/rest
   calib-plan --job DIR --name NAME / calib-measure --job DIR --grab grab.png      re-measure tool darkness
@@ -68,6 +72,23 @@ def floats(s):
 def jload(p):
     with open(p) as f:
         return json.load(f)
+
+
+def json_arg(v):
+    """Inline JSON or the path of a JSON file (overrides)."""
+    if not v:
+        return None
+    p = winpath(v.strip())
+    if not v.strip().startswith('{') and os.path.isfile(p):
+        return jload(p)
+    return json.loads(v)
+
+
+def csv_list(v, cast=float):
+    """'0.63,1,,1' -> [0.63, 1.0, None, 1.0] (empty = not set)."""
+    if not v:
+        return None
+    return [cast(x) if x.strip() else None for x in v.split(',')]
 
 
 def jsave(o, p, compact=False):
@@ -135,24 +156,38 @@ def cmd_prepare(a):
         rows, cols = gr.parse_grid(a.boxes)
         src = a.src
         focus = [floats(s) for s in a.focus] if a.focus else None
+        src_focus = None
         if getattr(a, 'subject', None):
             subs = jload(os.path.join(SKILL, 'assets', 'subjects', 'subjects.json'))
             d = subs[a.subject]
             src = src or os.path.join(SKILL, d.get('file_hires') or d['file'])
-            focus = focus or d.get('focus')
+            src_focus = None if focus else d.get('focus')     # fractions of the whole subject image
         styles = [winpath(s.strip()) for s in a.styles.split(',')]
         if len(styles) != rows * cols:
             raise SystemExit('--styles needs %d names for %s boxes' % (rows * cols, a.boxes))
-        over = json.loads(a.cell_override) if a.cell_override else None
-        m = bx.prepare_boxes(src, a.job, styles, rows, cols, load_style, a.bleed, over, focus)
-        print(json.dumps({'job': a.job, 'boxes': [(b['index'], b['style'], b['job'], b['tile_in_drawing_px']) for b in m['boxes']],
-                          'assembled_size': m['assembled_size']}))
+        over = json_arg(a.cell_override)
+        split_at = None
+        if a.split_at:
+            split_at = [float(v) if v.strip() else None for v in (a.split_at.split(',') + [''])[:2]]
+        if src_focus:                                         # -> fractions of the window the boxes will paint
+            size = Image.open(winpath(src)).size
+            wx0, wy0, wx1, wy1 = bx.fit_window(size, rows, cols, a.fit, floats(a.crop) if a.crop else None, split_at)
+            focus = [[(cx * size[0] - wx0) / (wx1 - wx0), (cy * size[1] - wy0) / (wy1 - wy0),
+                      rx * size[0] / (wx1 - wx0), ry * size[1] / (wy1 - wy0)] for cx, cy, rx, ry in src_focus]
+        m = bx.prepare_boxes(winpath(src), a.job, styles, rows, cols, load_style, a.bleed, over, focus, a.fit,
+                             floats(a.crop) if a.crop else None, split_at, a.name or 'box')
+        print(json.dumps({'job': a.job, 'name': m['name'], 'window_src_px': m['window_src_px'],
+                          'split_at_window_frac': m.get('split_at_window_frac'),
+                          'boxes': [{'index': b['index'], 'style': b['style'], 'job': b['job'], 'canvas_file': b['canvas_file'],
+                                     'plan_file': b['plan_file'], 'tile_in_drawing_px': b['tile_in_drawing_px'],
+                                     'focus': b['focus'], 'plan_opts': b.get('plan_opts')} for b in m['boxes']],
+                          'assembled_size': m['assembled_size']}, indent=1))
         return
     apply_subject(a)
     if getattr(a, 'grid', None):
         styles = [winpath(s.strip()) for s in a.styles.split(',')]
         order = [int(v) for v in a.order.split(',')] if a.order else None
-        over = json.loads(a.cell_override) if a.cell_override else None
+        over = json_arg(a.cell_override)
         m = gr.prepare_grid(a.src, a.job, styles, a.grid, load_style, a.width, a.height, a.fit,
                             [floats(s) for s in a.focus] if a.focus else None, floats(a.face_box) if a.face_box else None,
                             order, a.divider_width, a.inset, a.divider_color, not a.no_frame, over,
@@ -201,53 +236,92 @@ def cmd_plan_grid(a):
          'same style simulated on the whole image (what clipping to the cell changed).')
 
 
+def search_detail(a, attempts=8, lo_target=0.94):
+    """Plan at --detail; if it is over a cap (--seconds with the timing profile, --budget strokes, 4900 steps), search
+    the detail that lands just under the cap (load between lo_target and 1 of the tightest cap), never above --detail.
+    The load follows roughly detail^p; p is re-fitted from the plans made so far (log-log secant), bracketed by the
+    best plan that fits and the lowest detail that did not. Returns (plan, full, detail, est, nsteps)."""
+    import math
+    detail, best, over_d, pts = a.detail, None, None, []
+    for attempt in range(attempts):
+        plan, full = run_plan(a.job, detail, a.seed, log=hint if attempt == 0 and not a.quiet else (lambda *x: None))
+        est, nsteps, _ = estimate(a.job, plan)
+        n = plan['stats']['strokes']
+        load = max(est / a.seconds if a.seconds else 0.0, n / (a.budget * 1.05) if a.budget else 0.0, nsteps / 4900)
+        pts.append((detail, load))
+        if load <= 1:
+            if best is None or detail > best[2]:
+                best = (plan, full, detail, est, nsteps, load)
+            if attempt == 0 or load >= lo_target:
+                break
+        elif over_d is None or detail < over_d:
+            over_d = detail
+        if attempt == attempts - 1:
+            break
+        p = 1.0 / 0.6                                   # load ~ detail^p (the old fixed guess)
+        q = [(d, l) for d, l in pts if l > 0]
+        if len(q) >= 2 and abs(math.log(q[-1][0] / q[-2][0])) > 1e-3:
+            p = min(3.0, max(0.4, math.log(q[-1][1] / q[-2][1]) / math.log(q[-1][0] / q[-2][0])))
+        nxt = detail * (0.975 / max(load, 1e-6)) ** (1 / p)
+        lo = best[2] if best else 0.0
+        hi = min(over_d if over_d is not None else a.detail, a.detail)
+        if not lo < nxt < hi:                          # outside the bracket: bisect it
+            nxt = math.sqrt(max(lo, hi * 0.3) * hi) if lo == 0 else math.sqrt(lo * hi)
+        hint('-> %s (%d strokes, %.0f s, %d steps, load %.2f): retry with detail %.3f'
+             % ('over the cap' if load > 1 else 'well under the cap', n, est, nsteps, load, nxt))
+        detail = nxt
+    if best is None:
+        raise SystemExit('plan still estimates %.0f s (%s profile) at detail %.2f: above the %s s cap; use a smaller canvas, '
+                         'a lower --detail, or split the work' % (est, ui_for(a.job).get('timing_profile'), detail, a.seconds))
+    plan, full, detail, est, nsteps, load = best
+    if len(pts) > 1:
+        hint('-> detail %.3f: %.0f s (%.0f %% of the tightest cap) after %d plans' % (detail, est, load * 100, len(pts)))
+    return plan, full, detail, est, nsteps
+
+
 def cmd_plan(a):
     if os.path.isfile(os.path.join(a.job, 'boxes.json')) and not os.path.isfile(os.path.join(a.job, 'meta.json')):
         B = jload(os.path.join(a.job, 'boxes.json'))
+        bd, bs = csv_list(getattr(a, 'box_detail', None)), csv_list(getattr(a, 'box_seconds', None))
+        only = set(int(v) for v in a.only.split(',')) if getattr(a, 'only', None) else None
         summary = []
         for b in B['boxes']:
+            i = b['index']
+            if only is not None and i not in only:
+                continue
             a2 = argparse.Namespace(**vars(a))
             a2.job = os.path.join(a.job, b['job'])
-            hint('box %d (%s): planning' % (b['index'], b['style']))
+            po = b.get('plan_opts') or {}
+            # per box: --box-detail / --box-seconds (empty or 0 = not set) > the overrides' "plan" > --detail / --seconds
+            a2.detail = (bd[i] if bd and i < len(bd) and bd[i] else None) or po.get('detail') or a.detail
+            a2.seconds = (bs[i] if bs and i < len(bs) and bs[i] else None) or po.get('seconds') or a.seconds
+            hint('box %d (%s): planning (detail <= %.2f, cap %s s)' % (i, b['style'], a2.detail, a2.seconds or 'none'))
             import contextlib, io
             buf = io.StringIO()
             with contextlib.redirect_stdout(buf):
                 cmd_plan(a2)
             r = json.loads(buf.getvalue())
+            st = jload(os.path.join(a2.job, 'plan.json'))['stats']
             b.update(strokes=r['strokes'], batch_steps=r['batch_steps'], est_seconds=r['est_seconds'],
-                     detail=jload(os.path.join(a2.job, 'plan.json'))['stats'].get('detail'))
-            summary.append({k: b[k] for k in ('index', 'style', 'strokes', 'batch_steps', 'est_seconds', 'detail')})
+                     detail=st.get('detail'), cap_seconds=a2.seconds, uncovered_px=st.get('uncovered_px'))
+            summary.append({k: b.get(k) for k in ('index', 'style', 'strokes', 'batch_steps', 'est_seconds', 'cap_seconds',
+                                                  'detail', 'uncovered_px')})
         jsave(B, os.path.join(a.job, 'boxes.json'))
         out = bx.assemble(a.job, sim=True)
         print(json.dumps({'boxes': summary, 'assembled_preview': out}, indent=1))
         return
     if jload(os.path.join(a.job, 'meta.json')).get('grid'):
         return cmd_plan_grid(a)
-    detail = a.detail
-    for attempt in range(5):
-        plan, full = run_plan(a.job, detail, a.seed, log=hint if attempt == 0 and not a.quiet else (lambda *x: None))
-        est, nsteps, _ = estimate(a.job, plan)
-        n = plan['stats']['strokes']
-        over = []
-        if a.budget and n > a.budget * 1.05:
-            over.append((a.budget / n) ** 0.5)
-        if a.seconds and est > a.seconds:
-            over.append((a.seconds / est) ** 0.6)
-        if nsteps > 4900:
-            over.append((4900 / nsteps) ** 0.6)
-        if not over:
-            break
-        if attempt == 4:
-            raise SystemExit('plan still estimates %.0f s (%s profile) after lowering detail to %.2f: above the %.0f s cap; '
-                             'use a smaller canvas, a lower --detail, or split the work' % (est, ui_for(a.job).get('timing_profile'), detail, a.seconds))
-        detail *= min(over) * 0.97
-        hint('-> over budget (%d strokes, %.0f s, %d steps): retry with detail %.3f' % (n, est, nsteps, detail))
+    plan, full, detail, est, nsteps = search_detail(a)
     plan['stats'].update({'detail': round(detail, 3), 'est_seconds': round(est), 'batch_steps': nsteps})
     jsave(plan, os.path.join(a.job, 'plan.json'), compact=True)
     write_previews(a.job, full, plan)
-    print(json.dumps({'strokes': plan['stats']['strokes'], 'layers': plan['stats']['layers'],
-                      'colour_groups': plan['stats']['colour_groups'], 'batch_steps': nsteps,
-                      'est_seconds': round(est), 'sim_vs_target': plan['sim_score']}, indent=1))
+    out = {'strokes': plan['stats']['strokes'], 'layers': plan['stats']['layers'],
+           'colour_groups': plan['stats']['colour_groups'], 'batch_steps': nsteps, 'detail': round(detail, 3),
+           'est_seconds': round(est), 'sim_vs_target': plan['sim_score']}
+    if 'uncovered_px' in plan['stats']:
+        out.update(uncovered_px=plan['stats']['uncovered_px'], cover_patch_px=plan['stats'].get('cover_patch_px', 0))
+    print(json.dumps(out, indent=1))
     hint('sim_vs_target = simulation vs the STYLE-FILTERED target (target.png); score reports sim_vs_raw / live_vs_raw '
          'against the unfiltered source and live_vs_sim (execution fidelity).')
 
@@ -282,33 +356,56 @@ def cmd_preview(a):
 def cmd_emit(a):
     if os.path.isfile(os.path.join(a.job, 'boxes.json')) and not os.path.isfile(os.path.join(a.job, 'meta.json')):
         B = jload(os.path.join(a.job, 'boxes.json'))
+        # names: emit --name wins, else the name given to prepare (old jobs: their plan_file / canvas_file as they are)
+        if a.name:
+            B['name'] = bx.norm_prefix(a.name)
+            bx.assign_names(B['boxes'], B['name'])
+        elif B.get('name'):
+            bx.assign_names(B['boxes'], B['name'])
+        plans_dir = a.plans or PLANS
+        B['plans_dir'] = os.path.abspath(plans_dir)
+        B['timing_profile'] = ui_for(a.job, a.ui).get('timing_profile', 'recorded')
         for b in B['boxes']:
             sub = os.path.join(a.job, b['job'])
-            if os.path.isfile(os.path.join(a.job, 'ui.json')) and not os.path.isfile(os.path.join(sub, 'ui.json')):
-                shutil.copy(os.path.join(a.job, 'ui.json'), os.path.join(sub, 'ui.json'))
-            elif os.path.isfile(os.path.join(a.job, 'ui.json')):
+            if os.path.isfile(os.path.join(a.job, 'ui.json')):
                 shutil.copy(os.path.join(a.job, 'ui.json'), os.path.join(sub, 'ui.json'))
             plan = jload(os.path.join(sub, 'plan.json'))
             meta = jload(os.path.join(sub, 'meta.json'))
-            out = os.path.join(a.plans or PLANS, b['plan_file'])
+            out = os.path.join(plans_dir, b['plan_file'])
             est0 = estimate(sub, plan, ui_for(sub, a.ui))[0]
-            if a.seconds and est0 > a.seconds and not a.force:
-                raise SystemExit('refusing to emit box %d: estimate %.0f s exceeds %.0f s' % (b['index'], est0, a.seconds))
+            cap = b.get('cap_seconds') or a.seconds
+            if cap and est0 > cap and not a.force:
+                raise SystemExit('refusing to emit box %d: estimate %.0f s exceeds %.0f s' % (b['index'], est0, cap))
             s = ep.emit(plan, meta, ui_for(sub, a.ui), tools_for(sub), out)
             dst = os.path.join(a.job, b['canvas_file'])
             if not os.path.isfile(dst) or getattr(a, 'recopy', False):     # never overwrite a painted, saved box
                 shutil.copy(os.path.join(sub, 'canvas.png'), dst)
-            b.update(plan_path=out, canvas_path=os.path.join(a.job, b['canvas_file']), batch_steps=s['steps'],
-                     est_seconds=s['est_seconds'], est_seconds_unrecorded=s['est_seconds_unrecorded'],
-                     canvas_origin=s['canvas_origin'])
+            b.update(plan_path=out, canvas_path=dst, window_title=b['canvas_file'] + ' - Paint', batch_steps=s['steps'],
+                     strokes=s['strokes'], est_seconds=s['est_seconds'], est_seconds_unrecorded=s['est_seconds_unrecorded'],
+                     canvas_origin=s['canvas_origin'], detail=plan['stats'].get('detail', b.get('detail')))
         B['est_total_seconds'] = sum(b['est_seconds'] for b in B['boxes'])
         jsave(B, os.path.join(a.job, 'boxes.json'))
+        cp_ = os.path.join(a.job, 'job_card.json')
+        prev = None
+        if os.path.isfile(cp_):
+            try:
+                prev = jload(cp_)
+            except ValueError:
+                prev = None
+        card = bx.job_card(a.job, B, prev, B.get('name'), a.title, a.artist, a.year, a.source_url,
+                           [x.strip() for x in a.labels.split(',')] if a.labels else None)
+        jsave(card, cp_)
         print(json.dumps(B, indent=1))
-        hint('Open each canvas (pa_box_*.png) in Paint; paint them in order, one batch call per plan, the right window in front '
-             'before each; save each with Ctrl+S; then assemble --job %s' % a.job)
+        order = ''.join('\n  box %d %s: open %s (title "%s"), then {"steps": [], "plan": {"file": "%s"}}'
+                        % (b['index'], b['style'], os.path.normpath(b['canvas_path']), b['window_title'], b['plan_file'])
+                        for b in B['boxes'])
+        hint('Paint the boxes in this order, one melaya_computer_batch per box (no window_id; that window in front, '
+             'Ctrl+S right after):%s\nThen: assemble --job %s\nJob card: %s' % (order, a.job, os.path.normpath(cp_)))
         return
     plan = jload(os.path.join(a.job, 'plan.json'))
     meta = jload(os.path.join(a.job, 'meta.json'))
+    if not a.name:
+        raise SystemExit('emit needs --name NAME (the plan file and Paint canvas name)')
     if meta.get('grid'):
         out = gr.emit_grid(plan, meta, ui_for(a.job, a.ui), tools_for(a.job), a.plans or PLANS, a.name, a.seconds or 1e9)
         jsave(out, os.path.join(a.job, 'cells.json'))
@@ -553,7 +650,11 @@ def main(argv=None):
         p.add_argument('--no-frame', action='store_true'); p.set_defaults(focus_from=None)
         p.add_argument('--grid', help='composite: RxC cells, e.g. 2x2 (with --styles)')
         p.add_argument('--boxes', help='RxC boxes, each painted as its own full painting on a standard canvas (with --styles)')
-        p.add_argument('--bleed', type=float, default=8, help='boxes: source px of the neighbouring area planned past each interior edge')
+        p.add_argument('--bleed', type=float, default=8, help='boxes: drawing px of the neighbouring area planned past each interior edge')
+        p.add_argument('--crop', help='boxes: use only this source region x0,y0,x1,y1 (source px), then --fit to the boxes aspect')
+        p.add_argument('--split-at', help='boxes: source point x,y (px; either may be empty) placed exactly on the middle vertical / '
+                                          'horizontal divider, e.g. the face centre (implies --fit crop)')
+        p.add_argument('--name', help='boxes: file prefix, files pa_<name>_<style>[_<index>].png/.json (make: the plan name)')
         p.add_argument('--styles', help='grid: comma-separated styles (or preset files), reading order')
         p.add_argument('--order', help='grid: paint order of the cells, e.g. 0,1,2,3 (default reading order)')
         p.add_argument('--divider-width', type=int, default=5); p.add_argument('--inset', type=float, default=2,
@@ -561,13 +662,21 @@ def main(argv=None):
         p.add_argument('--divider-color', default='#1a1a1a')
         p.add_argument('--split-x', help='grid: vertical divider positions, fractions of the width (cols-1 values), e.g. 0.45')
         p.add_argument('--split-y', help='grid: horizontal divider positions, fractions of the height (rows-1 values), e.g. 0.37')
-        p.add_argument('--cell-override', help='grid: JSON {"<cell index>": {preset keys}} merged into that cell\'s style')
+        p.add_argument('--cell-override', help='grid / boxes: JSON {"<index>": {preset keys}} (inline or a file) merged into '
+                                               'that cell\'s style; boxes also take "plan": {"detail", "seconds"} per box')
     p = sp.add_parser('prepare'); prep_args(p); p.set_defaults(f=cmd_prepare)
     p = sp.add_parser('plan'); p.add_argument('--job', required=True); p.add_argument('--detail', type=float, default=1.0)
     p.add_argument('--budget', type=int); p.add_argument('--seconds', type=float, default=480, help='time cap in seconds with the timing profile (the batch runs up to 10 min); 0 = none'); p.add_argument('--seed', type=int, default=0)
-    p.add_argument('--quiet', action='store_true'); p.set_defaults(f=cmd_plan)
+    p.add_argument('--quiet', action='store_true')
+    p.add_argument('--box-detail', help='boxes: max detail per box in box order, e.g. 0.63,1,1,1 (empty or 0 = --detail)')
+    p.add_argument('--box-seconds', help='boxes: time cap per box, e.g. 440,0,0,0 (empty or 0 = --seconds)')
+    p.add_argument('--only', help='boxes: plan only these box indexes, e.g. 0,2 (the others keep their plans)')
+    p.set_defaults(f=cmd_plan)
     p = sp.add_parser('preview'); p.add_argument('--job', required=True); p.add_argument('--ui'); p.set_defaults(f=cmd_preview)
-    p = sp.add_parser('emit'); p.add_argument('--job', required=True); p.add_argument('--name', required=True)
+    p = sp.add_parser('emit'); p.add_argument('--job', required=True)
+    p.add_argument('--name', help='plan name; boxes: the file prefix (pa_<name>_<style>), default the name given to prepare')
+    p.add_argument('--title'); p.add_argument('--artist'); p.add_argument('--year'); p.add_argument('--source-url')
+    p.add_argument('--labels', help='boxes: display label per box in box order, comma separated (job_card.json)')
     p.add_argument('--ui'); p.add_argument('--plans')
     p.add_argument('--seconds', type=float, default=480, help='refuse a single plan above this estimate (grid: split per cell instead)')
     p.add_argument('--force', action='store_true', help='emit even above --seconds')
@@ -593,7 +702,7 @@ def main(argv=None):
     p = sp.add_parser('speed-measure'); p.add_argument('--job', required=True); p.add_argument('--grab'); p.add_argument('--take', action='store_true')
     p.add_argument('--file'); p.add_argument('--times', help='batch durations of s0..s4, comma separated')
     p.add_argument('--install', action='store_true'); p.set_defaults(f=cmd_speed_measure)
-    p = sp.add_parser('make'); prep_args(p); p.add_argument('--name'); p.add_argument('--detail', type=float, default=1.0)
+    p = sp.add_parser('make'); prep_args(p); p.add_argument('--detail', type=float, default=1.0)
     p.add_argument('--budget', type=int); p.add_argument('--seconds', type=float, default=480, help='time cap in seconds with the timing profile (the batch runs up to 10 min); 0 = none'); p.add_argument('--seed', type=int, default=0)
     p.add_argument('--ui'); p.set_defaults(f=cmd_make)
     p = sp.add_parser('contact'); p.add_argument('jobs', nargs='+'); p.add_argument('--out', required=True)

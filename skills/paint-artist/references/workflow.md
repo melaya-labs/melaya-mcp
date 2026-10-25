@@ -28,14 +28,14 @@ All commands: `cd SKILL_DIR/scripts && python -m paint_artist <command> ...` (Py
 | `compose SCENE --out ref.png [--width --height]` | Fresh composition (built-in `landscape`, `still_life`, `portrait`, or a scene JSON). See [style-transfer.md](style-transfer.md). |
 | `analyse REF --out style.json [--base STYLE]` | Measure a reference painting, pick a base style, tune it. See [style-transfer.md](style-transfer.md). |
 | `prepare SRC --job JOB --style STYLE` | `--height` (default 672), `--width` (default from aspect), `--fit crop|stretch`, `--focus cx,cy,rx,ry` (repeatable, fractions; the first is the face: finest detail, glaze protection, score box), `--face-box x0,y0,x1,y1`, `--reference REF [--transfer]`, `--no-frame`. |
-| `plan --job JOB` | `--detail` (1.0; lower = fewer strokes), `--budget N` strokes, `--seconds S` (default 480 with the timing profile; 0 = no cap), `--profile recorded|unrecorded`, `--seed`. Retries with less detail until strokes, time and the 4900-step margin fit. Prints `sim_vs_target` (simulation vs the style-filtered target). |
+| `plan --job JOB` | `--detail` (1.0; lower = fewer strokes), `--budget N` strokes, `--seconds S` (default 480 with the timing profile; 0 = no cap), `--profile recorded|unrecorded`, `--seed`. When a cap is exceeded (strokes, time, the 4900-step margin) it searches the detail that lands just under the tightest cap (94-100 %), never above `--detail`. Prints `sim_vs_target` (simulation vs the style-filtered target). |
 | `preview --job JOB [--ui]` | Estimate and preview without writing a Melaya plan. |
 | `emit --job JOB --name NAME [--ui] [--plans DIR]` | Writes `~/.melaya/plans/NAME.json` (or DIR) and prints the call to make. |
 | `locate --job JOB --take|--grab G [--write-ui]` | Finds the canvas on screen, prints origin, scale, swatch error; writes `JOB/ui.json`. |
 | `score --job JOB --file SAVED.png|--take|--grab G [--vs raw|target]` | `live_vs_sim` (execution fidelity) and live / sim vs the source (`raw`, default) or the filtered target. `--file` scores the saved canvas (exact pixels, preferred); grabs show Paint's resize-handle dots. |
 | `calib-plan --job CJ --name N` / `calib-measure --job CJ --take` | Tool darkness calibration. See [calibration.md](calibration.md). |
 | `prepare ... --grid RxC --styles a,b,... [--split-x] [--split-y] [--order] [--divider-width] [--inset] [--cell-override]` | Grid composite job; `plan` then writes the combined `canvas.png`, `emit` writes `cells.json`. See [grid.md](grid.md). |
-| `prepare --boxes RxC --styles a,b,... [--bleed 8] [--cell-override]`, `plan`, `emit`, `assemble --job JOB [--sim] [--file I=png]` | Boxes: each part as its own full painting, then tiled. See [grid.md](grid.md). |
+| `prepare --boxes RxC --styles a,b,... --name SLUG [--crop x0,y0,x1,y1] [--split-at x,y] [--fit crop|stretch] [--focus ...] [--bleed 8] [--cell-override JSON|file]`, `plan [--box-detail d0,d1,..] [--box-seconds s0,s1,..] [--only i,j]`, `emit [--name SLUG] [--title --artist --year --source-url --labels a,b,..]`, `assemble --job JOB [--sim] [--file I=png]` | Boxes: each part as its own full painting, then tiled; files `pa_<slug>_<style>`, `JOB/job_card.json`. See [grid.md](grid.md). |
 | `speed-calib --job CJ`, `speed-measure --job CJ --take --times t0,..,t4 [--install]` | Fastest safe pointer settings per tool and the Fill tool's connectivity. See [calibration.md](calibration.md). |
 | `make SRC --job JOB --style STYLE --name NAME` | prepare + plan + emit (run `locate` before trusting the origin). |
 | `contact JOB... --out sheet.png [--cols --tile --drawing]` | Contact sheet of simulations. |
@@ -53,7 +53,7 @@ Two timing profiles in `ui.default.json` (`timing_profiles`); `--profile` on pla
 | `recorded` (default) | recorded runs: the split-face grid (593 s) and the 17,386-stroke master run (512 s), max error 11 % | 0.016 s | 0.036 s | 0.28 s | 0.55 s / 1000 px | 0.10 s (placeholder) |
 | `unrecorded` | 9 unrecorded live runs, max error 17 % | 0.012 s + 0.0011 s per point | same | 0.33 s | 0.13 s / 1000 px | 0.10 s |
 
-A screen recorder (ffmpeg gdigrab at 30 fps) slows Paint, dots most. The grid estimate with the old model was 324 s and the run took 593 s; the recorded profile predicts 587 s. Every wait step is added. `plan` lowers detail until the estimate is under `--seconds` (480 by default) and refuses if it cannot. `emit` refuses a single plan above the cap (`--force` overrides), and a grid splits into one plan per cell instead. Add about 3 s of call latency per batch call.
+A screen recorder (ffmpeg gdigrab at 30 fps) slows Paint, dots most. The grid estimate with the old model was 324 s and the run took 593 s; the recorded profile predicts 587 s. Every wait step is added. `plan` lowers detail until the estimate is just under `--seconds` (480 by default; it lands at 94-100 % of the cap) and refuses if it cannot. `emit` refuses a single plan above the cap (`--force` overrides), and a grid splits into one plan per cell instead. Add about 3 s of call latency per batch call.
 
 Simulated numbers for the bundled Mona Lisa (`--subject mona_lisa`, 450x672, frame on):
 

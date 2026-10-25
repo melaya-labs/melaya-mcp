@@ -24,7 +24,10 @@ layer "cells" (preset):
     dither:   ordered 4x4 Bayer dithering on the cell grid, dither (L units of spread)
   fill       regions (posterised-region serpentines, tip cascade: any cell shape) | rects (horizontal lines inside
              each rectangle, crisp corners: grid and mondrian), rect_width (line width for rects), rect_overlap
-             (px each line runs past its rectangle, default 1: no 1-px seams live)
+             (px each line runs past its rectangle, default 1: no 1-px seams live; the line count includes it and
+             keeps the pitch <= width - 1.2 px, so rounded neighbouring lines always overlap)
+After the layer the planner checks the simulation: every pixel whose cell colour is not white must be painted;
+any pixel left at the bare canvas white is painted with 1 px Pencil runs ('cells-cover'), plan stats uncovered_px.
   lines      (mondrian) {color, width, thick_width, thick_levels}: the split lines drawn straight, full length
 After the layer, ctx.labels holds the CELL ids, so an `outline` layer with source labels draws every cell boundary
 (stained-glass leading, cubist facet edges).
@@ -333,10 +336,14 @@ def rect_fill(rects, colours, width, merge_rows=False, overlap=1.0):
                 merged.append(((x0, y0, x1, y1), k))
         items = merged
     out = []
+    ov = overlap                                         # px past each edge: no seams when Paint rounds positions
+    # line pitch: at most 0.8 x width and at least 1.2 px less than the width, so two neighbouring lines still
+    # overlap after both are rounded to whole screen pixels (Paint) or rasterised aliased (the simulator)
+    pitch = max(1.0, min(width * 0.8, width - 1.2))
     for (x0, y0, x1, y1), k in items:
         h, w = y1 - y0, x1 - x0
-        n = max(1, math.ceil((h - width) / (width * 0.8)) + 1)
-        ov = overlap                                     # px past each edge: no seams when Paint rounds positions
+        span = h - width + 2 * ov                         # centre of the first line to centre of the last
+        n = 1 if span <= 0 else math.ceil(span / pitch) + 1
         ys = [y0 + h / 2] if n == 1 else list(np.linspace(y0 + width / 2 - ov, y1 - width / 2 + ov, n))
         xa, xb = x0 + width / 2 - ov, x1 - width / 2 + ov
         if xb <= xa:
@@ -362,6 +369,7 @@ def layer_cells(ctx, L, seed, paint_labels):
     else:
         raise ValueError('unknown partition %r' % part)
     cmap = colour_cells(ctx, L, lab, grid, rng)
+    ctx.cell_cmap = cmap                     # the colour every pixel must end up with (planner's coverage guard)
     out = []
     tool = L.get('tool', 'brush')
     def strokes():

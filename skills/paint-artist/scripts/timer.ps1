@@ -1,10 +1,11 @@
 # Always-on-top, never-activating stopwatch for screen recordings of a run.
-# Starts when -StartFlag appears (or at launch when no StartFlag is given), freezes (green, "Done") when -StopFlag appears.
+# Starts when -StartFlag appears (or at launch when no StartFlag is given), freezes (green, "Done") when -StopFlag appears,
+# and closes itself -CloseAfterStopSeconds later (default 15 s: longer than record.ps1's tail, so the frozen clock is filmed).
 # Paths may be Windows (C:\...) or Git Bash (/c/...) style; they are tested literally (no wildcards).
 # Usage: powershell -NoProfile -ExecutionPolicy Bypass -STA -File timer.ps1 -StartFlag C:\tmp\t.start -StopFlag C:\tmp\t.stop `
 #        -Title 'Melaya Computer Control' -Subtitle 'Mona Lisa | one call' -X 1290 -Y 420
 param([string]$StopFlag, [string]$StartFlag, [string]$Title = 'Melaya Computer Control',
-      [string]$Subtitle = 'one call', [int]$X = 1290, [int]$Y = 420)
+      [string]$Subtitle = 'one call', [int]$X = 1290, [int]$Y = 420, [int]$CloseAfterStopSeconds = 15)
 
 function Norm([string]$p) {
   if (-not $p) { return $p }
@@ -37,13 +38,17 @@ $f.Controls.AddRange(@($t1, $t2, $clock))
 
 $script:sw = New-Object Diagnostics.Stopwatch
 $script:done = $false
+$script:doneAt = $null
 if (-not $StartFlag) { $script:sw.Start() }
 $tm = New-Object Windows.Forms.Timer; $tm.Interval = 50
 $tm.Add_Tick({
-  if ($script:done) { return }
+  if ($script:done) {
+    if ($CloseAfterStopSeconds -ge 0 -and ([DateTime]::UtcNow - $script:doneAt).TotalSeconds -ge $CloseAfterStopSeconds) { $tm.Stop(); $f.Close() }
+    return
+  }
   if (-not $script:sw.IsRunning -and $StartFlag -and [IO.File]::Exists($StartFlag)) { $script:sw.Start() }
   if ($script:sw.IsRunning -and $StopFlag -and [IO.File]::Exists($StopFlag)) {
-    $script:sw.Stop(); $script:done = $true
+    $script:sw.Stop(); $script:done = $true; $script:doneAt = [DateTime]::UtcNow
     $clock.ForeColor = [Drawing.Color]::FromArgb(90, 230, 150); $t2.Text = "Done  |  $Subtitle"
   }
   $e = $script:sw.Elapsed

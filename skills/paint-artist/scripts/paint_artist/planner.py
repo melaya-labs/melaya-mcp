@@ -231,16 +231,25 @@ def layer_strokes(ctx, L, seed):
         lum = Tl[..., 0]
         gy, gx = ndi.sobel(lum, 0), ndi.sobel(lum, 1)
     step = R * L.get('step', 1.0)
-    g = max(2, int(round(R * L.get('grid', 1.0) / max(0.2, ctx.detail) ** 0.5)))
+    # seed grid: the integer pitch at detail 1 (as always), scaled by detail as a FRACTIONAL pitch, so the stroke
+    # count follows detail smoothly (an integer pitch jumped, e.g. 3 -> 2 px at detail 0.64: +50 % strokes at once,
+    # and the time-cap search could not land near its cap)
+    g0 = max(2, int(round(R * L.get('grid', 1.0))))
+    gf = max(2.0, g0 / max(0.2, ctx.detail) ** 0.5)
+    g = int(math.ceil(gf))
+    ys0 = np.unique(np.round(np.arange(0, H, gf)).astype(int))
+    xs0 = np.unique(np.round(np.arange(0, W, gf)).astype(int))
     jit = L.get('seed_jitter', 0)
     use_fine = ctx.FINE.any() and L.get('use_fine', True)
     strokes = []
-    for y0 in range(0, H, g):
-        for x0 in range(0, W, g):
-            if only is not None and not only[y0:y0 + g, x0:x0 + g].any():
+    for iy0, y0 in enumerate(ys0):
+        y1 = ys0[iy0 + 1] if iy0 + 1 < len(ys0) else H
+        for ix0, x0 in enumerate(xs0):
+            x1 = xs0[ix0 + 1] if ix0 + 1 < len(xs0) else W
+            if only is not None and not only[y0:y1, x0:x1].any():
                 continue
-            blk = err[y0:y0 + g, x0:x0 + g]
-            infine = use_fine and ctx.FINE[y0:y0 + g, x0:x0 + g].any()
+            blk = err[y0:y1, x0:x1]
+            infine = use_fine and ctx.FINE[y0:y1, x0:x1].any()
             th = thresh * (fine_scale if infine else 1.0)
             if blk.mean() < th:
                 continue
@@ -682,17 +691,8 @@ def fill_layers(ctx, L, cmap):
                     sorted(r['fills'], key=lambda s: s[0])))
     fb = r['fallback_mask']
     if fb.any():                                    # tiny or leaking regions: 1 px pencil rows, exact
-        runs = []
-        ys, xs = np.nonzero(fb)
-        for y in np.unique(ys):
-            row = np.where(fb[y])[0]
-            for seg in np.split(row, np.where(np.diff(row) > 1)[0] + 1):
-                ks = cmap[y, seg]
-                for part in np.split(np.arange(len(seg)), np.where(np.diff(ks) != 0)[0] + 1):
-                    a, b = seg[part[0]], seg[part[-1]]
-                    runs.append((int(ks[part[0]]), [[float(a), float(y)], [float(b), float(y)]]))
         out.append(({'tool': 'pencil', 'width': 1, 'opacity': 1.0, 'name': name + '-small', 'no_merge': True},
-                    sorted(runs, key=lambda s: s[0])))
+                    pixel_runs(fb, cmap)))
     ctx.fill_stats = r['stats']
     return out
 
@@ -888,6 +888,7 @@ def plan(job, preset, tools, detail=1.0, seed=0, frame=None, log=print):
         return [(k, [(min(max(x, x_lo), x_hi), min(max(y, y_lo), y_hi)) for x, y in pts]) for k, pts in S]
 
     merge_dE = preset.get('colour_merge_dE', 2.0)
+    cover = {'patched': 0, 'left': 0, 'checked': False}
 
     def add(L, S, name=None):
         L = dict(L)
@@ -946,11 +947,24 @@ def plan(job, preset, tools, detail=1.0, seed=0, frame=None, log=print):
             L.setdefault('width', 2)
             add(L, layer_outline(ctx, L, sd), L.get('name', 'outline'))
         elif t == 'cells':
+            ctx.cell_cmap = None
             for sub, S in cl.layer_cells(ctx, L, sd, paint_labels):
                 full = dict(L)
                 full.update(sub)
                 if S:
                     add(full, S, sub['name'])
+            # coverage guard: every pixel of a non-white cell must be painted in the simulation (a bare canvas pixel
+            # there is a gap between fill lines, a missed bucket fill or a skipped tiny region): paint it, 1 px runs
+            gap = uncovered(ctx)
+            if gap is not None:
+                cover['patched'] += int(gap.sum())
+                if gap.any():
+                    log('cells coverage: %d bare px in %s -> 1 px Pencil runs' % (gap.sum(), L.get('name', 'cells')))
+                    add({'tool': 'pencil', 'width': 1, 'opacity': 1.0, 'no_merge': True}, pixel_runs(gap, ctx.cell_cmap),
+                        L.get('name', 'cells') + '-cover')
+                    gap = uncovered(ctx)
+                cover['left'] += int(gap.sum())
+                cover['checked'] = True
         elif t == 'ornament':
             L.setdefault('width', 2)
             S = cl.layer_ornament(ctx, L, sd)
@@ -968,4 +982,40 @@ def plan(job, preset, tools, detail=1.0, seed=0, frame=None, log=print):
            'stats': {'strokes': sum(len(L['strokes']) for L in layers),
                      'colour_groups': sum(len({s[0] for s in L['strokes']}) for L in layers),
                      'layers': len(layers)}}
+    if cover['checked']:
+        out['stats'].update(uncovered_px=cover['left'], cover_patch_px=cover['patched'])
     return out, ctx.full
+
+
+def uncovered(ctx):
+    """Drawing-area pixels still at the bare canvas white although their cell colour is not white (cells layers),
+    or None when the last layer was not a cells layer."""
+    cm = getattr(ctx, 'cell_cmap', None)
+    if cm is None:
+        return None
+    want_white = (ctx.pal[cm] >= 1 - 1e-6).all(-1)
+    return (ctx.C >= 1 - 1e-6).all(-1) & ~want_white
+
+
+def pixel_runs(mask, cmap):
+    """Horizontal 1 px Pencil runs of one colour covering every pixel of mask: [(k, [[x0, y], [x1, y]])]. A lone
+    pixel becomes a 2 px stroke toward a 4-neighbour of the same colour (the emitter would otherwise lengthen a
+    zero-length stroke by 1 px to the right, whatever colour that pixel should have)."""
+    H, W = mask.shape
+    runs = []
+    ys, xs = np.nonzero(mask)
+    for y in np.unique(ys):
+        row = np.where(mask[y])[0]
+        for seg in np.split(row, np.where(np.diff(row) > 1)[0] + 1):
+            ks = cmap[y, seg]
+            for part in np.split(np.arange(len(seg)), np.where(np.diff(ks) != 0)[0] + 1):
+                a, b = int(seg[part[0]]), int(seg[part[-1]])
+                k = int(ks[part[0]])
+                end = [float(b), float(y)]
+                if a == b:
+                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        if 0 <= a + dx < W and 0 <= y + dy < H and cmap[y + dy, a + dx] == k:
+                            end = [float(a + dx), float(y + dy)]
+                            break
+                runs.append((k, [[float(a), float(y)], end]))
+    return sorted(runs, key=lambda s: s[0])

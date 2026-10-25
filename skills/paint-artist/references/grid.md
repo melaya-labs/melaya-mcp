@@ -88,24 +88,81 @@ Total 14,888 strokes, 1,840 steps, 285 colour picks, about 344 s in ONE plan (`p
 
 Instead of one canvas with cells, `--boxes RxC` paints every part as a FULL painting on its own standard canvas (540x690, drawing area 450x672, the same screen position for every box), then `assemble` tiles the saved boxes into one big picture. A 2x2 Mona Lisa from the bundled 900x1344 source is painted at 1:1 per box, so assembled at 900x1344 it is four times as detailed as a single run.
 
-- Each box is prepared from its quarter of the high-resolution source, plus `--bleed` (8) source px of the neighbouring area on every interior side, resized to the drawing area. The planner paints past the box edge, so the tile edges are fully painted and seamless. No frame and no dividers on the boxes.
-- Each box is planned like a normal job, at the corrected time cap (480 s per box, recorded profile). Detail is lowered only where needed (`detail` in `boxes.json`).
-- `emit` writes one plan per box (`pa_box_<style>.json`), a canvas copy per box to open in Paint (`JOB/pa_box_<style>.png`), and updates `JOB/boxes.json`. That file holds, per box: style, sub-job, plan file and path, canvas file and path, tile rectangle in drawing px, batch steps, estimates and canvas origin.
-- `assemble --job JOB` reads the four SAVED canvases (`JOB/pa_box_<style>.png`, or `--file INDEX=path`). It crops each drawing area, removes the bleed, resizes each tile to the exact box size, tiles them and draws 5 px dark dividers and the frame, writing `assembled.png` and `assembled_nodividers.png`. `assemble --sim` does the same from the simulations (`*_sim.png`); `plan` writes those automatically.
-
 ```bash
-cd "SKILL_DIR/scripts"; J=$(cygpath -m "$HOME/paint-jobs/boxes_mona")
-python -m paint_artist prepare --subject mona_lisa --boxes 2x2 --styles master,pop-art,pointillism,cubism --job "$J" \
-       --cell-override "$(cat ../assets/subjects/mona_boxes.json)"
-python -m paint_artist plan --job "$J"            # plans the 4 boxes + assembled_sim.png
+cd "SKILL_DIR/scripts"; J=$(cygpath -m "$HOME/paint-jobs/boxes_ermine")
+python -m paint_artist prepare SRC.jpg --boxes 2x2 --styles master,pop-art,pixel-art,stained-glass --job "$J" --name ermine \
+       [--crop 509,120,1781,2020] [--split-at 1145,1070] [--focus 0.48,0.30,0.16,0.12 ...] [--cell-override overrides.json]
+python -m paint_artist plan --job "$J" [--seconds 480] [--box-detail 1.2,,,] [--box-seconds 400,0,0,0] [--only 0]
 # open the 4 canvases in Paint, pre-flight, then locate ONCE on the first one (all boxes share the position):
 python -m paint_artist locate --job "$J/box0_master" --take --write-ui && cp "$J/box0_master/ui.json" "$J/ui.json"
-python -m paint_artist emit --job "$J" --name pa_box  # 4 plans, boxes.json (copies JOB/ui.json into every box)
-# for each box in order: bring its Paint window to the front (title pa_box_<style>.png - Paint), batch call, save (Ctrl+S)
+python -m paint_artist emit --job "$J" --name ermine --title "Lady with an Ermine" --artist "Leonardo da Vinci" \
+       --year "c. 1489-1491" --source-url "https://..." --labels "Leonardo,Pop art,Pixel art,Stained glass"
+# per box, in order: bring "pa_ermine_<style>.png - Paint" to the front, one batch call with plan pa_ermine_<style>.json, Ctrl+S
 python -m paint_artist assemble --job "$J"        # assembled.png + assembled_nodividers.png
 ```
 
-The 2x2 Mona Lisa boxes (planned 2026-10-24, recorded profile; box 2 pointillism and box 3 cubism use the cell overrides in `assets/subjects/mona_boxes.json`):
+**Names.** `--name ermine` (on `prepare`, or later on `emit`, which wins) names every file `pa_ermine_<style>`: plans `~/.melaya/plans/pa_ermine_<style>.json`, canvases `JOB/pa_ermine_<style>.png`, Paint titles `pa_ermine_<style>.png - Paint`. A style used twice gets the box index: `pa_ermine_master_0`, `pa_ermine_master_2`. A leading `pa_` in the name is dropped (`--name pa_ermine` is the same). Without a name the prefix is `box` (`pa_box_<style>`). Give every painting its own name: all plans live in ONE folder, so two paintings with the same names overwrite each other's plans.
+
+**Source window: crop, fit, split.** The boxes paint one window of the source with the assembled aspect (C*450 : R*672, so 450:672 for 2x2):
+
+- `--crop x0,y0,x1,y1` (source px) uses only that region of the source.
+- `--fit crop` (default) takes the largest window of that aspect inside the region, centred. `--fit stretch` uses the whole region, stretched.
+- `--split-at x,y` (source px; either may be empty, e.g. `--split-at 1145,`) places that source point EXACTLY on the middle vertical and/or horizontal divider: the face centre on the split, the hook of a split-face painting. The window shrinks as needed, and `prepare` prints `split_at_window_frac` (0.5, 0.5 for 2x2) to confirm. Find the point on the source: between the eyes and through the mouth for the vertical split, just under the chin for the horizontal one.
+- `boxes.json` records `window_src_px`, `crop_src_px` and `split_at_src_px`. The source keeps its full resolution: each box is cut from it and resized to its 450x672 drawing area.
+
+**Focus.** `--focus cx,cy,rx,ry` is in fractions of the window (the assembled picture), as in the single mode; the bundled subject's focus is converted from the whole image. Every focus ellipse goes into EVERY box it overlaps, in box coordinates, so ONE face ellipse centred on the split gives both halves of the face the finest detail. The first focus in a box is that box's face (finest detail, glaze protection, score box, clamped to the box).
+
+**Bleed.** Each box gets `--bleed` (8) drawing px of the neighbouring area on every interior side. The planner paints past the box edge, so the tile edges are fully painted and seamless. No frame and no dividers on the boxes.
+
+**Per-box detail and time cap.** Each box is planned like a normal job, capped at `--seconds` (480 s, recorded profile). A plan over the cap triggers a detail search that lands just under it (94-100 % of the cap, a few plans), never above the box's detail. The stroke seed grid follows detail continuously, so the time follows it smoothly too. Per box, in priority order:
+
+- `--box-detail 1.2,,,` and `--box-seconds 400,0,0,0` on `plan`, in box order; empty or 0 = the global `--detail` / `--seconds`.
+- `"plan": {"detail": 1.2, "seconds": 400}` inside that box's entry of the overrides file (`--cell-override`, inline JSON or a file path; the other keys are merged into the box's style).
+- `plan --only 0,2` re-plans only those boxes; the others keep their plans and the assembled preview is rebuilt.
+
+**Coverage guard (cells styles).** After a `cells` layer (pixel art, stained glass, Mondrian), the simulation must leave no bare canvas pixel where the cell colour is not white. Any such pixel (a gap between fill lines, a missed bucket fill, a skipped tiny region) gets 1 px Pencil runs (`<layer>-cover`); `plan` prints `uncovered_px` (0 after the guard) and `cover_patch_px` (pixels it had to patch). The rectangle fill keeps its line pitch at least 1.2 px under the line width, overlap included, so neighbouring lines still overlap once rounded (before the fix it left 1 px white rows). Live pixel-art boxes fill their cells grouped by colour, dark to light, so the lightest cells stay white until the last seconds of the box: that is the run in progress, not a defect, and the saved canvas matches the simulation.
+
+**emit** writes one plan per box, a canvas copy per box (never over a saved one; `--recopy` forces it), `JOB/boxes.json` (per box: style, sub-job, plan and canvas file and path, window title, tile rectangle in drawing px, focus, batch steps, strokes, detail, estimates, canvas origin) and `JOB/job_card.json`. It prints, for each box in order, the canvas to open, the window title and the plan to call.
+
+**assemble --job JOB** reads the SAVED canvases (`JOB/<canvas_file>`, or `--file INDEX=path`). It crops each drawing area, removes the bleed, resizes each tile to the exact box size, tiles them and draws 5 px dark dividers and the frame, writing `assembled.png` and `assembled_nodividers.png`. `assemble --sim` does the same from the simulations (`*_sim.png`); `plan` writes those automatically.
+
+### JOB/job_card.json (written by emit)
+
+One canonical card per boxes job, read by the video script and the batch tooling. Values not passed to `emit` are kept from the previous card (older hand-written cards included), so re-emitting after `locate` keeps the title and labels.
+
+| Key | Value |
+|---|---|
+| `version` | 1 |
+| `slug` | the name prefix (`ermine`) |
+| `title`, `artist`, `year`, `source_url` | from `emit --title --artist --year --source-url` |
+| `mode`, `rows`, `cols` | `"boxes 2x2"`, 2, 2 |
+| `source`, `window_src_px` | the source file and the painted window (source px) |
+| `boxes[]` | `{index, row, col, style, label, plan_file, canvas_file, window_title, est_seconds, est_seconds_unrecorded, strokes, steps, detail}` in box (reading) order. `label` comes from `--labels` (comma separated, box order), else the previous card, else the style (`master` = the artist) |
+| `est_total_seconds`, `est_total_seconds_unrecorded` | sums over the boxes |
+| `total_strokes`, `total_steps` | sums over the boxes |
+| `timing_profile`, `canvas_origin`, `plans_dir` | as emitted |
+| `preview`, `preview_nodividers` | `JOB/assembled_sim.png`, `JOB/assembled_nodividers_sim.png` |
+| `notes` | kept from the previous card (free text: crop, hook, overrides, rejected variants) |
+
+### Batch of paintings
+
+Many paintings, one live Paint at a time. Everything except the live run can happen in parallel.
+
+1. **Prepare in parallel**, one job folder and one `--name` per painting (`~/paint-jobs/boxes_<slug>`, `--name <slug>`): source, `--crop` / `--split-at`, `prepare`, `plan`, `emit --title ... --labels ...`. Check each `assembled_sim.png` and adjust the overrides before going live. Several agents can do this at once: unique names mean no plan overwrites another.
+2. **One live runner at a time.** A single agent owns the screen, because Paint, the mouse and the keyboard are one resource. It paints the paintings one after another, the boxes of each in order: one `melaya_computer_batch` per box, the right window title in front, Ctrl+S right after each box.
+3. **Per painting: its own recorder and stopwatch.** Start a fresh recording and stopwatch before the first box of each painting and stop them after its last save ([recording.md](recording.md)), so each painting has its own `raw/<slug>_recording.mp4`. The stopwatch also counts the switching and saving between boxes (10-13 min against 4.5-8.5 min of batch time in the 2026-10-24 batch); the batch summaries hold the real painting times.
+4. **Assemble between paintings.** Run `assemble --job JOB` after the last save. Keep one `runs.json` entry per painting: live seconds per box (from the batch summaries), strokes, estimates and any issue.
+
+The 2026-10-24 batch: 10 paintings, 4 boxes each, every box in ONE call; 4,444 s of painting and 165,824 strokes in total. Live runs took 65-75 % of the recorded-profile estimates for most paintings (57-77 % across all ten).
+
+### The 2x2 Mona Lisa boxes
+
+```bash
+python -m paint_artist prepare --subject mona_lisa --boxes 2x2 --styles master,pop-art,pointillism,cubism --job "$J" \
+       --name mona --cell-override ../assets/subjects/mona_boxes.json
+```
+
+Planned 2026-10-24 with the recorded profile. Box 2 (pointillism) and box 3 (cubism) use the cell overrides in `assets/subjects/mona_boxes.json`:
 
 | Box | Style | Strokes | Steps | Detail | Estimate |
 |---|---|---|---|---|---|
