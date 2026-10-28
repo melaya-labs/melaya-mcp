@@ -1,7 +1,7 @@
 ---
 name: melaya
 description: Use for anything done on the Melaya platform through its MCP server (tools named melaya_*). Covers running, building, fixing and handing over Melaya pipelines and complete multi-pipeline agentic systems; connecting services (Google, Slack, CRMs, API keys); the local runner, Claude Code, Codex, Copilot, Ollama and LM Studio models; projects and templates; run inputs (brief and files); schedules, event triggers and approvals; data stores in Google Sheets and bulk scoring; validation, debugging and reading results; client documentation; phone, browser and computer agents (desktop apps on the user's own computer), including bulk or repeated device work run as one stored plan in one call (tables of records, the same form for many rows, file lists, diagrams and drawings, admin flows, phone flows for a list). Works for non-technical users (plain-language journeys) and for integrators (full end-to-end method). Load this first, then open only the module the task needs.
-version: 1.2.9
+version: 1.2.10
 ---
 
 # Melaya
@@ -67,6 +67,7 @@ New capability areas (for example dedicated mobile-agent or browser-agent playbo
 
 ## Changelog
 
+- 1.2.10: browser and phone batches take 5000 steps and 10 minutes per call, like the computer batch (needs the Melaya server release of 2026-10-28; an older server still refuses more than 20 browser / 25 phone steps). They run on the device in parts, and a batch still running after about 50 s returns a `run_id`: call the tool again with only `run_id`, `stop: true` stops it. Fast, batch and plans are documented side by side for every surface (devices-computer, devices-browser, pipeline-authoring with the pipeline tool ids, one-call-plans caps and failure rows); computer fast mode is 500 steps per call.
 - 1.2.9: runner command pinned to `@melaya/runner@1.1.76` (computer batch pointer steps before the last skip the UI-event wait on the CLI host; a batch step's expect checks the step's or the batch's window; Linux computer helper 1.2.1).
 - 1.2.8: new module one-call-plans: the method proven by painting the Mona Lisa in one call, generalised to any computer, browser or phone work (read and calibrate, plan offline in code, preview, store the plan and run it in one call, verify against the data, resume from the failed step), with the exact step shapes and caps of every batch, fast and plan tool, what runs in the background without taking the user's mouse, verification per surface, a failure table, six recipes and the `plankit.py` plan builder; validated live on a 30-row table in a desktop editor (one call, 2.8 s, background) and a public test web form (one stored plan per call).
 - 1.2.7: runner command pinned to `@melaya/runner@1.1.75` (computer runs pause while the user uses the mouse or keyboard and resume where they stopped; batch and path take `resume_from`; faster consecutive strokes).

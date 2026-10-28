@@ -65,8 +65,16 @@ Once you have read the window and can name the next steps, send them in one `mel
 - **Explore first.** Use the single tools on an unread window or app, for sign-ins, secure fields and file dialogs, and when each result decides the next step.
 - **Stop at the first surprise.** The run stops at the first step that does not resolve or changes nothing, and returns the window. Read it and re-plan from there. Never repeat a step that may already have taken effect.
 - **Commits are handed back** (send, post, delete, buy, install) unless you pass `allow_commit: true`, and the approval card still applies. Set it only for a commit the user asked for.
-- **Long runs** (up to 100 steps, loops of 200 rows, 15 minutes) return "running (run_id ...)" after about 50 seconds. Call again with only `run_id` to wait for more or get the result; add `stop: true` to stop it. One fast run per computer at a time.
+- **Long runs** (up to 500 steps, loops of 200 rows, 15 minutes) return "running (run_id ...)" after about 50 seconds. Call again with only `run_id` to wait for more or get the result; add `stop: true` to stop it. One fast run per computer at a time.
 - Other options: `done_url` (text the app id or window title must contain at the end, for a verified completion), `budget_s` (5 to 900), `computer_id`. A completed run returns its steps as a reusable workflow: offer it to the user.
+
+Three ways to send many steps, all through the same checks as single actions (allowed apps, access level, approvals, your Stop):
+
+| Mode | Tool | Steps per call | Use when |
+|---|---|---|---|
+| Fast | `melaya_computer_fast` | 500 (loops of 200 rows), 15 minutes | you can name the next steps by the labels you read; each is re-found on the live window and checked |
+| Batch | `melaya_computer_batch` | 5000, 10 minutes | the steps are exact (refs, values, coordinates) and many: data entry, drawing, the same flow per record |
+| Plan | `plan` on either tool, saved with `melaya_computer_plan` or as a file | the tool's own cap | the list is long or reused: it is stored once and the call only names it, so it starts at once |
 
 `melaya_computer_batch` runs up to 5000 exact action steps in the app in one call (10 minutes), and every grouped tool takes a stored plan (`plan: {file}` from `~/.melaya/plans/`, `{id}` from `melaya_computer_plan`, or `{url}`) so a long list starts at once. For anything repetitive (a table of records, many files, a form per row, a diagram or drawing) use the one-call method: probe, generate the plan in code, preview, store, one call, verify by reading back, resume from the failed step. Background delivery (no cursor move, no focus steal) works for typing, `set_value` and control clicks; key chords and pointer drawing need the foreground. Load `../../modules/one-call-plans/GUIDE.md`.
 

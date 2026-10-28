@@ -18,8 +18,8 @@ CLI:  python plankit.py preview FILE.json   (counts, caps, time estimate of an e
 Step shapes follow the live tool schemas (2026-10-24):
   computer batch : contract actions {kind, target?, ..., delivery?, expect?, onError?}; camelCase keys
   computer fast / browser fast / phone fast : plain-word steps {do, target|into|text|option|key|ms ...}
-  browser batch  : {do, args}; refs (@eN) from melaya_browser_screen; max 20 steps per call
-  phone batch    : {do, args, expect?, settle_ms?}; max 25 steps per call; expect is checked before settle_ms and
+  browser batch  : {do, args}; refs (@eN) from melaya_browser_screen; max 5000 steps and 10 minutes per call
+  phone batch    : {do, args, expect?, settle_ms?}; max 5000 steps and 10 minutes per call; expect is checked before settle_ms and
                    text_visible matches substrings (p_input_checked, expect_collisions)
 """
 import csv
@@ -37,9 +37,9 @@ CAPS = {
     ("computer", "batch"): {"steps": 5000, "seconds": 600},
     ("computer", "fast"): {"steps": 500, "seconds": 900},
     ("computer", "path"): {"strokes": 200, "points": 20000, "seconds": 540},
-    ("browser", "batch"): {"steps": 20, "seconds": 60},
+    ("browser", "batch"): {"steps": 5000, "seconds": 600},
     ("browser", "fast"): {"steps": 100, "seconds": 900},
-    ("phone", "batch"): {"steps": 25, "seconds": 60},
+    ("phone", "batch"): {"steps": 5000, "seconds": 600},
     ("phone", "fast"): {"steps": 100, "seconds": 900},
 }
 
@@ -150,7 +150,7 @@ def c_move(x, y, **o):
     return _c("move", x=int(x), y=int(y), **o)
 
 
-# ---------------------------------------------------------------- browser batch steps (melaya_browser_batch, max 20)
+# ---------------------------------------------------------------- browser batch steps (melaya_browser_batch, max 5000)
 
 
 def b(do, **args):
@@ -171,7 +171,7 @@ def f(do, **kw):
     return s
 
 
-# ---------------------------------------------------------------- phone batch steps (melaya_phone_batch, max 25)
+# ---------------------------------------------------------------- phone batch steps (melaya_phone_batch, max 5000)
 
 
 def p(do, expect=None, settle_ms=None, **args):

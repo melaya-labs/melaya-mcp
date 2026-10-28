@@ -15,8 +15,8 @@ All the device rules still apply unchanged: status first, only allowed apps and 
 | You read the screen and can name the next 2 to 30 steps by their visible labels | Fast mode inline: `melaya_computer_fast`, `melaya_browser_fast`, `melaya_phone_fast` with `steps` |
 | The same steps by label for many rows or pages (forms, lists, loops), each step should be re-found and checked | Fast mode with a stored plan (`plan`), up to 100 steps per call on browser and phone, 500 on the computer; `for_each` for list rows |
 | Exact steps by ref or coordinates at high volume (hundreds to thousands), pointer drawing, keys held across steps, or the fastest possible execution | `melaya_computer_batch` with a stored plan: up to 5000 steps, 10 minutes per call |
-| A short fixed browser sequence on one page you just read (navigate then read, focus type submit) | `melaya_browser_batch`, at most 20 steps, refs from the latest `melaya_browser_screen` |
-| A short exact phone sequence (open an app, two known screens) | `melaya_phone_batch`, at most 25 steps |
+| A fixed browser sequence by ref (navigate then read, focus type submit, a known data-entry flow) | `melaya_browser_batch`, up to 5000 steps and 10 minutes per call (about 1 s a step), refs from the latest `melaya_browser_screen` (a ref is valid only for the page load you read it from) |
+| An exact phone sequence (open an app, known screens, a known data-entry flow) | `melaya_phone_batch`, up to 5000 steps and 10 minutes per call (about 0.3 s a step plus its settle) |
 | Strokes only (signature, drawing, slider) | `melaya_computer_path` (or `path` steps inside a batch) |
 
 Store the plan whenever the list is longer than about 30 steps or will be reused: a long list written into the call is slow to start (every step is generated as tool-call text), a stored plan starts at once. Inline is fine for short lists.
@@ -29,8 +29,8 @@ Store the plan whenever the list is longer than about 30 steps or will be reused
 | `melaya_computer_path` | 200 strokes, 20,000 points | 9 minutes | |
 | `melaya_computer_fast` | 500 | 15 minutes (`budget_s` 5 to 900, default 120) | loops of 200 rows |
 | `melaya_browser_fast`, `melaya_phone_fast` | 100 (15 inside a `for_each`) | 15 minutes (`budget_s`, default 120) | loops of 200 rows, `collect` up to 500 items; a phone run still going after about 50 s returns a `run_id` |
-| `melaya_browser_batch` | 20 | short (one call's wait) | also enforced on stored plans |
-| `melaya_phone_batch` | 25 | short | enforced when the plan runs: `melaya_phone_plan` saves a longer list without a warning, then the run is refused ("At most 25 steps per batch") |
+| `melaya_browser_batch` | 5000 | 10 minutes (approval waits not counted) | sent to the browser in parts of up to 50 steps (about 30 s each); a batch still running after about 50 s returns a `run_id` (call again with only `run_id`; `stop: true` stops it after the part in progress); at the limit it stops and says which steps ran; the cap also applies to stored plans |
+| `melaya_phone_batch` | 5000 | 10 minutes | sent to the phone in parts of up to 25 steps (about 40 s each); a batch still running after about 50 s returns a `run_id` (call again with only `run_id`; `stop: true` stops it after the part in progress, `melaya_phone_stop` at once); at the limit it stops and says which steps ran; the cap also applies to stored plans |
 | Stored plan | 2 MB per plan, 20 saved plans per account, kept 7 days (up to 30) | | `plan: {file}` needs the runner or desktop app online on that computer |
 
 `max_steps` (1 to 30, default 8) on the fast tools limits only `goal` mode; a `steps` list is limited by the caps above. Over a cap, split the plan into several calls (`plankit.chunk`), each ending at a natural boundary (a whole record, a whole page).
@@ -81,9 +81,9 @@ Store the plan whenever the list is longer than about 30 steps or will be reused
 
 Tool arguments that can sit in the plan file: `budget_s`, `done_url`, `done_text`, `humanize`. `allow_commit` and the device choice (`computer_id`, `agent`) never come from a plan: pass them in the call.
 
-**Browser batch** (`melaya_browser_batch`, max 20): `{do, args}` with `do` one of navigate (`url`), click (`ref`), tap (`x`, `y`), input_text (`ref`, `text`, `submit?`), press_key (`key`), scroll (`direction`, `amount_px?`), select_option (`ref`, `values`), submit (`ref`), get_screen_tree, get_text (`ref?`), screenshot, back, forward, wait (`ms`). Refs are valid only for the page load you read them from.
+**Browser batch** (`melaya_browser_batch`, max 5000, 10 minutes): `{do, args}` with `do` one of navigate (`url`), click (`ref`), tap (`x`, `y`), input_text (`ref`, `text`, `submit?`), press_key (`key`), scroll (`direction`, `amount_px?`), select_option (`ref`, `values`), submit (`ref`), get_screen_tree, get_text (`ref?`), screenshot, back, forward, wait (`ms`). Refs are valid only for the page load you read them from.
 
-**Phone batch** (`melaya_phone_batch`, max 25): `{do, args, expect?, settle_ms?}` with `do` one of open_app (`app` package), click_text (`text`), click_id (`id`), input_text (`text`), paste (`text`), clear_text, press_enter, tap / double_tap / long_press (`x`, `y`), swipe (`x1`, `y1`, `x2`, `y2`), scroll (`direction`, `amount?`), home, back; `expect` holds one of `{app}`, `{text_visible}` or `{editable_focused: true}`. There is no wait step: `settle_ms` (0 to 3000, default 300) waits after a step. Two behaviours to plan around:
+**Phone batch** (`melaya_phone_batch`, max 5000, 10 minutes): `{do, args, expect?, settle_ms?}` with `do` one of open_app (`app` package), click_text (`text`), click_id (`id`), input_text (`text`), paste (`text`), clear_text, press_enter, tap / double_tap / long_press (`x`, `y`), swipe (`x1`, `y1`, `x2`, `y2`), scroll (`direction`, `amount?`), home, back; `expect` holds one of `{app}`, `{text_visible}` or `{editable_focused: true}`. There is no wait step: `settle_ms` (0 to 3000, default 300) waits after a step. Two behaviours to plan around:
 
 - The `expect` is checked right after the action, before `settle_ms`. A value that shows up a moment later (suggestions, a computed result, a search count) fails the check even with `settle_ms: 2000`. Type with a settle, then repeat the same `input_text` (it sets the same text again, nothing changes on screen) with the `expect` on that second step (`plankit.p_input_checked`).
 - `text_visible` matches a substring: `"= 10"` passes on a screen that shows `"= 1000"`. Check expected texts against each other with `plankit.expect_collisions` and lengthen the ones that collide, or verify those values from a read.
@@ -131,8 +131,8 @@ Measured live (2026-10-24): computer batch typing in the background about 0.08 s
 | A chord step fails with "need real keyboard input" | Ctrl, Alt or Shift chords cannot be sent in the background | Use `set_value` (a whole value, or `""` to clear), or a foreground step with the user's agreement |
 | An approval card for every row | `submit: true` or an Enter press commits in safe mode | Put line breaks inside the typed text, move between fields with Tab or labels; commit once at the end with the user's yes |
 | A fast step returns `ambiguous` | A label and its control share the same name | Fixed in the next server deploy for `select` and `pick` (the control wins over its label); for `click` add `ref` (from the screen you read) or `near` |
-| A browser batch is refused over 20 steps | The 20-step cap applies to stored plans too | Use `melaya_browser_fast` with a stored plan, or split |
-| A stored plan is accepted, then refused at run for its size | Saving checked only the shape | Fixed in the next server deploy: saving refuses a plan over its tool's cap (browser batch 20, phone batch 25, fast 100, computer fast 500, computer batch 5000, path 200 strokes) and names the kind that takes it |
+| A browser or phone batch is refused over 5000 steps, or stops at 10 minutes ("stopped at its 10-minute limit: steps 1-N ran") | The 5000-step cap and the 10-minute limit apply to stored plans too | Split with `plankit.chunk`, and run the remainder (`steps[N:]`) in another call |
+| A stored plan is accepted, then refused at run for its size | Saving checked only the shape | Fixed in the next server deploy: saving refuses a plan over its tool's cap (browser batch 5000, phone batch 5000, browser and phone fast 100, computer fast 500, computer batch 5000, path 200 strokes) and names the kind that takes it |
 | A phone batch `expect` fails although the text shows a moment later | The phone app checks `expect` right after the action, before `settle_ms` | Fixed in the next server deploy (MCP `melaya_phone_batch`): the check runs after the step's `settle_ms`, so give `settle_ms` for slow results. With phone app 1.1.1 + server deploy the phone also re-checks it for up to 4 s after the settle; on an older app it is one check |
 | `text_visible` passes on a longer text ("= 10" on "= 1000") | It is a substring match on the phone | With phone app 1.1.1 + server deploy: add `match: "exact"` (an element's whole text) or `match: "word"` (whole words) to the `expect`; an older app gets the batch refused (`app_update_required`) instead of a substring match. Phone fast `expect` takes the same `match` (checked on the server). Until then expect a text that is unique on the screen |
 | A phone batch failure says "Nothing changed on the device", counts steps from 0, shows no screen | The failure text ignored what the phone reported | Fixed in the next server deploy: the failed step numbered from 1, the steps that ran, the time and the screen at the end; a staged approval inside the batch reads PENDING APPROVAL. With phone app 1.1.1 + server deploy it also says per step whether the screen changed ("Screen changed after: 1 open_app yes, 2 tap NO") |
@@ -200,7 +200,7 @@ for path in write_plans("leads_form", steps, "browser", "fast", args={"budget_s"
     print(path)   # one melaya_browser_fast call per file: {"agent": "<id>", "plan": {"file": "leads_form_1.json"}, "allow_commit": true}
 ```
 
-Without the user's yes to submit, leave the Submit step out and stop after the fields. Verify on the destination (the list of submitted entries, the sheet behind the form), with `diff_rows`. For one record on a page you just read, `melaya_browser_batch` with refs is enough (20 steps).
+Without the user's yes to submit, leave the Submit step out and stop after the fields. Verify on the destination (the list of submitted entries, the sheet behind the form), with `diff_rows`. For records on a page you just read, `melaya_browser_batch` with refs is enough (up to 5000 steps, 10 minutes).
 
 ### 3. Renaming or organising many files in Explorer or a file dialog
 
@@ -276,7 +276,7 @@ write_plan("phone_values", steps, "phone", "fast", args={"budget_s": 300, "done_
 # melaya_phone_fast {"plan": {"file": "phone_values.json"}}; parse every PAGES entry, diff_rows(rows, parsed, key="input")
 ```
 
-For an exact short sequence with fixed ids, `melaya_phone_batch` (25 steps) with an `expect` on the steps that matter; for late values use `p_input_checked(text, expected)`, which adds the second, checking step. A phone job that should keep going after the chat belongs to `melaya_run_phone_agent` or a pipeline (`../devices-browser/GUIDE.md`).
+For an exact sequence with fixed ids, `melaya_phone_batch` (up to 5000 steps, 10 minutes) with an `expect` on the steps that matter; for late values use `p_input_checked(text, expected)`, which adds the second, checking step. A phone job that should keep going after the chat belongs to `melaya_run_phone_agent` or a pipeline (`../devices-browser/GUIDE.md`).
 
 ## Reference runs (2026-10-24)
 

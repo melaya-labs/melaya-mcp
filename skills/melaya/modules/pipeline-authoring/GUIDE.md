@@ -274,3 +274,19 @@ Any local provider on any agent sends the whole pipeline to the user's runner (f
 - [ ] `persistent_memory` is false unless de-duplication across runs is needed and marker lines are instructed.
 - [ ] Output language set (`user_lang` or an explicit instruction).
 - [ ] Preview shows every step, agent, tool, model and scoring call; save used `mode: "update"` with the whole document; the canonical name was recorded.
+
+## Device steps in pipelines: fast, batch and plans
+
+A pipeline agent that operates a phone, a browser or a computer has the same three ways to send many steps as an MCP client. Put the tool ids in `agent_tools` (confirm each with `melaya_pipeline_registry`):
+
+| Mode | Phone | Browser | Computer | Limit per call |
+|---|---|---|---|---|
+| Fast (steps by the labels the agent read, each re-found and checked) | `phone_fast` | `browser_fast` | `computer_fast` | 100 steps (computer 500), loops of 200 rows, 15 minutes |
+| Batch (exact steps by ref, value or coordinates) | `phone_batch` | `browser_batch` | `computer_batch` | 5000 steps, 10 minutes |
+| Plan (a stored list the call only names) | `plan` argument on any of the six | | | the tool's own cap |
+
+- A run that outlasts one tool call returns `running` with a run id. The agent calls the same tool again with only that id (`run_id`, sent to the server as `batch_run_id` for browser and phone batches because the request's own `run_id` is the pipeline's) and `stop: true` stops it.
+- Approvals and autonomy are unchanged: the phone follows the pipeline's `hitl_mode`, the browser the user's browser autonomy, the computer the per-app access level; every step meets the same checks as a single action.
+- Tell the agent in its instructions when to use which: fast to act on what it just read, batch for long exact lists, a plan for anything generated in code or reused.
+- `browser_fast` needs the Melaya extension transport. On the runner's own browser use the per-step tools or `browser_batch`.
+- Method, step shapes and recipes: `../one-call-plans/GUIDE.md`.
