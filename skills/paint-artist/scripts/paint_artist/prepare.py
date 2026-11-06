@@ -202,6 +202,17 @@ def prepare(source, out, preset, width=None, height=672, fit_mode='crop', focus=
     if transfer and ref is not None:
         T = col.reinhard_transfer(T, ref)
     T = col.adjust(T, pf.get('saturation', 1), pf.get('contrast', 1), pf.get('gamma', 1), pf.get('brightness', 0))
+    if pf.get('toon'):
+        from .toon import kuwahara
+        tn = pf['toon']
+        T = kuwahara(T, tn.get('kuwahara', 4), tn.get('passes', 2), tn.get('soft', 0.0))
+    if pf.get('value_floor'):
+        # lift the darks toward the middle (L* = floor + (100 - floor) * L / 100): cartoon brightness from a dark
+        # source without washing out the lights
+        lab = col.rgb2lab(T)
+        f = float(pf['value_floor'])
+        lab[..., 0] = f + (100.0 - f) * lab[..., 0] / 100.0
+        T = np.clip(col.lab2rgb(lab), 0, 1)
     if pf.get('complement_shadows'):
         T = complement_shadows(T, pf['complement_shadows'])
     if pf.get('warp'):

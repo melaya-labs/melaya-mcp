@@ -217,7 +217,8 @@ def colour_cells(ctx, L, lab, grid, rng):
     """Return a per-pixel palette-index map."""
     mode = L.get('color', 'nearest')
     means = cell_means(ctx, lab)
-    use = np.array([ctx.color_index(c) for c in L['colors']]) if L.get('colors') else np.arange(len(ctx.pal))
+    use = (np.array([ctx.color_index(c) for c in L['colors']]) if L.get('colors')
+           else np.flatnonzero(getattr(ctx, 'auto_ok', np.ones(len(ctx.pal), bool))))
     pal_use = ctx.pal_lab[use].copy()
     # match: {paint: proxy} -> the paint is chosen where the picture looks like the proxy colour (a stylised
     # palette that still traces the subject: yellow where the skin is light, blue/black where it is dark ...)

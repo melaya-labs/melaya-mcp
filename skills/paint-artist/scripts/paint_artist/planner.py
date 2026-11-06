@@ -33,7 +33,7 @@ from . import cells as cl
 from . import fastpaint as fp
 from . import color as col
 from . import simulate as sim
-from .prepare import ellipse_mask, load_rgb
+from .prepare import FRAME_COLOURS, ellipse_mask, load_rgb
 
 
 # ----------------------------------------------------------------------------------------------- context
@@ -49,6 +49,19 @@ class Ctx:
         self.pal = np.array(self.meta['palette'])
         self.pal_lab = col.rgb2lab(self.pal)
         self.pal_lin = col.srgb_to_linear(self.pal)
+        # Frame-only swatches (walnut, gold, dark appended for the frame because no paint colour was close) are paint
+        # like any other by default (their browns and near-black serve as deep tones, e.g. ukiyo-e hair). A preset with
+        # palette.frame_paint false keeps them out of the automatic colour choices (a grey charcoal drawing must not
+        # pick the gold); an explicit colour in a layer can still name them.
+        self.auto_ok = np.ones(len(self.pal), bool)
+        fr = (self.meta.get('palette_info') or {}).get('frame', {})
+        if (self.preset.get('palette') or {}).get('frame_paint', True) is not False:
+            fr = {}
+        for fname, fi in fr.items():
+            if fname in FRAME_COLOURS and 0 <= fi < len(self.pal) and np.allclose(self.pal[fi], FRAME_COLOURS[fname], atol=2e-3):
+                self.auto_ok[fi] = False
+        if not self.auto_ok.any():
+            self.auto_ok[:] = True
         self.full = load_rgb(os.path.join(job, 'canvas.png'))
         self.ox, self.oy = self.meta['layout']['draw_origin']
         self.rng = np.random.default_rng(seed)
@@ -115,8 +128,10 @@ class Ctx:
         if getattr(self, '_skin', None) is not None:
             return self._skin
         lab = np.stack([ndi.gaussian_filter(self.Tl[..., c], 1.5) for c in range(3)], -1)
-        warm = (lab[..., 0] > self.preset.get('skin', {}).get('min_L', 40)) & (lab[..., 1] > 1) & (lab[..., 2] > 10)
-        near = ndi.binary_dilation(self.FOCUS, iterations=20) if self.FOCUS.any() else np.ones_like(warm)
+        sk = self.preset.get('skin', {})
+        warm = (lab[..., 0] > sk.get('min_L', 40)) & (lab[..., 1] > sk.get('min_a', 1)) & (lab[..., 2] > sk.get('min_b', 10))
+        reach = int(self.preset.get('skin', {}).get('reach', 20))     # how far from the focus skin may extend
+        near = ndi.binary_dilation(self.FOCUS, iterations=reach) if self.FOCUS.any() else np.ones_like(warm)
         m = ndi.binary_opening(warm & near, iterations=2)
         m = ndi.binary_closing(m, iterations=4)
         m = ndi.binary_fill_holes(m)
@@ -266,6 +281,7 @@ def layer_strokes(ctx, L, seed):
                 d = np.linalg.norm(ctx.pal_lab - Tl[yi, xi], axis=1)
             else:
                 d = np.linalg.norm(col.rgb2lab(a * ctx.pal + (1 - a) * C[yi, xi]) - Tl[yi, xi], axis=1)
+            d = np.where(ctx.auto_ok, d, np.inf)
             if cj > 0:
                 cand = np.where(d <= d.min() + cj)[0]
                 k = int(rng.choice(cand))
@@ -340,6 +356,8 @@ def layer_glaze(ctx, L, seed):
     best = np.full((h, w), -1)
     gain = np.zeros((h, w))
     for k, c in enumerate(ctx.pal):
+        if not ctx.auto_ok[k]:
+            continue
         gk = base - np.linalg.norm(col.rgb2lab(a * c + (1 - a) * Cc) - Tl, axis=-1)
         u = gk > gain
         best[u] = k
@@ -430,6 +448,71 @@ def layer_hatch(ctx, L, seed):
     return strokes
 
 
+# ------------------------------------------------------------------------------------------ catchlight
+def find_eyes(ctx, focus, L):
+    """The two pupils of one face: local dark blobs (narrow minus wide blur of the raw lightness) in the upper
+    inner part of the focus ellipse, ranked by depth, paired by height (|dy| < 0.25 ry) and spacing
+    (0.15 .. 0.9 of the ellipse width). Returns [(x, y, r), ...] in drawing px, 0 to 2 entries."""
+    raw = load_rgb(os.path.join(ctx.job, 'target_raw.png'))
+    lum = col.rgb2lab(raw)[..., 0]
+    H, W = lum.shape
+    fx, fy, rx, ry = focus
+    cx, cy, ax, ay = fx * W, fy * H, rx * W, ry * H
+    yy, xx = np.mgrid[:H, :W]
+    inner = ((xx - cx) / (float(L.get('reach_x', 1.1)) * ax)) ** 2 + ((yy - cy) / (0.85 * ay)) ** 2 < 1
+    band = inner & (yy > cy - 0.75 * ay) & (yy < cy + 0.1 * ay)
+    G = ndi.gaussian_filter(lum, float(L.get('blob_sigma', 1.5)))
+    D = G - ndi.gaussian_filter(lum, float(L.get('blob_wide', 6.0)))
+    win = int(L.get('min_window', 9))
+    mins = (G == ndi.minimum_filter(G, size=win)) & band & (D < -float(L.get('depth', 3.0)))
+    blobs = []
+    for y, x in np.argwhere(mins):
+        # pupil radius: how far the dark core extends around the minimum
+        core = G[max(0, y - 6):y + 7, max(0, x - 6):x + 7] < G[y, x] + 0.5 * abs(D[y, x])
+        blobs.append((float(D[y, x]), float(x), float(y), max(1.5, (core.sum() / np.pi) ** 0.5)))
+    blobs.sort()
+    best = None
+    for i in range(len(blobs)):
+        for j in range(i + 1, len(blobs)):
+            (d1, x1, y1, r1), (d2, x2, y2, r2) = blobs[i], blobs[j]
+            sep = abs(x1 - x2) / (2 * ax)
+            if abs(y1 - y2) < 0.25 * ay and 0.15 < sep < 0.9:
+                sc = d1 + d2
+                if best is None or sc < best[0]:
+                    best = (sc, [(x1, y1, r1), (x2, y2, r2)])
+    if best:
+        return best[1]
+    return [(x, y, r) for _, x, y, r in blobs[:1]]
+
+
+def layer_catchlight(ctx, L, seed):
+    """Cartoon / anime eyes: on each of the first `faces` focus ellipses, the pupils found by find_eyes get a dark
+    pupil dot (`pupil` px, `pupil_color`, 0 = none) and a white highlight dot (`size` px) at its upper-left
+    (`offset` x the pupil radius). Returns sub-layers (pupils first, then highlights)."""
+    kp = ctx.color_index(L.get('pupil_color', 'darkest'))
+    kw = ctx.color_index(L.get('color', '#ffffff'))
+    pupils, lights = [], []
+    off = float(L.get('offset', 0.5))
+    pr0 = L.get('pupil', 0)
+    size = float(L.get('size', 3))
+    for f in (ctx.meta.get('focus') or [])[:int(L.get('faces', 1))]:
+        # 'auto': pupil diameter = pupil_scale x the face (focus ellipse) width, highlight = highlight_scale x pupil
+        fw = 2 * f[2] * ctx.W
+        pr = max(3.0, float(L.get('pupil_scale', 0.1)) * fw) if pr0 == 'auto' else float(pr0)
+        if pr0 == 'auto':
+            size = max(2.0, float(L.get('highlight_scale', 0.4)) * pr)
+        for x, y, r in find_eyes(ctx, f, L):
+            if pr:
+                pupils.append((kp, [[x, y], [x + 0.5, y]]))
+            rr = max(r, pr / 2)
+            lights.append((kw, [[x - off * rr, y - off * rr], [x - off * rr + 0.5, y - off * rr]]))
+    out = []
+    if pupils:
+        out.append(({'tool': 'brush', 'width': round(pr), 'name': 'pupils'}, pupils))
+    out.append(({'tool': 'brush', 'width': round(size), 'name': 'catchlight'}, lights))
+    return out
+
+
 # ----------------------------------------------------------------------------------------------- dots
 def layer_dots(ctx, L, seed):
     rng = np.random.default_rng(seed)
@@ -468,11 +551,11 @@ def layer_dots(ctx, L, seed):
                 want = col.srgb_to_linear(Tb[yi, xi]) + E[r_i, c_i + 1]
                 cur = col.srgb_to_linear(ctx.C[yi, xi])
                 got_all = a * ctx.pal_lin + (1 - a) * cur
-                k = int(np.linalg.norm(got_all - want, axis=1).argmin())
+                k = int(np.where(ctx.auto_ok, np.linalg.norm(got_all - want, axis=1), np.inf).argmin())
                 if comp and rng.random() < comp:
                     tl = col.rgb2lab(Tb[yi, xi])
                     cl = np.array([tl[0], -tl[1], -tl[2]])
-                    k = int(np.linalg.norm(ctx.pal_lab - cl, axis=1).argmin())
+                    k = int(np.where(ctx.auto_ok, np.linalg.norm(ctx.pal_lab - cl, axis=1), np.inf).argmin())
                 e = want - got_all[k]
                 E[r_i, c_i + 2] += e * 7 / 16
                 if r_i + 1 < len(rows):
@@ -523,10 +606,27 @@ def label_map(ctx, L):
         lbl = np.digitize(lum, q)
     else:
         use = L.get('use_colors')
+        if use is None and not ctx.auto_ok.all():
+            use = list(np.flatnonzero(ctx.auto_ok))
         pl = ctx.pal_lab if use is None else ctx.pal_lab[use]
         lbl = col.nearest(col.rgb2lab(small), pl)
         if use is not None:
             lbl = np.asarray(use)[lbl]
+    if L.get('skin_colors'):
+        # toon skin: inside the detected skin (face, hands) only the style's skin tones, dark to light by the
+        # pixel's lightness rank, `skin_split` = share of each darker tone (a hard cel shadow, then the base)
+        sidx = [ctx.color_index(c) for c in L['skin_colors']]
+        sidx = sorted(sidx, key=lambda i: ctx.pal_lab[i, 0])
+        m = ctx.skin()
+        if L.get('skin_grow'):
+            m = ndi.binary_dilation(m, iterations=int(L['skin_grow']))
+        m = m[s // 2::s, s // 2::s][:lbl.shape[0], :lbl.shape[1]]
+        if m.any():
+            lum = col.rgb2lab(small)[..., 0]
+            split = L.get('skin_split') or list(np.linspace(0, 1, len(sidx) + 1)[1:-1])
+            cuts = np.quantile(lum[m], np.cumsum(split)[:len(sidx) - 1])
+            lbl = lbl.copy()
+            lbl[m] = np.asarray(sidx)[np.digitize(lum[m], cuts)]
     if L.get('smooth', 2):
         lbl = mode_filter(lbl, K, L.get('smooth', 2))
     lbl = despeckle(lbl, K, L.get('minsize', 20))
@@ -633,7 +733,61 @@ def layer_flat(ctx, L, seed):
     full = np.kron(lbl, np.ones((s, s), int))
     pad = np.pad(full, ((0, max(0, ctx.H - full.shape[0])), (0, max(0, ctx.W - full.shape[1]))), mode='edge')
     ctx.labels = pad[:ctx.H, :ctx.W]
+    if L.get('fill') == 'scribble':
+        return scribble_fill(ctx, L, seed)
     return choose_render(ctx, L, lambda: paint_label_grid(ctx, L, lbl, s), ctx.labels.copy())
+
+
+def scribble_fill(ctx, L, seed):
+    """Crayon colouring-in: every region of the label map filled with back-and-forth parallel scribbles at its own
+    slant (`angle` +- `angle_jitter`), lines `spacing` apart (default: the tool's real ink width x `cover`), each
+    zigzag one press while its turns stay inside the region. Paper shows through between the lines (crayon look).
+    Regions lighter than `skip_L` (L*) stay bare paper; `skip_largest` leaves the biggest region (the background) bare."""
+    rng = np.random.default_rng(seed + 11)
+    spec = ctx.tools.get(L.get('tool', 'crayon'), {})
+    w = float(L.get('width', 10))
+    ink = w * float(spec.get('width_scale', 1.0))
+    sp = float(L.get('spacing') or max(2.0, ink * float(L.get('cover', 0.85))))
+    lab = ctx.labels
+    ks, counts = np.unique(lab, return_counts=True)
+    skip = set()
+    if L.get('skip_largest'):
+        skip.add(int(ks[counts.argmax()]))
+    if L.get('skip_L') is not None:
+        skip |= {int(k) for k in ks if ctx.pal_lab[int(k), 0] > float(L['skip_L'])}
+    keep_in = int(L.get('inset', 1))
+    strokes = []
+    comps = []
+    for k in ks:
+        if int(k) in skip:
+            continue
+        reg = lab == k
+        if keep_in:
+            reg = ndi.binary_erosion(reg, iterations=keep_in)
+        cc, n = ndi.label(reg)
+        for i in range(1, n + 1):
+            comps.append((int(k), cc == i))
+    for k, reg in comps:
+        if reg.sum() < float(L.get('min_area', 30)):
+            continue
+        ang = float(L.get('angle', 35)) + rng.uniform(-1, 1) * float(L.get('angle_jitter', 20))
+        segs = hatch_lines(reg, ang, sp, int(L.get('min_run', 3)), rng, float(L.get('jitter', 0.6)))
+        cur, flip = None, False
+        for seg in segs:
+            pts = [list(seg[1]), list(seg[0])] if flip else [list(seg[0]), list(seg[1])]
+            flip = not flip
+            if cur is not None:
+                (x0, y0), (x1, y1) = cur[-1], pts[0]
+                mx, my = int(round((x0 + x1) / 2)), int(round((y0 + y1) / 2))
+                if math.hypot(x1 - x0, y1 - y0) <= 3 * sp and 0 <= my < reg.shape[0] and 0 <= mx < reg.shape[1] and reg[my, mx]:
+                    cur.extend(pts)
+                    continue
+                strokes.append((k, cur))
+            cur = pts
+        if cur is not None:
+            strokes.append((k, cur))
+    name = L.get('name', 'scribble')
+    return [({'tool': L.get('tool', 'crayon'), 'width': w, 'name': name}, strokes)]
 
 
 def quick_cost(ctx, sublayers):
@@ -804,17 +958,37 @@ def chaikin(pts):
 
 def layer_outline(ctx, L, seed):
     src = L.get('source', 'labels')
-    if src == 'labels' and ctx.labels is not None:
-        lbl = ctx.labels
+    if src == 'xdog':
+        # ink lines on the dark side of edges (toon.line_mask), thinned to one-pixel paths
+        from . import toon
+        xd = L.get('xdog', {})
+        base = load_rgb(os.path.join(ctx.job, 'target_raw.png')) if xd.get('on') == 'raw' else ctx.T
+        gray = col.rgb2lab(base)[..., 0] / 100.0
+        args = (xd.get('sigma', 1.0), xd.get('k', 1.6))
+        B = toon.line_mask(gray, *args, xd.get('tau', 0.02), xd.get('min_area', 12), xd.get('close', 0))
+        if xd.get('focus_gain'):                 # finer features (eyes, nose, mouth) inside the faces
+            fm = ndi.binary_dilation(ctx.FOCUS, iterations=4)
+            B |= toon.line_mask(gray, *args, xd.get('tau', 0.02) / xd['focus_gain'], xd.get('focus_min_area', 6),
+                                xd.get('close', 0)) & fm
+        B = toon.thin(B)
     else:
-        n = int(str(src).split(':')[1]) if ':' in str(src) else 4
-        lum = ndi.gaussian_filter(ctx.Tl[..., 0], L.get('blur', 2.0))
-        q = np.quantile(lum, np.linspace(0, 1, n + 1)[1:-1])
-        lbl = np.digitize(lum, q)
-        lbl = mode_filter(lbl, n, 2)
-    B = np.zeros(lbl.shape, bool)
-    B[:, :-1] |= lbl[:, :-1] != lbl[:, 1:]
-    B[:-1, :] |= lbl[:-1, :] != lbl[1:, :]
+        if src == 'labels' and ctx.labels is not None:
+            lbl = ctx.labels
+            if L.get('merge'):
+                # colours that count as one shape for the outline (e.g. a skin tone and its cel shadow)
+                lbl = lbl.copy()
+                for grp in L['merge']:
+                    ids = [ctx.color_index(c) for c in grp]
+                    lbl[np.isin(lbl, ids)] = ids[0]
+        else:
+            n = int(str(src).split(':')[1]) if ':' in str(src) else 4
+            lum = ndi.gaussian_filter(ctx.Tl[..., 0], L.get('blur', 2.0))
+            q = np.quantile(lum, np.linspace(0, 1, n + 1)[1:-1])
+            lbl = np.digitize(lum, q)
+            lbl = mode_filter(lbl, n, 2)
+        B = np.zeros(lbl.shape, bool)
+        B[:, :-1] |= lbl[:, :-1] != lbl[:, 1:]
+        B[:-1, :] |= lbl[:-1, :] != lbl[1:, :]
     only = ctx.mask(L.get('mask'))
     if only is not None:
         B &= only
@@ -946,6 +1120,12 @@ def plan(job, preset, tools, detail=1.0, seed=0, frame=None, log=print):
         elif t == 'outline':
             L.setdefault('width', 2)
             add(L, layer_outline(ctx, L, sd), L.get('name', 'outline'))
+        elif t == 'catchlight':
+            for sub, S in layer_catchlight(ctx, L, sd):
+                full = dict(L)
+                full.update(sub)
+                if S:
+                    add(full, S, sub['name'])
         elif t == 'cells':
             ctx.cell_cmap = None
             for sub, S in cl.layer_cells(ctx, L, sd, paint_labels):
