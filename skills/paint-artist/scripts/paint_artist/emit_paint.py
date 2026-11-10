@@ -191,8 +191,11 @@ class Emitter:
         if group:
             self.paths(group, speed, step_px, gap_ms, t == 'fill')
 
-    def emit(self, plan):
+    def start(self):
         self.steps.append({'kind': 'set_value', 'target': dict(self.ui['opacity_slider']), 'value': '100', 'onError': 'continue'})
+
+    def emit(self, plan):
+        self.start()
         for L in plan['layers']:
             if L['strokes']:
                 self.layer(L)
@@ -212,8 +215,16 @@ class Emitter:
                 + self.n_fill * tm.get('per_fill_s', 0.30) + nset * tm.get('per_set_value_s', 0.0) + waits)
 
 
+def make_emitter(meta, ui, tools):
+    """The adapter for ui['app']: Kleki (emit_kleki.py) or Microsoft Paint (this file, the default)."""
+    if str(ui.get('app', '')).startswith('kleki'):
+        from .emit_kleki import KlekiEmitter
+        return KlekiEmitter(meta, ui, tools)
+    return Emitter(meta, ui, tools)
+
+
 def emit(plan, meta, ui, tools, out_path):
-    em = Emitter(meta, ui, tools)
+    em = make_emitter(meta, ui, tools)
     doc = em.emit(plan)
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     with open(out_path, 'w') as f:

@@ -213,7 +213,7 @@ def run_plan(job, detail, seed, log=None):
 
 def estimate(job, plan, ui=None):
     meta = jload(os.path.join(job, 'meta.json'))
-    em = ep.Emitter(meta, ui or ui_for(job), tools_for(job))
+    em = ep.make_emitter(meta, ui or ui_for(job), tools_for(job))
     em.emit(plan)
     return em.estimate(), len(em.steps), em
 

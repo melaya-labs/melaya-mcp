@@ -314,8 +314,8 @@ def emit_grid(plan, meta, ui, tools, plans_dir, name, cap=500.0, dry=False):
         groups[-1][1].append(L)
 
     def run(groups_subset):
-        em = ep.Emitter(meta, ui, tools)
-        em.steps.append({'kind': 'set_value', 'target': dict(ui['opacity_slider']), 'value': '100', 'onError': 'continue'})
+        em = ep.make_emitter(meta, ui, tools)
+        em.start()
         marks = []
         for c, Ls in groups_subset:
             s0, t0 = len(em.steps), em.estimate()

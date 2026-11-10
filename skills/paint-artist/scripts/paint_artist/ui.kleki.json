@@ -1,0 +1,81 @@
+{
+ "_doc": "Kleki (kleki.com) in a Safari window on macOS, window at (227,141) size 1264x796 points, Kleki zoom 100 %, Stabilizer 0, bucket tolerance 0. Screen POINTS (Retina scale 2 handled by the grab). Bars: Kleki's custom sliders, a press at x sets the value (see emit_kleki.py).",
+ "app": "kleki-safari-mac",
+ "screen": [
+  1728,
+  1117
+ ],
+ "scale": 1.0,
+ "canvas_center": [
+  723,
+  565
+ ],
+ "canvas_origin": null,
+ "viewport": [
+  227,
+  193,
+  1220,
+  937
+ ],
+ "brush_icons": {
+  "pen": [
+   1239,
+   701
+  ],
+  "pixel": [
+   1355,
+   701
+  ]
+ },
+ "size_bar": {
+  "x0": 1231.1,
+  "x1": 1456.2,
+  "y": 746
+ },
+ "opacity_bar": {
+  "x0": 1231.1,
+  "x1": 1456.2,
+  "y": 786
+ },
+ "max_px": 64,
+ "waits_ms": {
+  "after_key": 150,
+  "after_brush_icon": 200,
+  "after_slider": 60
+ },
+ "edge_clear_px": 5,
+ "path": {
+  "speed": 8000,
+  "ground_speed": 6000,
+  "strokeGapMs": 2,
+  "max_strokes_per_step": 200,
+  "settleMs": 12,
+  "_doc_settle": "settleMs: still time on each stroke's last point (macOS frame coalescing; see emit_kleki.paths)"
+ },
+ "timing_profile": "recorded",
+ "timing_profiles": {
+  "recorded": {
+   "per_long_s": 0.013,
+   "per_short_s": 0.013,
+   "per_point_s": 0.0037,
+   "per_pick_s": 0.02,
+   "per_kpx16_s": 0.5397,
+   "per_kpx4_s": 0.5397,
+   "per_fill_s": 0.013,
+   "per_set_value_s": 0.0,
+   "fitted_on": "2026-10-25 live Kleki/Safari runs on the Mac (Melaya 0.1.6, settleMs 12, 8000 px/s, stepPx 8): the 4 recorded Venus boxes (386/187/79/83 s) + the unrecorded Liberty mondrian test (21 s); NNLS fit, error master -1 %, stained-glass +1 %, pixel-art -20 %, pointillism -11 %, mondrian +23 %"
+  },
+  "unrecorded": {
+   "per_long_s": 0.013,
+   "per_short_s": 0.013,
+   "per_point_s": 0.0037,
+   "per_pick_s": 0.02,
+   "per_kpx16_s": 0.5397,
+   "per_kpx4_s": 0.5397,
+   "per_fill_s": 0.013,
+   "per_set_value_s": 0.0,
+   "fitted_on": "2026-10-25 live Kleki/Safari runs on the Mac (Melaya 0.1.6, settleMs 12, 8000 px/s, stepPx 8): the 4 recorded Venus boxes (386/187/79/83 s) + the unrecorded Liberty mondrian test (21 s); NNLS fit, error master -1 %, stained-glass +1 %, pixel-art -20 %, pointillism -11 %, mondrian +23 %"
+  }
+ },
+ "_doc_bars": "Size bar fitted on 3 presses: x 1250 -> 2.4, 1350 -> 57, 1400 -> 113 (radius 0.5 + 99.5 t^2, shown as diameter)."
+}

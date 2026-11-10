@@ -34,7 +34,17 @@ def scores(img, target, face_box=None, inset=16):
 
 
 def grab(path):
-    """Full-desktop screenshot with ffmpeg gdigrab (Windows). Returns path."""
+    """Full-desktop screenshot. Windows: ffmpeg gdigrab. macOS: screencapture, scaled down to screen points
+    (PAINT_GRAB_SCALE, default 2 = Retina) so the grab matches the coordinates Computer Control uses. Returns path."""
+    import sys
+    if sys.platform == 'darwin':
+        from PIL import Image
+        subprocess.run(['screencapture', '-x', '-t', 'png', path], check=True)
+        k = float(os.environ.get('PAINT_GRAB_SCALE', '2'))
+        if k != 1:
+            im = Image.open(path).convert('RGB')
+            im.resize((round(im.width / k), round(im.height / k)), Image.LANCZOS).save(path)
+        return path
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'gdigrab', '-draw_mouse', '0', '-i', 'desktop', '-frames:v', '1', path], check=True)
     return path
 
