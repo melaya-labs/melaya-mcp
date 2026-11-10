@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <!--
+    Composition skeleton: a 20 s landscape piece with three scenes, a music bed and one SFX.
+    Copy into composition/index.html, then:
+      - put gsap.min.js in vendor/ (never load it from a CDN at render time),
+      - put the fonts, music and sfx in assets/,
+      - replace every {placeholder},
+      - keep data-duration, meta.json and the timeline length equal.
+    Checked with the HyperFrames CLI 0.8: lint and check pass with 0 errors; the three
+    nested_structure warnings only affect the studio timeline view (move each scene into
+    compositions/ as a sub-composition for larger pieces).
+    Formats: 1920x1080 (landscape), 1080x1920 (vertical), 1080x1080 (square).
+  -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>{title}</title>
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Display"; src: url("assets/fonts/display-300.woff2") format("woff2"); font-weight: 300; font-display: block; }
+      @font-face { font-family: "Display"; src: url("assets/fonts/display-800.woff2") format("woff2"); font-weight: 800; font-display: block; }
+      @font-face { font-family: "Mono"; src: url("assets/fonts/mono-500.woff2") format("woff2"); font-weight: 500; font-display: block; }
+      :root {
+        --ground: #0e1116;   /* tokens from brand-kit.md, by role */
+        --surface: #161b22;
+        --text: #f2f4f7;
+        --muted: rgba(242, 244, 247, 0.6);
+        --accent: #ff7a1a;
+      }
+      html, body { margin: 0; background: var(--ground); color: var(--text); }
+      html, body, #root, .scene { font-family: "Display", system-ui, sans-serif; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--ground); }
+      .scene { position: absolute; inset: 0; display: grid; place-items: center; }
+      .read { margin: 0; font-weight: 800; font-size: 150px; letter-spacing: -0.035em; line-height: 0.95; text-align: center; }
+      .read .light { font-weight: 300; }
+      .read .accent { color: var(--accent); }
+      .line { display: block; overflow: hidden; padding-bottom: 6px; }
+      .line > span { display: inline-block; }
+      .mono { font-family: "Mono", ui-monospace, monospace; font-weight: 500; }
+      .url { font-size: 44px; color: var(--muted); margin-top: 32px; }
+      .camera { position: absolute; inset: 0; display: grid; place-items: center; transform-origin: 50% 50%; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="20" data-width="1920" data-height="1080">
+      <!-- Scene 1: hook (0-4 s). The frame is full at frame 0. -->
+      <section id="s1" class="scene clip" data-start="0" data-duration="4" data-track-index="1">
+        <div class="camera" id="cam1">
+          <h1 class="read" id="hook">
+            <span class="line"><span>{Hook line one}</span></span>
+            <span class="line"><span class="light">{hook line two}</span></span>
+          </h1>
+        </div>
+      </section>
+
+      <!-- Scene 2: the product in use (4-15 s). Recreated UI goes here (product-ui.md). -->
+      <section id="s2" class="scene clip" data-start="4" data-duration="11" data-track-index="1">
+        <div class="camera" id="cam2">
+          <h2 class="read" id="claim">{Claim} <span class="accent">{payoff}</span></h2>
+        </div>
+      </section>
+
+      <!-- Scene 3: lockup (15-20 s). Real logo artwork, held and readable. -->
+      <section id="s3" class="scene clip" data-start="15" data-duration="5" data-track-index="1">
+        <div class="camera" id="cam3" style="flex-direction: column">
+          <img id="logo" src="assets/logo.png" alt="" style="width: 520px" />
+          <div class="mono url" id="url">{example.com}</div>
+        </div>
+      </section>
+
+      <!-- Audio: every element has an id; the bed and each overlapping SFX on their own lane. -->
+      <audio id="music" data-start="0" data-duration="20" data-track-index="10" data-volume="0.35" src="assets/music/bed.wav"></audio>
+      <audio id="sfx-reveal" data-start="3.88" data-duration="0.3" data-track-index="11" data-volume="0.7" src="assets/sfx/soft-impact.wav"></audio>
+    </div>
+
+    <script>
+      // One paused timeline, built synchronously, every tween at an explicit position.
+      var tl = gsap.timeline({ paused: true });
+      var D1 = 1.9, D2 = 3.9, D3 = 15.5;   // strong downbeats from beats.json
+
+      // Scene 1: mask rise per line, then a slow drift (never freeze).
+      tl.fromTo("#hook .line > span", { yPercent: 105 }, { yPercent: 0, duration: 0.55, ease: "power4.out", stagger: 0.1 }, 0.2);
+      tl.fromTo("#cam1", { scale: 1 }, { scale: 1.04, duration: 3.6, ease: "sine.inOut" }, 0.4);
+
+      // Scene 2: scale slam landing on a strong downbeat (starts slightly early).
+      tl.fromTo("#claim", { scale: 1.6, opacity: 0, filter: "blur(16px)" },
+        { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.42, ease: "expo.out" }, D2 + 0.1);
+      tl.fromTo("#cam2", { scale: 1 }, { scale: 1.05, duration: 10, ease: "sine.inOut" }, 4.6);
+
+      // Scene 3: logo settles, URL types at about 45 ms per character.
+      tl.fromTo("#logo", { scale: 1.05, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(2)" }, D3);
+      tl.fromTo("#url", { opacity: 0 }, { opacity: 1, duration: 0.3 }, D3 + 0.6);
+      tl.fromTo("#cam3", { scale: 1 }, { scale: 1.018, duration: 4, ease: "sine.inOut" }, D3 + 0.5);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

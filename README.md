@@ -161,6 +161,16 @@ git clone --depth 1 https://github.com/melaya-labs/melaya-mcp /tmp/melaya-mcp &&
 </tr>
 </table>
 
+### Content creation skill
+
+**[`skills/melaya-content-creation`](./skills/melaya-content-creation)** is a separate, brand-neutral skill for any AI: launch, promo, explainer and social videos, films, carousels, thumbnails, captions and share copy for any brand or product, from the brief and the brand kit to the render, QA and publishing package. It builds with HyperFrames (Remotion as an alternative) and hands off a ready-to-render package when no renderer is available. One short router plus a graph of modules loaded on demand, style presets as data, templates and worked examples. It does not need the MCP server. In Claude Code the plugin bundles it with the `/create-content` command; on its own:
+
+```bash
+git clone --depth 1 https://github.com/melaya-labs/melaya-mcp /tmp/melaya-mcp && cp -r /tmp/melaya-mcp/skills/melaya-content-creation ~/.claude/skills/
+```
+
+It adapts the launch-video method of [brag](https://github.com/latent-spaces/brag) (MIT) and follows the [HyperFrames](https://github.com/heygen-com/hyperframes) composition contract (Apache-2.0); credits in the [skill's README](./skills/melaya-content-creation/README.md).
+
 ## What it can do
 
 ### Operate your phone
@@ -295,7 +305,7 @@ Disconnecting in Melaya settings immediately revokes the connection's ability to
 |---|---|
 | `server.json` | Manifest for the [official MCP Registry](https://registry.modelcontextprotocol.io) |
 | `.mcp.json` | Remote server declaration |
-| `.claude-plugin/`, `skills/`, `commands/` | Claude Code plugin packaging — one distribution of the same server. `skills/melaya` is the [Melaya skill](./skills/melaya) (its only source); `skills/melaya-setup` is the first-run setup skill; `skills/paint-artist` paints in Microsoft Paint through Computer Control in one stored-plan call (17 styles, the advanced drawing example of the Melaya skill's one-call plans) |
+| `.claude-plugin/`, `skills/`, `commands/` | Claude Code plugin packaging — one distribution of the same server. `skills/melaya` is the [Melaya skill](./skills/melaya) (its only source); `skills/melaya-setup` is the first-run setup skill; `skills/paint-artist` paints in Microsoft Paint through Computer Control in one stored-plan call (17 styles, the advanced drawing example of the Melaya skill's one-call plans); `skills/melaya-content-creation` is a standalone, brand-neutral content-creation skill (launch, promo, explainer and social videos, films, carousels, thumbnails, captions and share copy, built with HyperFrames or handed off ready to render), with its `/create-content` command |
 
 The server itself runs as part of the Melaya platform; this repo is its public manifest, packaging and documentation.
 
