@@ -66,7 +66,7 @@ Types: `note`, `abstract` (summary, tldr), `info`, `todo`, `tip` (hint, importan
 
 - Obsidian renders a safe subset of HTML (`<details>`, `<sub>`, `<sup>`, `<kbd>`, `<br>`, simple tables); Markdown inside HTML blocks is not rendered. Prefer callouts and Markdown.
 - Headings and list items fold in the editor; folding is not saved in the file, so never rely on it to hide content.
-- Web pages can be embedded with an `<iframe>` (some sites refuse); prefer a link plus a summary.
+- Web pages can be embedded with an HTML iframe element (some sites refuse); prefer a link plus a summary.
 
 ## Files Obsidian reads
 
