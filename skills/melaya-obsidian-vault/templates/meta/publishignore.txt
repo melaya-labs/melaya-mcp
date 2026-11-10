@@ -1,0 +1,11 @@
+# Publication exclusion manifest for this vault (copy to _Meta/.publishignore).
+# Every path below is INTERNAL. Any export, publish, static-site build, share, sync or
+# knowledge-base build of the public part of the vault MUST skip these paths.
+# Syntax: one vault-relative path per line; a trailing slash means the whole folder.
+# Also skip any note whose properties say publish: false or a non-public audience,
+# and drop every line between "%% private:start %%" and "%% private:end %%" (markers included).
+_Meta/sources/
+_Meta/.publishignore
+_Meta/Source Ledger.md
+Bases/Review Queue.base
+{{internal_paths}}

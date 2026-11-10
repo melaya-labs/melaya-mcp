@@ -171,6 +171,14 @@ git clone --depth 1 https://github.com/melaya-labs/melaya-mcp /tmp/melaya-mcp &&
 
 It adapts the launch-video method of [brag](https://github.com/latent-spaces/brag) (MIT) and follows the [HyperFrames](https://github.com/heygen-com/hyperframes) composition contract (Apache-2.0); credits in the [skill's README](./skills/melaya-content-creation/README.md).
 
+### Obsidian vault skill
+
+**[`skills/melaya-obsidian-vault`](./skills/melaya-obsidian-vault)** builds the most complete, well-linked Obsidian vault of your own knowledge, end to end, from everything you have: Drive, Docs, Sheets, Slides, Notion, Confluence, OneNote, Evernote, Gmail, Outlook, Slack, Teams, Jira, GitHub, Zoho, web pages and local files (PDF with OCR, Office, images, transcripts). Solo founder, team wiki, company handbook, research vault, client project, migration, personal knowledge base, multilingual, public plus private zones, ongoing refresh. It starts from a one-page charter, inventories every source with permission and personal-data checks, reads them read-only in resumable batches with a source ledger, and writes typed notes with properties, sources and dates on every fact, hubs, a deliberate link graph (no orphans, three hops from Home), Bases and Canvas views. Stdlib-only Python scripts scaffold the vault, keep the ledger, generate hubs, auto-link the glossary, add outlines, check every rule (links, properties, taxonomy, zones, secrets, personal data), report graph metrics and export the public zone. With the MCP server it reads through Melaya's read-only connectors and can write to a connected vault; without it, it works from exports and plain Markdown. In Claude Code the plugin bundles it with the `/build-vault` command; on its own:
+
+```bash
+git clone --depth 1 https://github.com/melaya-labs/melaya-mcp /tmp/melaya-mcp && cp -r /tmp/melaya-mcp/skills/melaya-obsidian-vault ~/.claude/skills/
+```
+
 ## What it can do
 
 ### Operate your phone
@@ -305,7 +313,7 @@ Disconnecting in Melaya settings immediately revokes the connection's ability to
 |---|---|
 | `server.json` | Manifest for the [official MCP Registry](https://registry.modelcontextprotocol.io) |
 | `.mcp.json` | Remote server declaration |
-| `.claude-plugin/`, `skills/`, `commands/` | Claude Code plugin packaging — one distribution of the same server. `skills/melaya` is the [Melaya skill](./skills/melaya) (its only source); `skills/melaya-setup` is the first-run setup skill; `skills/paint-artist` paints in Microsoft Paint through Computer Control in one stored-plan call (17 styles, the advanced drawing example of the Melaya skill's one-call plans); `skills/melaya-content-creation` is a standalone, brand-neutral content-creation skill (launch, promo, explainer and social videos, films, carousels, thumbnails, captions and share copy, built with HyperFrames or handed off ready to render), with its `/create-content` command |
+| `.claude-plugin/`, `skills/`, `commands/` | Claude Code plugin packaging — one distribution of the same server. `skills/melaya` is the [Melaya skill](./skills/melaya) (its only source); `skills/melaya-setup` is the first-run setup skill; `skills/paint-artist` paints in Microsoft Paint through Computer Control in one stored-plan call (17 styles, the advanced drawing example of the Melaya skill's one-call plans); `skills/melaya-content-creation` is a standalone, brand-neutral content-creation skill (launch, promo, explainer and social videos, films, carousels, thumbnails, captions and share copy, built with HyperFrames or handed off ready to render), with its `/create-content` command; `skills/melaya-obsidian-vault` builds and maintains an Obsidian vault of the user's knowledge from every source (charter, read-only extraction with a ledger, typed and linked notes, zones, validation and export scripts), with its `/build-vault` command |
 
 The server itself runs as part of the Melaya platform; this repo is its public manifest, packaging and documentation.
 

@@ -1,0 +1,16 @@
+{
+  "home": "00 Home.md",
+  "max_hops": 3,
+  "attachments_folder": "Attachments",
+  "taxonomy_note": "_Meta/Tag Taxonomy.md",
+  "tag_patterns": [],
+  "required_properties": ["type", "description", "tags", "updated", "audience"],
+  "required_by_zone": {"internal": ["owner", "status", "reviewed", "review_every"]},
+  "audiences": ["everyone", "team", "internal", "private"],
+  "size_budget_kb": 8,
+  "banned": {"em_dash": true, "en_dash_separator": true, "semicolon": false, "exclamation": false, "custom": []},
+  "zones": {"default": "public", "manifest": "_Meta/.publishignore", "leak_allowed": ["00 Home.md"]},
+  "pii": {"email_allow": ["example.com", "example.org", "example.net"], "phone": "WARN", "ip": "WARN", "national_id": "WARN"},
+  "denylist": [],
+  "denylist_public": []
+}

@@ -1,0 +1,65 @@
+filters:
+  and:
+    - file.ext == "md"
+    - not:
+        - file.inFolder("_Meta")
+        - file.inFolder("_Templates")
+{{exclude}}
+properties:
+  note.type:
+    displayName: Kind
+  note.description:
+    displayName: What it answers
+  note.owner:
+    displayName: Owner
+  note.updated:
+    displayName: Updated
+views:
+  - type: table
+    name: By section
+    groupBy:
+      property: file.folder
+      direction: ASC
+    order:
+      - file.name
+      - type
+      - description
+      - updated
+    sort:
+      - property: file.name
+        direction: ASC
+  - type: table
+    name: By kind
+    groupBy:
+      property: note.type
+      direction: ASC
+    order:
+      - file.name
+      - description
+      - owner
+  - type: table
+    name: Hubs
+    filters:
+      and:
+        - type == "moc"
+    order:
+      - file.name
+      - description
+  - type: table
+    name: Recently updated
+    order:
+      - file.name
+      - type
+      - updated
+    sort:
+      - property: updated
+        direction: DESC
+    limit: 50
+  - type: cards
+    name: Concepts
+    filters:
+      and:
+        - type == "concept"
+    order:
+      - file.name
+      - description

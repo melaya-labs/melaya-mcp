@@ -1,0 +1,15 @@
+{
+  "nodes": [
+    {"id": "home", "type": "file", "file": "00 Home.md", "x": 0, "y": 0, "width": 400, "height": 100, "color": "6"},
+    {"id": "title", "type": "text", "text": "# Vault map\nEvery hub one click from Home. Open a hub for its notes.", "x": -480, "y": 0, "width": 420, "height": 100},
+    {"id": "grp", "type": "group", "label": "Sections", "x": -460, "y": 180, "width": 1320, "height": 160, "color": "4"},
+    {"id": "s10", "type": "file", "file": "10 Section/Section.md", "x": -420, "y": 220, "width": 380, "height": 90},
+    {"id": "s20", "type": "file", "file": "20 Other Section/Other Section.md", "x": 20, "y": 220, "width": 380, "height": 90},
+    {"id": "s90", "type": "file", "file": "90 Reference/Reference.md", "x": 460, "y": 220, "width": 380, "height": 90}
+  ],
+  "edges": [
+    {"id": "e10", "fromNode": "home", "fromSide": "bottom", "toNode": "s10", "toSide": "top"},
+    {"id": "e20", "fromNode": "home", "fromSide": "bottom", "toNode": "s20", "toSide": "top"},
+    {"id": "e90", "fromNode": "home", "fromSide": "bottom", "toNode": "s90", "toSide": "top", "label": "terms and facts"}
+  ]
+}

@@ -1,0 +1,57 @@
+filters:
+  and:
+    - file.ext == "md"
+    - file.hasProperty("review_every")
+    - not:
+        - file.inFolder("_Templates")
+properties:
+  note.owner:
+    displayName: Owner
+  note.status:
+    displayName: Status
+  note.reviewed:
+    displayName: Last reviewed
+  note.review_every:
+    displayName: Every
+views:
+  - type: table
+    name: Oldest review first
+    order:
+      - file.name
+      - owner
+      - status
+      - reviewed
+      - review_every
+    sort:
+      - property: reviewed
+        direction: ASC
+  - type: table
+    name: Not current
+    filters:
+      and:
+        - status != "current"
+    groupBy:
+      property: note.status
+      direction: ASC
+    order:
+      - file.name
+      - owner
+      - reviewed
+  - type: table
+    name: By owner
+    groupBy:
+      property: note.owner
+      direction: ASC
+    order:
+      - file.name
+      - status
+      - reviewed
+  - type: table
+    name: Open questions
+    filters:
+      and:
+        - open_questions == true
+    order:
+      - file.name
+      - owner
+      - updated
