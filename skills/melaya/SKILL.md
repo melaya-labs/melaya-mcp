@@ -1,7 +1,7 @@
 ---
 name: melaya
-description: Use for anything done on the Melaya platform through its MCP server (tools named melaya_*). Covers running, building, fixing and handing over Melaya pipelines and complete multi-pipeline agentic systems; connecting services (Google, Slack, CRMs, API keys); the local runner, Claude Code, Codex, Copilot, Ollama and LM Studio models; projects and templates; run inputs (brief and files); schedules, event triggers and approvals; data stores in Google Sheets and bulk scoring; validation, debugging and reading results; client documentation; phone, browser and computer agents (desktop apps on the user's own computer), including bulk or repeated device work run as one stored plan in one call (tables of records, the same form for many rows, file lists, diagrams and drawings, admin flows, phone flows for a list). Works for non-technical users (plain-language journeys) and for integrators (full end-to-end method). Load this first, then open only the module the task needs.
-version: 1.2.14
+description: Use for anything done on the Melaya platform through its MCP server (tools named melaya_*). Covers running, building, fixing and handing over Melaya pipelines and complete multi-pipeline agentic systems; connecting services (Google, Slack, CRMs, API keys); the local runner, Claude Code, Codex, Copilot, Ollama and LM Studio models; projects and templates; run inputs (brief and files); schedules, event triggers and approvals; data stores in Google Sheets and bulk scoring; validation, debugging and reading results; client documentation; phone, browser and computer agents (desktop apps on the user's own computer); Melaya EXCOM executive teams (creating a team end to end for the user through the New team wizard or autopilot, roles and their apps, mailboxes and aliases, autonomy, rules, the draft-only lock, executives that operate the computer), including bulk or repeated device work run as one stored plan in one call (tables of records, the same form for many rows, file lists, diagrams and drawings, admin flows, phone flows for a list). Works for non-technical users (plain-language journeys) and for integrators (full end-to-end method). Load this first, then open only the module the task needs.
+version: 1.3.0
 ---
 
 # Melaya
@@ -47,6 +47,7 @@ If you cannot tell, ask one question: "Do you want to run something that exists,
 | Testing a pipeline, a failed or slow run, reading diagnoses and evals, checking outputs, known failure patterns | `modules/validate-debug/GUIDE.md` |
 | Documenting a system for a client or a non-technical owner, handover | `modules/client-handover/GUIDE.md` |
 | Operating an Android phone or a browser, device steps in pipelines, the Melaya Assistant | `modules/devices-browser/GUIDE.md` |
+| Melaya EXCOM, the executive team: creating a team for the user end to end (wizard or autopilot through Computer / Browser Control), personal vs project teams and "Apply my connectors", the apps each role plans, mailboxes and aliases, autonomy levels, rules, limits, the draft-only lock, approvals and channels, executives that operate the computer | `modules/excom/GUIDE.md` |
 | Operating desktop apps on the user's own computer or a headless Linux VM (Computer Control): access levels, the read-act-verify loop, fast mode, computer steps in pipelines | `modules/devices-computer/GUIDE.md` |
 | Repetitive or long device work in ONE call on the computer, browser or phone: entering a table of records, the same form for N rows, renaming many files, drawing a diagram from data, repetitive admin flows, a phone flow for a list; choosing fast mode vs batch vs stored plans, background vs foreground, verifying and resuming | `modules/one-call-plans/GUIDE.md` |
 
@@ -58,6 +59,7 @@ Each module starts with a "Use when" line, then its method; deeper material sits
 - Build one pipeline: discovery, pipeline-authoring (plus data-spine if it stores records), validate-debug, automation-governance to schedule it.
 - Build a full client system: agentic-systems drives every phase and names the module for each.
 - Phone or browser work: devices-browser (plus runners-models when a browser runs on the user's computer).
+- Set up an EXCOM team for the user: excom (and its references/autopilot-setup.md), devices-computer or devices-browser to operate the app, discovery for missing connectors.
 - Desktop app work on the user's computer: devices-computer (after checking discovery for a connector, and devices-browser for a website or phone app).
 - Bulk or repeated device work (many rows, files, pages or strokes): the device module for setup and safety, then one-call-plans for the plan, the single call and the verification.
 
@@ -67,6 +69,7 @@ New capability areas (for example dedicated mobile-agent or browser-agent playbo
 
 ## Changelog
 
+- 1.3.0: new module excom: Melaya EXCOM end to end (the six-step New team wizard and its "Set it up for me with my AI assistant" option, an autopilot setup reference for creating a team for the user through Computer or Browser Control, personal and project teams and Apply my connectors, the apps each role plans per capability slot, mailboxes with Sends as / Reads aliases and one wake per alias, autonomy levels, action classes, rules and limits, the draft-only lock, approvals and channels, knowledge, executives that operate the user's computer with identity, account profiles and secret handles). devices-computer: installing and linking the desktop app, the per-computer approval mode for MCP clients on the Safety tab (Safe, Payments only, Autonomous; the computer no longer always runs Safe over MCP), and EXCOM executives on the computer.
 - 1.2.14: runner command pinned to `@melaya/runner@1.1.82` (the EXCOM gate reports a connector tool's text errors, such as a missing vault or an unauthorized account, as failed calls instead of successes).
 - 1.2.13: runner command pinned to `@melaya/runner@1.1.81` (executives of an EXCOM team whose model runs on the runner go through the same server-side approval gate as cloud models: every tool call is decided by the Melaya server, and a gate that cannot answer runs nothing, so Prepare, Run and vault edits work on runner models).
 - 1.2.12: runner command pinned to `@melaya/runner@1.1.80` (a runner-hosted assistant turn that goes quiet for 20 s says what it is doing, in the chat and in the runner log).
