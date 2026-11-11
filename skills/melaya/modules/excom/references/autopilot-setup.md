@@ -22,8 +22,7 @@ Ask only what you cannot read yourself; offer defaults:
 | Company website (or another source: Obsidian vault, Drive, Notion, Confluence, a file) | The website |
 | Goals for the first weeks (for example first paying customers, partners, affiliates) | Read from the company profile |
 | Roles | CEO, CRO, CMO, CFO, COO, CTO, CPO (or the three proposed from their connected apps) |
-| Autonomy | Prepare |
-| Draft-only lock for a dry run | 48 hours |
+| Autonomy | Prepare (the safe dry run: nothing leaves without the user's approval) |
 | Mailbox aliases per role | One alias per role on the main mailbox, each also reading the main address |
 | Channels for decisions | The in-app inbox plus their phone (Telegram or WhatsApp if linked) |
 | Models | The team's working provider (never pick one that is not working) |
@@ -57,7 +56,7 @@ Open each executive (click it on the Stage or in the rail):
 
 ## 5. Team settings
 
-- **Limits and schedule**: message and recipient caps, quiet hours, review time; budget as the user wants (none when their models are subscriptions); the **Draft only** lock for the dry run.
+- **Limits and schedule**: message and recipient caps, quiet hours, review time; budget as the user wants (none when their models are subscriptions).
 - **Knowledge**: add the team's sources (website, vault, Drive, Notion, Confluence).
 - **Objectives**: the agreed outcomes (for example 5 paying customers, 3 signed partners, 20 active affiliates).
 - Pipelines the user already runs stay as they are; link them to the executives who should see them.
@@ -65,7 +64,7 @@ Open each executive (click it on the Stage or in the rail):
 ## 6. Finish
 
 - Leave the team paused or started, as the user asked.
-- Summarise in plain words: the team, roles, models, autonomy, mailboxes, what is connected, what is still needed (with links), the draft-only end date, where decisions will arrive.
+- Summarise in plain words: the team, roles, models, autonomy, mailboxes, what is connected, what is still needed (with links), where decisions will arrive.
 - Never approve the cards that appear: point the user to the Actions tab or their phone.
 
 ## Things that are always the user's

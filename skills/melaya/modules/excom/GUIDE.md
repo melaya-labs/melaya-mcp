@@ -1,5 +1,5 @@
 <!-- Module of the melaya skill. Entry point: ../../SKILL.md -->
-> Use when: the task is about Melaya EXCOM, the executive team of AI executives (CEO, CFO, CRO, CMO, COO, CTO, CPO and more) that reads the user's connected apps, drafts and acts under the autonomy the user sets. Covers creating a team end to end for the user (the New team wizard step by step, or the autopilot setup where you do it for them through Computer Control or Browser Control), personal and project teams and "Apply my connectors", the apps each role plans, mailboxes and aliases per executive, autonomy levels, action classes, rules and limits, the draft-only lock, approvals and channels, knowledge sources, and executives that operate the user's computer (the COO creating accounts). Load references/autopilot-setup.md to run the setup for the user, references/roles-and-apps.md for which apps each role uses.
+> Use when: the task is about Melaya EXCOM, the executive team of AI executives (CEO, CFO, CRO, CMO, COO, CTO, CPO and more) that reads the user's connected apps, drafts and acts under the autonomy the user sets. Covers creating a team end to end for the user (the New team wizard step by step, or the autopilot setup where you do it for them through Computer Control or Browser Control), personal and project teams and "Apply my connectors", the apps each role plans, mailboxes and aliases per executive, autonomy levels, action classes, rules and limits, approvals and channels, knowledge sources, and executives that operate the user's computer (the COO creating accounts). Load references/autopilot-setup.md to run the setup for the user, references/roles-and-apps.md for which apps each role uses.
 
 # Melaya EXCOM: an executive team of AI executives
 
@@ -13,7 +13,7 @@ The app is at https://app.melaya.org/excom. There is no `melaya_excom_*` MCP too
 2. Connecting a service, signing in and choosing what to share are the user's steps. Accounts are bound read-only by default; widening a grant to draft or write is the user's choice, per account.
 3. Passwords, one-time codes, card numbers and legal acceptances are the user's. Hand them back (`melaya_computer_handoff`, or ask in chat) and continue after they confirm.
 4. An executive can never change its own grants, budget, rules, members or autonomy. Do not try to make one do it.
-5. During a dry run, use the draft-only lock (below): nothing leaves Melaya until the date.
+5. For a dry run, set the team to Prepare (or Observe): nothing leaves without the user's approval.
 
 ## Where things are
 
@@ -23,7 +23,7 @@ The app is at https://app.melaya.org/excom. There is no `melaya_excom_*` MCP too
 | Switch teams | The Team switch (name, executive count, status dot). |
 | Pause or resume | The play / pause button in the header. Pause stops new work at once. |
 | Autonomy of the team | The Autonomy switch in the header (Observe, Prepare, Run within rules). |
-| Team settings | The gear: Profile, Members, Model, Knowledge, Channels, Limits and schedule (budget, message caps, quiet hours, review time, the draft-only lock), Objectives, Skills, Danger zone. |
+| Team settings | The gear: Profile, Members, Model, Knowledge, Channels, Limits and schedule (budget, message caps, quiet hours, review time), Objectives, Skills, Danger zone. |
 | One executive | Click it on the Stage or in the rail: Chat, Goals, Tasks, Tools and accounts (accounts, mailbox, computer control), Knowledge, Rules, Skills, Model, Schedule, Memory. |
 | Decisions waiting | The Actions tab and the approvals pill; also Telegram, WhatsApp, Slack or Teams cards when set. |
 | What happened | The Audit tab (every tool call, its class, the decision and the account used), exportable. |
@@ -72,9 +72,9 @@ A common layout uses the company's aliases: the CEO on the main address with the
 
 The team sets the ceiling; a role can only be narrower. Every tool call is classified before it runs: read, propose, draft, send, record change, spend, delete, production, legal or people, secret, pipeline schedule, self-modification. Spend, delete, production, legal or people, secrets and pipeline schedules always ask, in every mode; self-modification never runs. Rules come from approvals: after three identical approvals of the same class and scope, the executive proposes a rule with the bounds it observed, and the user allows it or keeps asking. Limits apply before any rule: optional daily budget, external messages per day, recipients per message, quiet hours (20:00 to 07:00 by default), the review time.
 
-## The draft-only lock (dry runs)
+## Dry runs
 
-Team settings > **Limits and schedule** > **Draft only**: on for 24 hours, 48 hours, 7 days or until a chosen time (at most 30 days), or ended early. While it is on, nothing leaves Melaya: emails are written as drafts in each executive's own mailbox, other messages, posts and external record changes wait as cards that can only be declined, and spend, delete, people, production, secret and schedule actions are refused. Reads, notes in the executive's vault and tasks keep working. A banner shows on the board; the Audit tab marks drafted actions. It ends on its own at the date.
+The autonomy level is the only control. To test a team safely, use Prepare: executives read and draft, and every send, record change, spend or deletion waits as a card the user approves or declines; nothing leaves without their approval. Observe is stricter still (reads and proposed tasks only). Move to Run within rules only when the user asks and the rules they approved cover what the team may do on its own.
 
 ## Approvals and channels
 
@@ -99,5 +99,5 @@ The allowed apps, their levels and the computer's approval mode still apply (Com
 - [ ] The team exists with the agreed scope (personal or project), roles, models and autonomy, and is paused or started as the user asked.
 - [ ] The accounts each role needs are connected (on the project for a project team) and bound at the access the user chose.
 - [ ] Mailboxes: each executive sends as and reads the agreed aliases; one wake per alias.
-- [ ] Limits, quiet hours, channels and the draft-only lock set as agreed.
+- [ ] Autonomy, limits, quiet hours and channels set as agreed.
 - [ ] Nothing approved, sent or widened on the user's behalf; the user got a short summary and the open tasks.
