@@ -1,7 +1,7 @@
 ---
 name: cto-fix-deploy-verify-loop
-description: Closes a production error end to end: monitor, find the cause, fix it in a coding session with a test, review and push, deploy through CI, then prove from monitoring that the error stopped. Use when a monitoring alert wakes you, the daily reliability check finds a noisy service, a customer-visible error has a log signature, a previous fix did not hold, or someone asks "is it fixed in production".
-version: 2.0.0
+description: Closes a production error or a failing tool end to end: monitor, find the cause, fix it in a coding session with a test, review and push, deploy through CI, then prove from monitoring that the error stopped. Use when a monitoring alert wakes you, the daily reliability check finds a noisy service, a customer-visible error has a log signature, a tool's failure rate rises or runs finish degraded, a previous fix did not hold, or someone asks "is it fixed in production".
+version: 2.1.0
 ---
 # Monitor, fix, deploy, verify loop
 
@@ -16,14 +16,14 @@ Keep the loop whole so no fix is called done until the error count says so. Each
 ## Steps
 
 1. Orient: read the alert payload, then `excom_read_tasks` for an open task on the same error.
-2. Monitor: `grafana_errors_summary` for the window. Pick one error, the one with the most customer impact, not the loudest.
-3. Evidence: `grafana_error_context` on that message; find the root cause with skill cto-incident-root-cause. No root cause hypothesis, no loop.
+2. Monitor: `grafana_errors_summary` for the window, and the tool-call failure telemetry when the team has it (failure rate per surface, per connector and per tool, top failing tools, degraded runs). Pick one error or one failing tool, the one with the most customer impact, not the loudest.
+3. Evidence: `grafana_error_context` on that message. For a failing tool, read its failed calls: the tool, its error class and its code location (the source file and line its telemetry names, or the team's tool-to-module map), and start reading the code there. Find the root cause with skill cto-incident-root-cause. No root cause hypothesis, no loop.
 4. Task: `excom_propose_task` carrying the evidence (service, errors, logs, query, first seen, last seen, count, source).
-5. Fix: `excom_code_task` with repository, one-line goal, governing runbook and evidence (record write, asks under Prepare). The session reproduces with a test and reports evidence addressed and the covering test. Follow skill cto-coding-session-hygiene.
+5. Fix: `excom_code_task` with repository, one-line goal, governing runbook and evidence, including the failing file for a tool (record write, asks under Prepare). The session reproduces with a test and reports evidence addressed and the covering test. Commit messages follow the repository's own convention: read the recent history first. Follow skill cto-coding-session-hygiene.
 6. Review and push: skill cto-push-review-gate; `excom_code_push` branch (send), then base (production, always asks).
-7. Deploy: skill cto-jenkins-safe-deploy, only the jobs the diff needs, in the runbook's order. On red, read `jenkins_build_console` and stop.
+7. Deploy: skill cto-jenkins-safe-deploy, only the jobs the diff needs, in the runbook's order, one job at a time: start one, `jenkins_wait_build` until it finishes, and start the next only when it is green. On red, read `jenkins_build_console` and stop.
 8. Mark: `grafana_create_annotation` with commit and build (record write).
-9. Verify: `grafana_errors_summary` with a window that starts after the build finished and ends now. The fixed message must not appear after the deploy. Allow at least 30 minutes of normal traffic, or the alert's usual recurrence interval, before calling it stopped.
+9. Verify: `grafana_errors_summary` with a window that starts after the build finished and ends now. The fixed message must not appear after the deploy; for a tool, its failure rate after the deploy must be below the rate before it. Allow at least 30 minutes of normal traffic, or the alert's usual recurrence interval, before calling it stopped.
 10. If it persists or a new error appeared, say so on the task, gather new evidence, start a new session. Never mark done on a deploy alone.
 11. Close: `excom_record_measurement` (count before and after, windows), `excom_update_task` with receipts, and a known-issues entry drafted with `excom_save_draft` when the cause is reusable.
 
