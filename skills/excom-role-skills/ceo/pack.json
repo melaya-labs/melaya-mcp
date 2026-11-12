@@ -1,0 +1,98 @@
+{
+  "pack": "ceo",
+  "skills": {
+    "ceo-goal-tracker": {
+      "title": "Goal tracker",
+      "hint": "outcomes vs target, leading signals",
+      "packs": [
+        "ceo",
+        "cfo",
+        "cdo"
+      ],
+      "icon": "target",
+      "category": "strategy",
+      "source": "Adapted from TerminalSkills skills/okr-planning by terminal-skills (Apache-2.0), modified"
+    },
+    "ceo-company-knowledge-vault": {
+      "title": "Build your company knowledge vault",
+      "hint": "no vault yet? build and attach one",
+      "packs": [
+        "ceo",
+        "cdo",
+        "coo"
+      ],
+      "icon": "library",
+      "category": "strategy",
+      "source": "Adapted from kepano/obsidian-skills obsidian-markdown and obsidian-headless by Steph Ango (MIT), modified"
+    },
+    "ceo-decision-memo": {
+      "title": "Decision memo",
+      "hint": "options, trade-offs, reversibility",
+      "packs": [
+        "ceo",
+        "cfo",
+        "coo",
+        "cdo"
+      ],
+      "icon": "scale",
+      "category": "strategy",
+      "source": "Adapted from knowledge-work-plugins product-management/skills/stakeholder-update (decision records) by Anthropic (Apache-2.0), modified"
+    },
+    "ceo-priority-reset": {
+      "title": "Priority reset when goals slip",
+      "hint": "goal slipping, stop and start",
+      "packs": [
+        "ceo",
+        "coo"
+      ],
+      "icon": "alarm",
+      "category": "strategy",
+      "source": "Adapted from claude-skills c-level-advisor/skills/strategic-alignment by Alireza Rezvani (MIT), modified"
+    },
+    "ceo-stakeholder-update": {
+      "title": "Investor and stakeholder update",
+      "hint": "investor update draft",
+      "packs": [
+        "ceo",
+        "cfo"
+      ],
+      "icon": "megaphone",
+      "category": "strategy",
+      "source": "Adapted from anthropics/skills internal-comms (3P updates) and knowledge-work-plugins product-management/skills/stakeholder-update by Anthropic (Apache-2.0), modified"
+    },
+    "ceo-strategic-bet-review": {
+      "title": "Strategic bet review",
+      "hint": "bets, failure signals, kill triggers",
+      "packs": [
+        "ceo",
+        "cfo",
+        "cro"
+      ],
+      "icon": "lightbulb",
+      "category": "strategy",
+      "source": "Adapted from claude-skills c-level-advisor/skills/scenario-war-room by Alireza Rezvani (MIT), modified"
+    },
+    "ceo-tradeoff-log": {
+      "title": "Cross-executive trade-off log",
+      "hint": "competing asks, decision record",
+      "packs": [
+        "ceo",
+        "coo"
+      ],
+      "icon": "layers",
+      "category": "strategy",
+      "source": "Adapted from claude-skills c-level-advisor/skills/decision-logger by Alireza Rezvani (MIT), modified"
+    },
+    "ceo-weekly-board-brief": {
+      "title": "Weekly board brief",
+      "hint": "Monday brief, three decisions",
+      "packs": [
+        "ceo",
+        "coo"
+      ],
+      "icon": "compass",
+      "category": "strategy",
+      "source": "Adapted from claude-skills c-level-advisor/skills/board-meeting by Alireza Rezvani (MIT), modified"
+    }
+  }
+}

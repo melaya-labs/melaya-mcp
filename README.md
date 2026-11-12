@@ -179,6 +179,12 @@ It adapts the launch-video method of [brag](https://github.com/latent-spaces/bra
 git clone --depth 1 https://github.com/melaya-labs/melaya-mcp /tmp/melaya-mcp && cp -r /tmp/melaya-mcp/skills/melaya-obsidian-vault ~/.claude/skills/
 ```
 
+**[`skills/excom-role-skills`](./skills/excom-role-skills)** gives AI executives the playbooks of their roles: 125 generic skills in 15 role folders (CEO, CFO, CRO, CMO, COO, CTO, CPO, customer, data, people, security, legal, quality, supply chain, partnerships), one per recurring job, such as the weekly board brief, cash runway, lead qualification, SEO content coverage, incident root cause, contract review or partner onboarding. Each skill first reads your company's own goals, terms and definitions from your knowledge base, names the exact tools and says which steps wait for your approval. They are the role packs Melaya EXCOM ships built in. Several adapt open-source skills under MIT and Apache-2.0, credited per role in `THIRD_PARTY.txt` ([index](./skills/excom-role-skills/README.md)). On its own:
+
+```bash
+git clone --depth 1 https://github.com/melaya-labs/melaya-mcp /tmp/melaya-mcp && cp -r /tmp/melaya-mcp/skills/excom-role-skills ~/.claude/skills/
+```
+
 ## What it can do
 
 ### Operate your phone

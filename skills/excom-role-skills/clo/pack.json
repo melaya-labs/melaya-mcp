@@ -1,0 +1,12 @@
+{
+  "pack": "clo",
+  "skills": {
+    "clo-contract-review": {"title": "Contract review against the playbook", "hint": "playbook review, graded redline drafts", "packs": ["clo", "partnerships", "cro"], "icon": "scale", "category": "legal", "source": "Adapted from anthropics/knowledge-work-plugins legal/skills/review-contract (Apache-2.0) and kevanwee/playbook-as-code SKILL.md (MIT), modified"},
+    "clo-partner-affiliate-agreements": {"title": "Partner and affiliate agreement terms", "hint": "e-signature, programme terms, filing", "packs": ["clo", "partnerships", "cro"], "icon": "scale", "category": "legal", "source": "Adapted from anthropics/knowledge-work-plugins legal/skills/signature-request, vendor-check (Apache-2.0) and Maxbase91/procurement-skills supplier-truthcheck (MIT), modified"},
+    "clo-privacy-requests": {"title": "Privacy and data-processing requests", "hint": "DSAR clock, DPA and privacy answers", "packs": ["clo", "cdo", "ciso"], "icon": "shield-check", "category": "legal", "source": "Adapted from anthropics/knowledge-work-plugins legal/skills/compliance-check, legal-response (Apache-2.0), modified"},
+    "clo-legal-pages-upkeep": {"title": "Terms and legal pages upkeep", "hint": "legal pages and language parity", "packs": ["clo", "cto", "cmo"], "icon": "book", "category": "legal", "source": null},
+    "clo-marketing-claims-review": {"title": "Marketing claims review", "hint": "comparison pages, testimonials, AI-washing", "packs": ["clo", "cmo", "partnerships"], "icon": "megaphone", "category": "legal", "source": "Adapted from anthropics/knowledge-work-plugins legal/skills/legal-risk-assessment (Apache-2.0), modified"},
+    "clo-oss-licensing-attribution": {"title": "Open-source licensing and attribution", "hint": "licences, notices, third-party attribution", "packs": ["clo", "cto"], "icon": "library", "category": "legal", "source": null},
+    "clo-regulatory-watch": {"title": "Regulatory watch", "hint": "AI, privacy, platform and store rules", "packs": ["clo", "ceo", "ciso"], "icon": "compass", "category": "legal", "source": "Adapted from anthropics/knowledge-work-plugins operations/skills/compliance-tracking, legal/skills/compliance-check (Apache-2.0), modified"}
+  }
+}

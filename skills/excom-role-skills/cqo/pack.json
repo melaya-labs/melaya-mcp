@@ -1,0 +1,61 @@
+{
+  "pack": "cqo",
+  "skills": {
+    "cqo-release-quality-gate": {
+      "title": "Release quality gate",
+      "hint": "go or no-go with evidence per row",
+      "packs": ["cqo", "cto"],
+      "icon": "shield-check",
+      "category": "quality",
+      "source": "Adapted from obra/superpowers skills/verification-before-completion (MIT), modified"
+    },
+    "cqo-regression-test-plan": {
+      "title": "Regression test plan per product",
+      "hint": "scenarios, trials and a regression verdict",
+      "packs": ["cqo", "cpo"],
+      "icon": "layers",
+      "category": "quality",
+      "source": "Adapted from alirezarezvani/claude-skills engineering/skills/agent-regression-evals and phuryn/pm-skills pm-execution/skills/test-scenarios (MIT), modified"
+    },
+    "cqo-bug-triage-severity": {
+      "title": "Bug triage and severity",
+      "hint": "reproduce, classify, route a bug",
+      "packs": ["cqo", "cxo"],
+      "icon": "alarm",
+      "category": "quality",
+      "source": null
+    },
+    "cqo-locale-qa": {
+      "title": "Translation and locale QA",
+      "hint": "locale parity and language tag checks",
+      "packs": ["cqo", "cpo"],
+      "icon": "compass",
+      "category": "quality",
+      "source": "Adapted from alirezarezvani/claude-skills engineering/skills/i18n-localization (MIT), modified"
+    },
+    "cqo-docs-accuracy-check": {
+      "title": "Docs accuracy check",
+      "hint": "doc claims verified against the product",
+      "packs": ["cqo", "cpo"],
+      "icon": "book",
+      "category": "quality",
+      "source": null
+    },
+    "cqo-defect-loop": {
+      "title": "Customer-reported defect loop",
+      "hint": "root cause to verified prevention",
+      "packs": ["cqo", "cxo"],
+      "icon": "workflow",
+      "category": "quality",
+      "source": "Adapted from alirezarezvani/claude-skills ra-qm-team/skills/capa-officer (MIT), modified"
+    },
+    "cqo-pipeline-run-quality": {
+      "title": "Pipeline run quality review",
+      "hint": "judge runs by artifacts, not status",
+      "packs": ["cqo", "coo"],
+      "icon": "target",
+      "category": "quality",
+      "source": null
+    }
+  }
+}

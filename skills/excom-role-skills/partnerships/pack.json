@@ -1,0 +1,69 @@
+{
+  "pack": "partnerships",
+  "skills": {
+    "partner-programme-offer": {
+      "title": "Integrator and agency programme offer",
+      "hint": "recruit with the standing programme tiers",
+      "packs": ["partnerships"],
+      "icon": "users",
+      "category": "partners",
+      "source": "Adapted from gtmagents/gtm-agents plugins/referral-program-orchestration/skills/incentive-design (Apache-2.0), modified"
+    },
+    "partner-sourcing-list": {
+      "title": "Partner sourcing list",
+      "hint": "ranked list of partners to approach",
+      "packs": ["partnerships"],
+      "icon": "network",
+      "category": "partners",
+      "source": "Adapted from gtmagents/gtm-agents plugins/partnership-development/skills/partner-ecosystem-map (Apache-2.0), modified"
+    },
+    "partner-onboarding-kit": {
+      "title": "Partner onboarding kit",
+      "hint": "kit, tracking link, first action",
+      "packs": ["partnerships"],
+      "icon": "rocket",
+      "category": "partners",
+      "source": "Adapted from gtmagents/gtm-agents plugins/referral-program-orchestration/skills/partner-ops (Apache-2.0), modified"
+    },
+    "partner-co-marketing": {
+      "title": "Co-marketing with partners and the CMO",
+      "hint": "joint campaigns with the CMO",
+      "packs": ["partnerships", "cmo"],
+      "icon": "megaphone",
+      "category": "partners",
+      "source": "Adapted from gtmagents/gtm-agents plugins/partnership-development/skills/co-marketing-governance (Apache-2.0), modified"
+    },
+    "partner-agreement-docusign": {
+      "title": "Partner agreement via the DocuSign template",
+      "hint": "draft, owner sends, file when signed",
+      "packs": ["partnerships", "clo"],
+      "icon": "scale",
+      "category": "partners",
+      "source": null
+    },
+    "partner-marketplace-listings": {
+      "title": "Marketplace and launch-community listings",
+      "hint": "marketplaces, registries, launch sites",
+      "packs": ["partnerships", "cmo"],
+      "icon": "library",
+      "category": "partners",
+      "source": "Adapted from coreyhaines31/marketingskills skills/directory-submissions (MIT), modified"
+    },
+    "partner-pipeline-review": {
+      "title": "Partner pipeline review against the goal",
+      "hint": "weekly review, signed means filed",
+      "packs": ["partnerships"],
+      "icon": "target",
+      "category": "partners",
+      "source": "Adapted from gtmagents/gtm-agents plugins/partnership-development/skills/partner-revenue-desk (Apache-2.0), modified"
+    },
+    "partner-enablement": {
+      "title": "Partner enablement",
+      "hint": "talk tracks, demos, reinforcement",
+      "packs": ["partnerships"],
+      "icon": "book",
+      "category": "partners",
+      "source": "Adapted from gtmagents/gtm-agents plugins/sales-handoff-orchestration/skills/enablement-kit and plugins/sales-enablement/skills/reinforcement-loop (Apache-2.0), modified"
+    }
+  }
+}

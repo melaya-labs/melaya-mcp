@@ -1,0 +1,14 @@
+{
+  "pack": "cto",
+  "skills": {
+    "cto-coding-session-hygiene": {"title": "Coding session hygiene", "hint": "small diffs, test first, evidence", "packs": ["cto", "cpo"], "icon": "workflow", "category": "engineering", "source": "Adapted from obra/superpowers skills/test-driven-development and skills/verification-before-completion (MIT), modified"},
+    "cto-cost-performance-watch": {"title": "Cost and performance watch", "hint": "measure spend and latency first", "packs": ["cto", "cfo"], "icon": "coins", "category": "engineering", "source": "Adapted from alirezarezvani/claude-skills engineering/llm-cost-optimizer/skills/llm-cost-optimizer and engineering/skills/performance-profiler (MIT), modified"},
+    "cto-fix-deploy-verify-loop": {"title": "Monitor, fix, deploy, verify loop", "hint": "monitored error to verified fix", "packs": ["cto"], "icon": "workflow", "category": "engineering", "source": null},
+    "cto-incident-root-cause": {"title": "Incident root cause", "hint": "root cause before any fix", "packs": ["cto", "cqo"], "icon": "alarm", "category": "engineering", "source": "Adapted from obra/superpowers skills/systematic-debugging (MIT), modified"},
+    "cto-jenkins-safe-deploy": {"title": "Safe deploy through CI", "hint": "one job at a time, verified", "packs": ["cto", "coo"], "icon": "rocket", "category": "engineering", "source": null},
+    "cto-post-incident-review": {"title": "Post-incident review", "hint": "blameless review within 72 hours", "packs": ["cto", "ciso"], "icon": "book", "category": "engineering", "source": "Adapted from alirezarezvani/claude-skills engineering-team/skills/incident-commander (MIT), modified"},
+    "cto-push-review-gate": {"title": "Push review and gate", "hint": "review a session before push", "packs": ["cto", "ciso"], "icon": "shield-check", "category": "engineering", "source": "Adapted from alirezarezvani/claude-skills engineering/skills/pr-review-expert and obra/superpowers skills/requesting-code-review (MIT), modified"},
+    "cto-runner-provider-change": {"title": "Runner release and model provider change", "hint": "all pins together, publish then deploy", "packs": ["cto", "cqo"], "icon": "cpu", "category": "engineering", "source": null},
+    "cto-partner-go-live": {"title": "Partner go-live", "hint": "signed partner to live pages", "packs": ["cto", "partnerships"], "icon": "rocket", "category": "partners", "source": null}
+  }
+}

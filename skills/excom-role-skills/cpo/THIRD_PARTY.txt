@@ -1,0 +1,157 @@
+THIRD-PARTY NOTICES: EXCOM role skills, CPO pack
+============================================================
+
+The skills listed below are MODIFIED derivative works of third-party
+open-source agent skills, rewritten in our own words for EXCOM executives.
+Each adapted skill names its source in pack.json and its SKILL.md ends with
+a credit line. No upstream file is bundled verbatim. None of the upstream
+sources ships a NOTICE file. Their licence texts follow below.
+
+In-house skills in this pack (no third-party source): cpo-docs-upkeep/SKILL.md, cpo-code-session-handoff/SKILL.md.
+
+1. cpo-roadmap-from-evidence/SKILL.md, cpo-roadmap-from-evidence/references/scoring.md (modified)
+   Source repo:   https://github.com/phuryn/pm-skills
+   Commit:        9af7bfd0bc47fdad43c2eaa7a43cd13918e7aaef
+   Licence:       MIT
+   Original path: pm-product-discovery/skills/analyze-feature-requests/SKILL.md
+                  pm-product-discovery/skills/prioritize-features/SKILL.md
+   Copyright:     Copyright (c) 2026 Pawel Huryn
+   Changes:       rewritten generic for EXCOM: company facts read from the knowledge base
+                  at run time; steps mapped to EXCOM tools with action classes
+                  and approvals; scripts, install steps, network calls and
+                  paid-service steps removed; text addressed to the agent
+                  removed; long checklists moved to references.
+
+2. cpo-acceptance-criteria/SKILL.md, cpo-acceptance-criteria/references/adversarial-cases.md (modified)
+   Source repo:   https://github.com/phuryn/pm-skills
+   Commit:        9af7bfd0bc47fdad43c2eaa7a43cd13918e7aaef
+   Licence:       MIT
+   Original path: pm-execution/skills/test-scenarios/SKILL.md
+   Copyright:     Copyright (c) 2026 Pawel Huryn
+   Changes:       rewritten generic for EXCOM: company facts read from the knowledge base
+                  at run time; steps mapped to EXCOM tools with action classes
+                  and approvals; scripts, install steps, network calls and
+                  paid-service steps removed; text addressed to the agent
+                  removed; long checklists moved to references.
+
+3. cpo-release-notes/SKILL.md (modified)
+   Source repo:   https://github.com/phuryn/pm-skills
+   Commit:        9af7bfd0bc47fdad43c2eaa7a43cd13918e7aaef
+   Licence:       MIT
+   Original path: pm-execution/skills/release-notes/SKILL.md
+   Copyright:     Copyright (c) 2026 Pawel Huryn
+   Changes:       rewritten generic for EXCOM: company facts read from the knowledge base
+                  at run time; steps mapped to EXCOM tools with action classes
+                  and approvals; scripts, install steps, network calls and
+                  paid-service steps removed; text addressed to the agent
+                  removed; long checklists moved to references.
+
+4. cpo-adoption-readout/SKILL.md (modified)
+   Source repo:   https://github.com/phuryn/pm-skills
+   Commit:        9af7bfd0bc47fdad43c2eaa7a43cd13918e7aaef
+   Licence:       MIT
+   Original path: pm-data-analytics/skills/cohort-analysis/SKILL.md
+   Copyright:     Copyright (c) 2026 Pawel Huryn
+   Changes:       rewritten generic for EXCOM: company facts read from the knowledge base
+                  at run time; steps mapped to EXCOM tools with action classes
+                  and approvals; scripts, install steps, network calls and
+                  paid-service steps removed; text addressed to the agent
+                  removed; long checklists moved to references.
+
+5. cpo-seo-roast/SKILL.md, cpo-seo-roast/references/roast-checks.md (modified)
+   Source repo:   https://github.com/Illyism/seo-skills
+   Commit:        805c9c8261e60716e17efe6b834b0be7248d9ebb
+   Licence:       MIT (stated in the repository README; no LICENSE file at this commit, standard MIT text reproduced below)
+   Original path: seo/seo-roast/SKILL.md
+   Copyright:     Copyright (c) Ilias Ism
+   Changes:       rewritten generic for EXCOM: company facts read from the knowledge base
+                  at run time; steps mapped to EXCOM tools with action classes
+                  and approvals; scripts, install steps, network calls and
+                  paid-service steps removed; text addressed to the agent
+                  removed; long checklists moved to references.
+
+6. cpo-seo-autopilot/SKILL.md (modified)
+   Source repo:   https://github.com/Illyism/seo-skills
+   Commit:        805c9c8261e60716e17efe6b834b0be7248d9ebb
+   Licence:       MIT (stated in the repository README; no LICENSE file at this commit, standard MIT text reproduced below)
+   Original path: seo/seo-autopilot/SKILL.md
+   Copyright:     Copyright (c) Ilias Ism
+   Changes:       rewritten generic for EXCOM: company facts read from the knowledge base
+                  at run time; steps mapped to EXCOM tools with action classes
+                  and approvals; scripts, install steps, network calls and
+                  paid-service steps removed; text addressed to the agent
+                  removed; long checklists moved to references.
+
+7. cpo-internal-links-code/SKILL.md, cpo-internal-links-code/references/link-rules.md (modified)
+   Source repo:   https://github.com/Illyism/seo-skills
+   Commit:        805c9c8261e60716e17efe6b834b0be7248d9ebb
+   Licence:       MIT (stated in the repository README; no LICENSE file at this commit, standard MIT text reproduced below)
+   Original path: seo/internal-linking/SKILL.md
+   Copyright:     Copyright (c) Ilias Ism
+   Changes:       rewritten generic for EXCOM: company facts read from the knowledge base
+                  at run time; steps mapped to EXCOM tools with action classes
+                  and approvals; scripts, install steps, network calls and
+                  paid-service steps removed; text addressed to the agent
+                  removed; long checklists moved to references.
+
+8. cpo-ai-crawler-policy/SKILL.md, cpo-ai-crawler-policy/references/bot-classes.md (modified)
+   Source repo:   https://github.com/Illyism/seo-skills
+   Commit:        805c9c8261e60716e17efe6b834b0be7248d9ebb
+   Licence:       MIT (stated in the repository README; no LICENSE file at this commit, standard MIT text reproduced below)
+   Original path: seo/block-ai-scrapers/SKILL.md
+   Copyright:     Copyright (c) Ilias Ism
+   Changes:       rewritten generic for EXCOM: company facts read from the knowledge base
+                  at run time; steps mapped to EXCOM tools with action classes
+                  and approvals; scripts, install steps, network calls and
+                  paid-service steps removed; text addressed to the agent
+                  removed; long checklists moved to references.
+
+----------------------------------------------------------------------
+Licence text: phuryn/pm-skills (MIT), verbatim from the source at commit 9af7bfd0bc47fdad43c2eaa7a43cd13918e7aaef
+----------------------------------------------------------------------
+MIT License
+
+Copyright (c) 2026 Pawel Huryn
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+----------------------------------------------------------------------
+Licence text: Illyism/seo-skills (MIT), verbatim from the source at commit 805c9c8261e60716e17efe6b834b0be7248d9ebb
+----------------------------------------------------------------------
+MIT License
+
+Copyright (c) Ilias Ism
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

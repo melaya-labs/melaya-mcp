@@ -1,0 +1,91 @@
+{
+  "pack": "cdo",
+  "skills": {
+    "cdo-affiliate-attribution": {
+      "title": "Affiliate and partner attribution",
+      "hint": "who brought which customer",
+      "packs": [
+        "cdo",
+        "cro",
+        "partnerships",
+        "cfo"
+      ],
+      "icon": "network",
+      "category": "data",
+      "source": "Adapted from TerminalSkills skills/analytics-tracking by terminal-skills (Apache-2.0), modified"
+    },
+    "cdo-dashboard-upkeep": {
+      "title": "Dashboard upkeep",
+      "hint": "dashboards stay true and current",
+      "packs": [
+        "cdo",
+        "ceo"
+      ],
+      "icon": "layers",
+      "category": "data",
+      "source": "Adapted from knowledge-work-plugins data/skills/build-dashboard by Anthropic (Apache-2.0), modified"
+    },
+    "cdo-data-quality-checks": {
+      "title": "Data quality checks",
+      "hint": "check numbers before they ship",
+      "packs": [
+        "cdo",
+        "cfo",
+        "ceo"
+      ],
+      "icon": "shield-check",
+      "category": "data",
+      "source": "Adapted from knowledge-work-plugins data/skills/validate-data by Anthropic (Apache-2.0), modified"
+    },
+    "cdo-experiment-readout": {
+      "title": "Experiment readout",
+      "hint": "test plan, power, readout",
+      "packs": [
+        "cdo",
+        "cpo",
+        "cmo",
+        "cro"
+      ],
+      "icon": "lightbulb",
+      "category": "data",
+      "source": "Adapted from TerminalSkills skills/ab-test-setup and knowledge-work-plugins data/skills/statistical-analysis (Apache-2.0), modified"
+    },
+    "cdo-metric-definitions": {
+      "title": "Metric definitions, one source per KPI",
+      "hint": "one definition and source per KPI",
+      "packs": [
+        "cdo",
+        "ceo",
+        "cfo"
+      ],
+      "icon": "database",
+      "category": "data",
+      "source": "Adapted from claude-skills c-level-advisor/skills/chief-data-officer-advisor by Alireza Rezvani (MIT), modified"
+    },
+    "cdo-privacy-safe-data": {
+      "title": "Privacy-safe data handling",
+      "hint": "personal data, consent, retention",
+      "packs": [
+        "cdo",
+        "clo",
+        "ciso"
+      ],
+      "icon": "shield-check",
+      "category": "data",
+      "source": "Adapted from TerminalSkills skills/gdpr-compliance by terminal-skills (Apache-2.0), modified"
+    },
+    "cdo-product-funnel": {
+      "title": "Funnel analytics per product",
+      "hint": "per-product funnel, bottleneck",
+      "packs": [
+        "cdo",
+        "cpo",
+        "cmo",
+        "ceo"
+      ],
+      "icon": "target",
+      "category": "data",
+      "source": "Adapted from TerminalSkills skills/product-analytics by terminal-skills (Apache-2.0), modified"
+    }
+  }
+}

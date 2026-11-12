@@ -1,0 +1,69 @@
+{
+  "pack": "cxo",
+  "skills": {
+    "cxo-activation-paths": {
+      "title": "Activation paths per product",
+      "hint": "first-success path for each product",
+      "packs": ["cxo", "cro"],
+      "icon": "compass",
+      "category": "support",
+      "source": "Adapted from gtmagents/gtm-agents plugins/product-led-growth/skills/onboarding-blueprint (Apache-2.0), modified"
+    },
+    "cxo-trial-rescue": {
+      "title": "Trial rescue for stalled users",
+      "hint": "rescue stalled trials, then stop",
+      "packs": ["cxo", "cro"],
+      "icon": "alarm",
+      "category": "support",
+      "source": "Adapted from stephenrogan/csm-skills skills/re-engagement-email-writer (MIT), modified"
+    },
+    "cxo-support-macros": {
+      "title": "Support macros from the answer library",
+      "hint": "vetted answers for repeat questions",
+      "packs": ["cxo"],
+      "icon": "library",
+      "category": "support",
+      "source": "Adapted from gtmagents/gtm-agents plugins/technical-writing/skills/quality-review-checklist (Apache-2.0), modified"
+    },
+    "cxo-onboarding-emails": {
+      "title": "Onboarding email sequence",
+      "hint": "behaviour-triggered onboarding drafts",
+      "packs": ["cxo", "cmo"],
+      "icon": "workflow",
+      "category": "support",
+      "source": "Adapted from coreyhaines31/marketingskills skills/onboarding (MIT), modified"
+    },
+    "cxo-health-signals": {
+      "title": "Churn and health signals",
+      "hint": "account health score and interventions",
+      "packs": ["cxo", "cro"],
+      "icon": "shield-check",
+      "category": "support",
+      "source": "Adapted from coreyhaines31/marketingskills skills/churn-prevention (MIT) and gtmagents/gtm-agents plugins/customer-success/skills/risk-scoring-framework (Apache-2.0), modified"
+    },
+    "cxo-feedback-to-cpo": {
+      "title": "Feedback loop to the CPO",
+      "hint": "tagged customer insights for the CPO",
+      "packs": ["cxo", "cpo"],
+      "icon": "lightbulb",
+      "category": "support",
+      "source": "Adapted from gtmagents/gtm-agents plugins/customer-feedback-orchestration/skills/insight-synthesis and plugins/voice-of-customer/skills/customer-feedback-taxonomy (Apache-2.0), modified"
+    },
+    "cxo-help-docs-gaps": {
+      "title": "Help-docs gaps",
+      "hint": "find and fix missing help docs",
+      "packs": ["cxo"],
+      "icon": "book",
+      "category": "support",
+      "source": "Adapted from gtmagents/gtm-agents plugins/technical-writing/skills/doc-requirements-matrix (Apache-2.0), modified"
+    },
+    "cxo-customer-interviews": {
+      "title": "Customer interviews",
+      "hint": "recruit, script and synthesise interviews",
+      "packs": ["cxo", "cpo"],
+      "icon": "users",
+      "category": "support",
+      "source": "Adapted from coreyhaines31/marketingskills skills/customer-research (MIT) and gtmagents/gtm-agents plugins/customer-feedback-orchestration/skills/survey-design (Apache-2.0), modified"
+    }
+  }
+}

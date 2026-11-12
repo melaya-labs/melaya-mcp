@@ -1,0 +1,12 @@
+{
+  "pack": "csco",
+  "skills": {
+    "csco-vendor-inventory": {"title": "Vendor and provider inventory", "hint": "suppliers, providers, owners, costs", "packs": ["csco", "cfo", "ciso"], "icon": "database", "category": "supply", "source": "Adapted from anthropics/knowledge-work-plugins operations/skills/vendor-review (Apache-2.0) and Maxbase91/procurement-skills supplier-truthcheck (MIT), modified"},
+    "csco-provider-outage-fallback": {"title": "Provider outage and fallback plan", "hint": "outage triage and supplier fallbacks", "packs": ["csco", "cto", "coo"], "icon": "alarm", "category": "supply", "source": "Adapted from anthropics/knowledge-work-plugins operations/skills/runbook, risk-assessment (Apache-2.0), modified"},
+    "csco-renewals-calendar": {"title": "Cost and contract renewals calendar", "hint": "trials, renewals, certificates, expiries", "packs": ["csco", "cfo"], "icon": "alarm", "category": "supply", "source": "Adapted from anthropics/knowledge-work-plugins legal/skills/vendor-check (Apache-2.0), modified"},
+    "csco-provider-price-refresh": {"title": "Provider model and price refresh", "hint": "model catalogs, prices, promo expiries", "packs": ["csco", "cto", "cfo"], "icon": "cpu", "category": "supply", "source": null},
+    "csco-procurement-request": {"title": "Procurement request", "hint": "buy requests, quotes, spend asks", "packs": ["csco", "cfo"], "icon": "coins", "category": "supply", "source": "Adapted from Maxbase91/procurement-skills bid-compass (MIT), modified"},
+    "csco-vendor-risk-review": {"title": "Vendor risk review with the CISO", "hint": "periodic supplier risk with the CISO", "packs": ["csco", "ciso", "clo"], "icon": "shield-check", "category": "supply", "source": "Adapted from anthropics/knowledge-work-plugins operations/skills/risk-assessment (Apache-2.0) and Maxbase91/procurement-skills supplier-truthcheck (MIT), modified"},
+    "csco-monthly-spend-review": {"title": "Monthly supplier spend review", "hint": "supplier spend, anomalies, savings", "packs": ["csco", "cfo"], "icon": "coins", "category": "supply", "source": "Adapted from Maxbase91/procurement-skills spend-prism (MIT), modified"}
+  }
+}

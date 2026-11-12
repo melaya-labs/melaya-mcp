@@ -1,0 +1,114 @@
+{
+  "pack": "cpo",
+  "skills": {
+    "cpo-acceptance-criteria": {
+      "title": "Acceptance criteria for a change",
+      "hint": "scenario and passing result table",
+      "packs": [
+        "cpo",
+        "cqo"
+      ],
+      "icon": "shield-check",
+      "category": "product",
+      "source": "Adapted from phuryn/pm-skills pm-execution/skills/test-scenarios (MIT), modified"
+    },
+    "cpo-adoption-readout": {
+      "title": "Feature adoption readout",
+      "hint": "did the shipped feature get used",
+      "packs": [
+        "cpo",
+        "cdo"
+      ],
+      "icon": "database",
+      "category": "product",
+      "source": "Adapted from phuryn/pm-skills pm-data-analytics/skills/cohort-analysis (MIT), modified"
+    },
+    "cpo-ai-crawler-policy": {
+      "title": "AI crawler policy, bot by bot",
+      "hint": "per-bot AI crawler decisions",
+      "packs": [
+        "cpo",
+        "cmo",
+        "ciso"
+      ],
+      "icon": "shield-check",
+      "category": "seo",
+      "source": "Adapted from Illyism/seo-skills seo/block-ai-scrapers (MIT), modified"
+    },
+    "cpo-code-session-handoff": {
+      "title": "Code a change and hand it to the CTO",
+      "hint": "code, commit, hand over to push",
+      "packs": [
+        "cpo"
+      ],
+      "icon": "cpu",
+      "category": "engineering",
+      "source": null
+    },
+    "cpo-docs-upkeep": {
+      "title": "Keep public and in-app docs true",
+      "hint": "docs match the product, every language",
+      "packs": [
+        "cpo",
+        "cqo"
+      ],
+      "icon": "book",
+      "category": "product",
+      "source": null
+    },
+    "cpo-internal-links-code": {
+      "title": "Internal links in the client code",
+      "hint": "link components and related links",
+      "packs": [
+        "cpo",
+        "cmo"
+      ],
+      "icon": "network",
+      "category": "seo",
+      "source": "Adapted from Illyism/seo-skills seo/internal-linking (MIT), modified"
+    },
+    "cpo-release-notes": {
+      "title": "Release notes from what shipped",
+      "hint": "user-facing notes from commits",
+      "packs": [
+        "cpo",
+        "cmo"
+      ],
+      "icon": "megaphone",
+      "category": "product",
+      "source": "Adapted from phuryn/pm-skills pm-execution/skills/release-notes (MIT), modified"
+    },
+    "cpo-roadmap-from-evidence": {
+      "title": "Roadmap from weighted evidence",
+      "hint": "rank asks by weighted evidence",
+      "packs": [
+        "cpo",
+        "ceo"
+      ],
+      "icon": "compass",
+      "category": "product",
+      "source": "Adapted from phuryn/pm-skills pm-product-discovery/skills/analyze-feature-requests and prioritize-features (MIT), modified"
+    },
+    "cpo-seo-autopilot": {
+      "title": "SEO fixes in a coding session",
+      "hint": "fix SEO findings in client code",
+      "packs": [
+        "cpo"
+      ],
+      "icon": "workflow",
+      "category": "seo",
+      "source": "Adapted from Illyism/seo-skills seo/seo-autopilot (MIT), modified"
+    },
+    "cpo-seo-roast": {
+      "title": "Technical SEO roast of the site",
+      "hint": "fatal-first technical SEO audit",
+      "packs": [
+        "cpo",
+        "cmo"
+      ],
+      "icon": "alarm",
+      "category": "seo",
+      "source": "Adapted from Illyism/seo-skills seo/seo-roast (MIT), modified"
+    }
+  }
+}

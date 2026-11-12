@@ -1,0 +1,135 @@
+THIRD-PARTY NOTICES: EXCOM role skills, pack "cmo"
+
+Layout: pack.json (metadata), <slug>/SKILL.md, <slug>/references/*.md.
+Every adapted file listed below is a MODIFIED work, marked as such in its
+closing credit line ("Modified: rewritten generic for EXCOM") and in the
+"source" field of pack.json. The references/*.md files of an adapted skill are
+part of the same modified work. No source file is copied verbatim and no
+third-party script is bundled or executed.
+
+Neither source repository ships a NOTICE file. The full MIT licence texts are
+reproduced at the end of this file.
+
+------------------------------------------------------------------------------
+Source 1: seo-skills
+  Repository : https://github.com/Illyism/seo-skills
+  Commit     : 805c9c8261e60716e17efe6b834b0be7248d9ebb (2026-11-12)
+  Licence    : MIT, Copyright (c) Ilias Ism. The repository has no LICENSE
+               file; the licence is stated in its README ("License: MIT (c)
+               Ilias Ism"). Text reproduced below.
+
+  File     : cmo-content-coverage/SKILL.md
+  Original : seo/content-coverage/SKILL.md
+  Changed  : MODIFIED, rewritten generic for EXCOM: company facts read from the knowledge base at run time; steps mapped to EXCOM tools with action classes and approvals; scripts, install steps and paid-service steps removed; third-party tracker calls replaced by search-console, webmaster, SERP and web-search reads.
+
+  File     : cmo-vs-alternatives/SKILL.md
+  Original : seo/vs-and-alternatives/SKILL.md
+  Changed  : MODIFIED, rewritten generic for EXCOM: company facts read from the knowledge base at run time; steps mapped to EXCOM tools with action classes and approvals; scripts, install steps and paid-service steps removed; route scaffolding removed; claims review step added; section order and trigger gates moved to references/page-structure.md.
+
+  File     : cmo-reddit-serp/SKILL.md
+  Original : seo/reddit-serp/SKILL.md
+  Changed  : MODIFIED, rewritten generic for EXCOM: company facts read from the knowledge base at run time; steps mapped to EXCOM tools with action classes and approvals; scripts, install steps and paid-service steps removed; replies kept as drafts with one approval per post; gates, scoring and reply rules moved to references/reply-rules.md.
+
+  File     : cmo-internal-linking/SKILL.md
+  Original : seo/internal-linking/SKILL.md
+  Changed  : MODIFIED, rewritten generic for EXCOM: company facts read from the knowledge base at run time; steps mapped to EXCOM tools with action classes and approvals; scripts, install steps and paid-service steps removed; bundled script and component code removed; plan handed to the coding role; rules moved to references/anchor-rules.md.
+
+  File     : cmo-seo-title-optimization/SKILL.md
+  Original : seo/seo-title-optimization/SKILL.md
+  Changed  : MODIFIED, rewritten generic for EXCOM: company facts read from the knowledge base at run time; steps mapped to EXCOM tools with action classes and approvals; scripts, install steps and paid-service steps removed; before and after measurement added; patterns moved to references/title-patterns.md.
+
+  File     : cmo-blog-refresher/SKILL.md
+  Original : seo/blog-refresher/SKILL.md
+  Changed  : MODIFIED, rewritten generic for EXCOM: company facts read from the knowledge base at run time; steps mapped to EXCOM tools with action classes and approvals; scripts, install steps and paid-service steps removed; fact checks against the knowledge base added; checklist moved to references/audit-checklist.md.
+
+  File     : cmo-unslop-copy/SKILL.md
+  Original : content/unslop-seo/SKILL.md
+  Changed  : MODIFIED, rewritten generic for EXCOM: company facts read from the knowledge base at run time; steps mapped to EXCOM tools with action classes and approvals; scripts, install steps and paid-service steps removed; check script removed; brand voice read at run time; pattern table moved to references/slop-table.md.
+
+  File     : cmo-youtube-seo/SKILL.md
+  Original : content/youtube-seo/SKILL.md
+  Changed  : MODIFIED, rewritten generic for EXCOM: company facts read from the knowledge base at run time; steps mapped to EXCOM tools with action classes and approvals; scripts, install steps and paid-service steps removed; embed code replaced by a handoff; chapter rules moved to references/chapter-rules.md.
+
+  File     : cmo-directory-submissions/SKILL.md
+  Original : seo/directory-submissions/SKILL.md
+  Changed  : MODIFIED, rewritten generic for EXCOM: company facts read from the knowledge base at run time; steps mapped to EXCOM tools with action classes and approvals; scripts, install steps and paid-service steps removed; directory lists with links removed; free-first rule and paid-listing approval added; templates moved to references/fact-sheet-template.md and references/directory-waves.md.
+
+  File     : cmo-ai-search-visibility/SKILL.md
+  Original : seo/ai-seo-report/SKILL.md
+  Changed  : MODIFIED, rewritten generic for EXCOM: company facts read from the knowledge base at run time; steps mapped to EXCOM tools with action classes and approvals; scripts, install steps and paid-service steps removed; third-party tracker replaced by sampled web-search and SERP reads (combined with source 2); prompt set moved to references/prompt-set.md.
+
+  File     : cmo-honest-link-outreach/SKILL.md
+  Original : seo/honest-link-outreach/SKILL.md
+  Changed  : MODIFIED, rewritten generic for EXCOM: company facts read from the knowledge base at run time; steps mapped to EXCOM tools with action classes and approvals; scripts, install steps and paid-service steps removed; paid link offers removed (no payment or trade for links); variation rules moved to references/email-variation.md.
+
+------------------------------------------------------------------------------
+Source 2: marketingskills
+  Repository : https://github.com/coreyhaines31/marketingskills
+  Commit     : 1f837447b20bb6f0e72d87b80ece1c221c362c7d (shallow clone 2026-11-12)
+  Licence    : MIT, Copyright (c) 2025 Corey Haines (LICENSE file, reproduced below)
+
+  File     : cmo-affiliate-recruiting/SKILL.md
+  Original : skills/referrals/SKILL.md, skills/referrals/references/affiliate-operations.md, skills/influencer-marketing/SKILL.md
+  Changed  : MODIFIED, rewritten generic for EXCOM: company facts read from the knowledge base at run time; steps mapped to EXCOM tools with action classes and approvals; scripts, install steps and paid-service steps removed; programme terms and the active-affiliate definition read from the knowledge base; vetting and activation moved to references/vetting-and-outreach.md and references/activation-kit.md.
+
+  File     : cmo-build-in-public/SKILL.md
+  Original : skills/social/references/ship-post.md
+  Changed  : MODIFIED, rewritten generic for EXCOM: company facts read from the knowledge base at run time; steps mapped to EXCOM tools with action classes and approvals; scripts, install steps and paid-service steps removed; approval of every post by its named author added; surface rules moved to references/surface-adaptation.md.
+
+  File     : cmo-social-engine/SKILL.md
+  Original : skills/social/SKILL.md
+  Changed  : MODIFIED, rewritten generic for EXCOM: company facts read from the knowledge base at run time; steps mapped to EXCOM tools with action classes and approvals; scripts, install steps and paid-service steps removed; scheduler steps replaced by platform tools with approvals; inbound routing to EXCOM roles added; plan and routing moved to references/weekly-plan.md and references/inbound-routing.md.
+
+  File     : cmo-ai-search-visibility/SKILL.md
+  Original : skills/ai-seo/SKILL.md
+  Changed  : MODIFIED, rewritten generic for EXCOM: company facts read from the knowledge base at run time; steps mapped to EXCOM tools with action classes and approvals; scripts, install steps and paid-service steps removed; citation versus recommendation split and repeated-run sampling kept; paid monitoring tools removed as steps.
+
+------------------------------------------------------------------------------
+In-house (no third-party source): cmo-weekly-seo-review/SKILL.md and
+cmo-weekly-seo-review/references/review-template.md
+
+==============================================================================
+MIT License (seo-skills)
+
+Copyright (c) Ilias Ism
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+==============================================================================
+MIT License (marketingskills)
+
+Copyright (c) 2025 Corey Haines
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

@@ -1,0 +1,69 @@
+{
+  "pack": "ciso",
+  "skills": {
+    "ciso-access-review": {
+      "title": "Access review",
+      "hint": "who has access and should they",
+      "packs": ["ciso", "chro"],
+      "icon": "users",
+      "category": "security",
+      "source": "Adapted from mukul975/Anthropic-Cybersecurity-Skills skills/performing-access-review-and-certification (Apache-2.0), modified"
+    },
+    "ciso-compliance-evidence": {
+      "title": "Compliance evidence catalogue",
+      "hint": "controls mapped to dated evidence",
+      "packs": ["ciso"],
+      "icon": "book",
+      "category": "security",
+      "source": "Adapted from alirezarezvani/claude-skills ra-qm-team/skills/soc2-compliance (MIT), modified"
+    },
+    "ciso-incident-first-hour": {
+      "title": "Security incident first hour",
+      "hint": "declare, preserve, contain, clocks",
+      "packs": ["ciso", "cto", "coo"],
+      "icon": "alarm",
+      "category": "security",
+      "source": "Adapted from mukul975/Anthropic-Cybersecurity-Skills skills/triaging-security-incident (Apache-2.0), modified"
+    },
+    "ciso-phishing-mailbox-safety": {
+      "title": "Phishing and mailbox safety",
+      "hint": "suspicious mail and mailbox rules",
+      "packs": ["ciso", "coo"],
+      "icon": "shield-check",
+      "category": "security",
+      "source": "Adapted from mukul975/Anthropic-Cybersecurity-Skills skills/conducting-phishing-incident-response (Apache-2.0), modified"
+    },
+    "ciso-questionnaire-answers": {
+      "title": "Security questionnaire answers",
+      "hint": "sourced answers, no overclaiming",
+      "packs": ["ciso", "cro", "partnerships"],
+      "icon": "library",
+      "category": "security",
+      "source": null
+    },
+    "ciso-secrets-hygiene": {
+      "title": "Secrets hygiene and rotation plan",
+      "hint": "leaks, rotation, never show values",
+      "packs": ["ciso", "cto"],
+      "icon": "shield-check",
+      "category": "security",
+      "source": "Adapted from alirezarezvani/claude-skills engineering/skills/env-secrets-manager (MIT), modified"
+    },
+    "ciso-vendor-security-review": {
+      "title": "Vendor security review",
+      "hint": "tier, evidence, residual risk",
+      "packs": ["ciso", "csco", "clo"],
+      "icon": "scale",
+      "category": "security",
+      "source": "Adapted from mukul975/Anthropic-Cybersecurity-Skills skills/managing-third-party-vendor-risk (Apache-2.0), modified"
+    },
+    "ciso-vuln-dependency-triage": {
+      "title": "Vulnerability and dependency triage",
+      "hint": "exploited first, fix order with deadlines",
+      "packs": ["ciso", "cto"],
+      "icon": "alarm",
+      "category": "security",
+      "source": "Adapted from mukul975/Anthropic-Cybersecurity-Skills skills/performing-cve-prioritization-with-kev-catalog (Apache-2.0), modified"
+    }
+  }
+}

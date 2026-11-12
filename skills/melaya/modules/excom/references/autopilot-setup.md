@@ -1,7 +1,23 @@
 <!-- Reference of the excom module of the melaya skill. Entry point: ../GUIDE.md -->
 # Set up an EXCOM team for the user, end to end (autopilot)
 
-Use this when the user asks you to create their Melaya EXCOM team for them, usually after copying the prompt from the wizard's "Set it up for me with my AI assistant" option. You do every step in the app yourself, from the user's answers, and stop only for what is theirs: passwords, one-time codes, CAPTCHAs, legal acceptances and approval cards.
+Use this when the user asks you to create their Melaya EXCOM team for them, usually after copying the prompt from the wizard's "Set it up for me with my AI assistant" option. You do every step yourself, from the user's answers, and stop only for what is theirs: passwords, one-time codes, CAPTCHAs, legal acceptances and approval cards.
+
+## The default route: the `melaya_excom_*` tools
+
+The wizard's prompt starts "Set up my Melaya EXCOM team with the melaya_excom_* tools" and carries the user's answers so far (name, team, roles, autonomy, website, direction; "ask me" marks a blank). With `melaya:excom` and `melaya:excom.write` granted, do not operate the app:
+
+1. `melaya_setup_status`, then `melaya_excom_team_read` action `plan` (with `scope` / `project`) for the proposed roles and their apps.
+2. Ask everything marked "ask me" in one short message, with the defaults of section 1 below.
+3. `melaya_excom_team_manage` action `create` (`name`, `scope`, `project`, `roles`, `autonomy`, `direction`, `website`). Then the other tools for sections 3 to 5 below: `melaya_excom_mailbox_manage`, `melaya_excom_grants_manage`, `melaya_excom_knowledge_manage`, `melaya_excom_rules_manage`, `melaya_excom_settings_manage` (`channels`, `limits`, `quiet_hours`).
+4. Knowledge: an Obsidian vault first, ahead of documents, Drive or Notion. The `knowledge` field of `plan` and `create` gives the next step: bind a vault the user has (`melaya_excom_knowledge_manage` `bind` kind `obsidian`, then `sync`), or, with none, propose the CEO skill `ceo-company-knowledge-vault.md` (Build your company knowledge vault): the user builds it locally with you, connects it in Melaya, then you bind it.
+5. Show the user every dry run and pass `confirm: true` only after their yes. Start the team (`start`) when they agreed; its first pass is read-only.
+
+Every change is recorded in the team's Audit tab as "Through an MCP client". If a tool is missing, the connection lacks the EXCOM permissions: ask the user to reconnect and switch on **Read your EXCOM teams** and **Manage your EXCOM teams**, or use the Computer Control route below if they prefer.
+
+## The fallback route: operate the app (Computer Control or Browser Control)
+
+The wizard's fallback ("No EXCOM tools in your assistant? Use Computer Control instead") gives a prompt that drives the New team wizard on the user's computer. The rest of this file is that route.
 
 ## 0. Before you start (check, do not assume)
 
@@ -57,7 +73,7 @@ Open each executive (click it on the Stage or in the rail):
 ## 5. Team settings
 
 - **Limits and schedule**: message and recipient caps, quiet hours, review time; budget as the user wants (none when their models are subscriptions).
-- **Knowledge**: add the team's sources (website, vault, Drive, Notion, Confluence).
+- **Knowledge**: an Obsidian vault first, then the website, Drive, Notion, Confluence. No vault yet: propose the CEO skill **Build your company knowledge vault** (`ceo-company-knowledge-vault.md`).
 - **Objectives**: the agreed outcomes (for example 5 paying customers, 3 signed partners, 20 active affiliates).
 - Pipelines the user already runs stay as they are; link them to the executives who should see them.
 

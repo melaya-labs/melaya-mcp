@@ -1,0 +1,165 @@
+{
+  "pack": "cmo",
+  "skills": {
+    "cmo-affiliate-recruiting": {
+      "title": "Affiliate recruiting and activation on Affonso",
+      "hint": "recruit and activate Affonso affiliates",
+      "packs": [
+        "cmo",
+        "cro",
+        "partnerships"
+      ],
+      "icon": "users",
+      "category": "growth",
+      "source": "Adapted from coreyhaines31/marketingskills skills/referrals and skills/influencer-marketing (MIT), modified (generic)"
+    },
+    "cmo-ai-search-visibility": {
+      "title": "AI search visibility report",
+      "hint": "GEO visibility brief, no paid tracker",
+      "packs": [
+        "cmo",
+        "cdo"
+      ],
+      "icon": "compass",
+      "category": "seo",
+      "source": "Adapted from Illyism/seo-skills seo/ai-seo-report (MIT) and coreyhaines31/marketingskills skills/ai-seo (MIT), modified (generic)"
+    },
+    "cmo-blog-refresher": {
+      "title": "Refresh a post or guide that slipped",
+      "hint": "refresh slipping posts and guides",
+      "packs": [
+        "cmo"
+      ],
+      "icon": "book",
+      "category": "content",
+      "source": "Adapted from Illyism/seo-skills seo/blog-refresher (MIT), modified (generic)"
+    },
+    "cmo-build-in-public": {
+      "title": "Build in public from shipped work",
+      "hint": "progress posts from shipped work",
+      "packs": [
+        "cmo",
+        "ceo"
+      ],
+      "icon": "rocket",
+      "category": "content",
+      "source": "Adapted from coreyhaines31/marketingskills skills/social/references/ship-post.md (MIT), modified (generic)"
+    },
+    "cmo-content-coverage": {
+      "title": "Content coverage map",
+      "hint": "topic gaps against queries and rivals",
+      "packs": [
+        "cmo"
+      ],
+      "icon": "target",
+      "category": "seo",
+      "source": "Adapted from Illyism/seo-skills seo/content-coverage (MIT), modified (generic)"
+    },
+    "cmo-directory-submissions": {
+      "title": "Directory and registry submissions",
+      "hint": "free directory and MCP listings",
+      "packs": [
+        "cmo"
+      ],
+      "icon": "layers",
+      "category": "seo",
+      "source": "Adapted from Illyism/seo-skills seo/directory-submissions (MIT), modified (generic)"
+    },
+    "cmo-honest-link-outreach": {
+      "title": "Honest backlink outreach",
+      "hint": "earn links, never buy them",
+      "packs": [
+        "cmo",
+        "partnerships"
+      ],
+      "icon": "network",
+      "category": "seo",
+      "source": "Adapted from Illyism/seo-skills seo/honest-link-outreach (MIT), modified (generic)"
+    },
+    "cmo-internal-linking": {
+      "title": "Internal linking plan",
+      "hint": "route link equity to money pages",
+      "packs": [
+        "cmo",
+        "cpo"
+      ],
+      "icon": "network",
+      "category": "seo",
+      "source": "Adapted from Illyism/seo-skills seo/internal-linking (MIT), modified (generic)"
+    },
+    "cmo-reddit-serp": {
+      "title": "Reddit threads that rank for buying queries",
+      "hint": "ranking Reddit threads, draft replies",
+      "packs": [
+        "cmo"
+      ],
+      "icon": "megaphone",
+      "category": "seo",
+      "source": "Adapted from Illyism/seo-skills seo/reddit-serp (MIT), modified (generic)"
+    },
+    "cmo-seo-title-optimization": {
+      "title": "Title and snippet fixes for click-through",
+      "hint": "CTR fixes from striking distance",
+      "packs": [
+        "cmo"
+      ],
+      "icon": "target",
+      "category": "seo",
+      "source": "Adapted from Illyism/seo-skills seo/seo-title-optimization (MIT), modified (generic)"
+    },
+    "cmo-social-engine": {
+      "title": "Weekly social content engine",
+      "hint": "plan, draft, publish, route inbound",
+      "packs": [
+        "cmo",
+        "cxo"
+      ],
+      "icon": "megaphone",
+      "category": "content",
+      "source": "Adapted from coreyhaines31/marketingskills skills/social (MIT), modified (generic)"
+    },
+    "cmo-unslop-copy": {
+      "title": "De-slop copy for brand voice and answer engines",
+      "hint": "remove AI tells, answer first",
+      "packs": [
+        "cmo",
+        "cpo",
+        "cxo"
+      ],
+      "icon": "sparkles",
+      "category": "content",
+      "source": "Adapted from Illyism/seo-skills content/unslop-seo (MIT), modified (generic)"
+    },
+    "cmo-vs-alternatives": {
+      "title": "Comparison and alternatives pages",
+      "hint": "honest /vs and alternative pages",
+      "packs": [
+        "cmo",
+        "cro"
+      ],
+      "icon": "scale",
+      "category": "seo",
+      "source": "Adapted from Illyism/seo-skills seo/vs-and-alternatives (MIT), modified (generic)"
+    },
+    "cmo-weekly-seo-review": {
+      "title": "Weekly SEO review loop",
+      "hint": "Tuesday GSC, Bing and CWV review",
+      "packs": [
+        "cmo",
+        "cdo"
+      ],
+      "icon": "alarm",
+      "category": "seo"
+    },
+    "cmo-youtube-seo": {
+      "title": "YouTube metadata that ranks",
+      "hint": "titles, chapters, key moments",
+      "packs": [
+        "cmo"
+      ],
+      "icon": "rocket",
+      "category": "content",
+      "source": "Adapted from Illyism/seo-skills content/youtube-seo (MIT), modified (generic)"
+    }
+  }
+}

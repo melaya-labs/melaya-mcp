@@ -1,0 +1,86 @@
+{
+  "pack": "coo",
+  "skills": {
+    "coo-account-key-setup": {
+      "title": "Account and API key setup",
+      "hint": "new provider account and keys",
+      "packs": [
+        "coo",
+        "cto"
+      ],
+      "icon": "shield-check",
+      "category": "operations"
+    },
+    "coo-handoff-delay-audit": {
+      "title": "Handoff delay audit",
+      "hint": "slowest handoffs, measured",
+      "packs": [
+        "coo",
+        "ceo"
+      ],
+      "icon": "network",
+      "category": "operations",
+      "source": "Adapted from claude-skills business-operations/skills/process-mapper by Alireza Rezvani (MIT), modified"
+    },
+    "coo-repeat-work-to-pipeline": {
+      "title": "Turn repeated work into a pipeline",
+      "hint": "repeats to managed pipeline",
+      "packs": [
+        "coo",
+        "cto",
+        "cfo",
+        "cdo"
+      ],
+      "icon": "workflow",
+      "category": "operations",
+      "source": "Adapted from knowledge-work-plugins operations/skills/process-optimization by Anthropic (Apache-2.0), modified"
+    },
+    "coo-runbook-upkeep": {
+      "title": "Runbook upkeep",
+      "hint": "stale runbooks, refresh from reality",
+      "packs": [
+        "coo",
+        "cto"
+      ],
+      "icon": "book",
+      "category": "operations",
+      "source": "Adapted from knowledge-work-plugins operations/skills/runbook by Anthropic (Apache-2.0), modified"
+    },
+    "coo-service-level-misses": {
+      "title": "Service-level misses",
+      "hint": "SLA misses, severity, postmortem",
+      "packs": [
+        "coo",
+        "cto",
+        "cxo"
+      ],
+      "icon": "alarm",
+      "category": "operations",
+      "source": "Adapted from knowledge-work-plugins engineering/skills/incident-response by Anthropic (Apache-2.0), modified"
+    },
+    "coo-vendor-tool-inventory": {
+      "title": "Vendor and tool inventory",
+      "hint": "vendors, tools, renewals, risk",
+      "packs": [
+        "coo",
+        "csco",
+        "cfo",
+        "ciso"
+      ],
+      "icon": "database",
+      "category": "operations",
+      "source": "Adapted from knowledge-work-plugins operations/skills/vendor-review by Anthropic (Apache-2.0), modified"
+    },
+    "coo-weekly-ops-review": {
+      "title": "Weekly operations review",
+      "hint": "Friday ops report, red items first",
+      "packs": [
+        "coo",
+        "ceo"
+      ],
+      "icon": "layers",
+      "category": "operations",
+      "source": "Adapted from knowledge-work-plugins operations/skills/status-report by Anthropic (Apache-2.0), modified"
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "pack": "cfo",
+  "skills": {
+    "cfo-affonso-commission-check": {
+      "title": "Affiliate commission check",
+      "hint": "commissions vs paid Stripe invoices",
+      "packs": [
+        "cfo",
+        "cro",
+        "partnerships"
+      ],
+      "icon": "shield-check",
+      "category": "finance",
+      "source": "Adapted from knowledge-work-plugins finance/skills/reconciliation by Anthropic (Apache-2.0), modified"
+    },
+    "cfo-cash-runway-13-week": {
+      "title": "Cash and runway, 13-week view",
+      "hint": "13-week cash, runway, risks",
+      "packs": [
+        "cfo",
+        "ceo"
+      ],
+      "icon": "coins",
+      "category": "finance",
+      "source": "Adapted from knowledge-work-plugins small-business/skills/cash-flow-snapshot by Anthropic (Apache-2.0), modified"
+    },
+    "cfo-model-cost-watch": {
+      "title": "Model and infrastructure cost watch",
+      "hint": "model, API and infra cost",
+      "packs": [
+        "cfo",
+        "cto",
+        "coo"
+      ],
+      "icon": "cpu",
+      "category": "finance",
+      "source": "Adapted from TerminalSkills skills/llm-cost-optimizer by terminal-skills (Apache-2.0), modified"
+    },
+    "cfo-monthly-close": {
+      "title": "Monthly close checklist",
+      "hint": "month-end close, day by day",
+      "packs": [
+        "cfo"
+      ],
+      "icon": "book",
+      "category": "finance",
+      "source": "Adapted from knowledge-work-plugins finance/skills/close-management by Anthropic (Apache-2.0), modified"
+    },
+    "cfo-pricing-change-impact": {
+      "title": "Pricing change impact",
+      "hint": "price change effect, migration",
+      "packs": [
+        "cfo",
+        "ceo",
+        "cro"
+      ],
+      "icon": "scale",
+      "category": "finance",
+      "source": "Adapted from TerminalSkills skills/pricing-strategy by terminal-skills (Apache-2.0), modified"
+    },
+    "cfo-spend-review": {
+      "title": "Spend review",
+      "hint": "spend vs budget, every spend asks",
+      "packs": [
+        "cfo",
+        "coo",
+        "cmo"
+      ],
+      "icon": "alarm",
+      "category": "finance",
+      "source": "Adapted from knowledge-work-plugins finance/skills/variance-analysis by Anthropic (Apache-2.0), modified"
+    },
+    "cfo-stripe-collections": {
+      "title": "Stripe collections and failed payments",
+      "hint": "failed payments, dunning drafts",
+      "packs": [
+        "cfo",
+        "cro",
+        "cxo"
+      ],
+      "icon": "coins",
+      "category": "finance",
+      "source": "Adapted from knowledge-work-plugins small-business/skills/invoice-chase by Anthropic (Apache-2.0), modified"
+    },
+    "cfo-unit-economics": {
+      "title": "Unit economics per product and plan",
+      "hint": "margins, payback, LTV per product",
+      "packs": [
+        "cfo",
+        "ceo",
+        "cro"
+      ],
+      "icon": "coins",
+      "category": "finance",
+      "source": "Adapted from claude-skills finance/skills/saas-metrics-coach by Alireza Rezvani (MIT), modified"
+    }
+  }
+}

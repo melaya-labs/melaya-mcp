@@ -1,0 +1,69 @@
+{
+  "pack": "cro",
+  "skills": {
+    "cro-lead-qualification": {
+      "title": "Lead qualification by fit and intent",
+      "hint": "fit and intent score per product",
+      "packs": ["cro", "partnerships"],
+      "icon": "target",
+      "category": "sales",
+      "source": "Adapted from gtmagents/gtm-agents plugins/sales-prospecting/skills/lead-qualification (Apache-2.0), modified"
+    },
+    "cro-inbound-answer-library": {
+      "title": "Inbound replies from the answer library",
+      "hint": "draft replies from approved answers",
+      "packs": ["cro"],
+      "icon": "library",
+      "category": "sales",
+      "source": "Adapted from stephenrogan/csm-skills skills/objection-handler (MIT), modified"
+    },
+    "cro-follow-up-cadence": {
+      "title": "Follow-up cadence without spam",
+      "hint": "sequenced follow-ups, never spam",
+      "packs": ["cro", "partnerships"],
+      "icon": "alarm",
+      "category": "sales",
+      "source": "Adapted from gtmagents/gtm-agents plugins/email-sequence-orchestration/skills/cadence-design (Apache-2.0), modified"
+    },
+    "cro-trial-to-paid": {
+      "title": "Trial-to-paid conversion",
+      "hint": "upgrade moments from usage and billing",
+      "packs": ["cro"],
+      "icon": "coins",
+      "category": "sales",
+      "source": "Adapted from coreyhaines31/marketingskills skills/paywalls (MIT), modified"
+    },
+    "cro-call-prep": {
+      "title": "Demo and call prep brief",
+      "hint": "one-page brief before a call",
+      "packs": ["cro", "partnerships"],
+      "icon": "compass",
+      "category": "sales",
+      "source": "Adapted from gtmagents/gtm-agents plugins/sales-calls/skills/call-brief-framework (Apache-2.0), modified"
+    },
+    "cro-pipeline-forecast": {
+      "title": "Weekly pipeline review and forecast",
+      "hint": "weekly review with a goal forecast",
+      "packs": ["cro"],
+      "icon": "workflow",
+      "category": "sales",
+      "source": "Adapted from gtmagents/gtm-agents plugins/sales-pipeline/skills/forecast-discipline (Apache-2.0), modified"
+    },
+    "cro-win-loss-notes": {
+      "title": "Win-loss notes",
+      "hint": "why deals are won or lost",
+      "packs": ["cro"],
+      "icon": "scale",
+      "category": "sales",
+      "source": "Adapted from LMTYdotcom/skills skills/competitive-win-loss-analysis (MIT) and gtmagents/gtm-agents plugins/competitive-intelligence/skills/win-loss-dataset (Apache-2.0), modified"
+    },
+    "cro-pricing-plan-fit": {
+      "title": "Pricing and plan fit",
+      "hint": "map a need to one plan or product",
+      "packs": ["cro"],
+      "icon": "layers",
+      "category": "sales",
+      "source": "Adapted from gtmagents/gtm-agents plugins/pricing-strategy/skills/packaging-framework (Apache-2.0), modified"
+    }
+  }
+}
