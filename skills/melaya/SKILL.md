@@ -1,7 +1,7 @@
 ---
 name: melaya
 description: Use for anything done on the Melaya platform through its MCP server (tools named melaya_*). Covers running, building, fixing and handing over Melaya pipelines and complete multi-pipeline agentic systems; connecting services (Google, Slack, CRMs, API keys); the local runner, Claude Code, Codex, Copilot, Ollama and LM Studio models; projects and templates; run inputs (brief and files); schedules, event triggers and approvals; data stores in Google Sheets and bulk scoring; validation, debugging and reading results; client documentation; phone, browser and computer agents (desktop apps on the user's own computer); Melaya EXCOM executive teams (setting up, managing, operating and auditing a team end to end with the melaya_excom_* tools, or through the New team wizard or autopilot, roles and their apps, mailboxes and aliases, autonomy, rules, executives that operate the computer), including bulk or repeated device work run as one stored plan in one call (tables of records, the same form for many rows, file lists, diagrams and drawings, admin flows, phone flows for a list). Works for non-technical users (plain-language journeys) and for integrators (full end-to-end method). Load this first, then open only the module the task needs.
-version: 1.4.1
+version: 1.4.2
 ---
 
 # Melaya
@@ -70,6 +70,7 @@ New capability areas (for example dedicated mobile-agent or browser-agent playbo
 
 ## Changelog
 
+- 1.4.2: excom: deploys from a coding session run one Jenkins job at a time in the order the company's own deploy runbook gives, each started only once the previous one finished SUCCESS; the guide no longer names a fixed job order.
 - 1.4.1: discovery 6a: a file on the user's computer reaches any file-taking connector tool as a `melaya-file://` reference from `melaya_file_stage` (upload with the returned curl command, 95 MB per file, 60 minutes, this account only) or as `"local:<path>"` through the user's runner or desktop app (only from `~/.melaya/files/` or folders shared with `npx @melaya/runner files allow <folder>`); never a bare local path or base64. `gmail_send` attachments over about 25 MB: nothing is sent unless the user agrees to `large_attachments: "drive_link"` (shared with the recipients only, linked in the body).
 - 1.4.0: excom: the 17 `melaya_excom_*` MCP tools manage a team end to end (set up, settings, executives, grants and recommended apps, mailboxes, devices, coding, knowledge, rules, tasks, chat, Push now, the audit, metrics and budgets); prefer them over driving the EXCOM page. Permissions `melaya:excom` (read), `melaya:excom.write` (manage), the opt-in `melaya:excom.approve` (decide, by the computer's Safety setting; never spend, secret, legal_people or production). Risky changes are dry runs until `confirm: true`.
 - 1.3.4: excom: app grants start at write and the team's autonomy decides; read or drafts only is an optional per-account limit. Every role is suggested its full app set (cloud and DNS providers for the CTO, Grafana for monitoring, Jenkins for deploys, Okta and Vanta for the CISO, HR and recruiting for the CHRO, DocuSign for the CLO).
