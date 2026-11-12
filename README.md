@@ -14,7 +14,7 @@
 [![Smithery](https://img.shields.io/badge/Smithery-listed-8B5CF6)](https://smithery.ai/servers/info-h530/melaya)
 [![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/melaya-labs/melaya-mcp)
 [![Glama MCP server](https://glama.ai/mcp/servers/@melaya-labs/melaya-mcp/badge)](https://glama.ai/mcp/servers/@melaya-labs/melaya-mcp)
-[![Tools](https://img.shields.io/badge/tools-130_across_10_domains-22D3EE)](#what-it-can-do)
+[![Tools](https://img.shields.io/badge/tools-147_across_11_domains-22D3EE)](#what-it-can-do)
 [![Auth](https://img.shields.io/badge/auth-OAuth_2.1_%2B_PKCE-10B981)](#permissions)
 [![Agent Skill](https://img.shields.io/badge/Agent_Skill-for_any_AI-EC4899)](#give-your-ai-the-melaya-skill)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
@@ -223,6 +223,10 @@ Grant `melaya:connectors.write` as well and the assistant can act for you there 
 
 Create a project, rename it or edit its description, and delete it once it is empty. Delete is a dry run until confirmed, only the project's creator can do it, and a project that still holds pipelines, run history or other members is refused. Plan limits apply exactly as in the app.
 
+### Run your EXCOM executive team
+
+Create a [Melaya EXCOM](https://melaya.org/en/product/excom) team from a plan, then manage it from the chat: autonomy, budgets and token caps, quiet hours, approvers and channels, the executives' charters, models and schedules, the apps and accounts each one may use, mailboxes and aliases, devices and coding, knowledge, rules and tasks. Talk to an executive, wake it with **Push now**, and read the whole audit trail, one turn's trace, metrics and spend. Your role on the team and your plan decide exactly as in the app; risky changes are a dry run until you confirm. Deciding what executives wait on is a separate, opt-in permission bound by your computer's Safety setting, and it never approves spending, secrets, legal and people or production.
+
 ### Find out what happened
 
 Runs, transcripts, tool traces, failure diagnosis, cost, and what your agents have learned across runs.
@@ -259,7 +263,7 @@ On the phone overlay and in the Melaya app. It halts everything immediately, acr
 
 ### Approvals are listed here, never decided here
 
-The gate exists to put a human between an agent and a consequential action, and the caller here is a model reading untrusted content. You approve in the Melaya app or on your phone.
+The gate exists to put a human between an agent and a consequential action, and the caller here is a model reading untrusted content. You approve in the Melaya app or on your phone. EXCOM is the one exception, and only if you switch on `melaya:excom.approve`: your assistant may then decide what your executives wait on, within your computer's Safety setting (Safe declines only), and never approve spending, secrets, legal and people, or production.
 
 Password fields are excluded from screen reads.
 
@@ -271,7 +275,7 @@ Also deliberately absent, and enforced by tests rather than by convention: **adm
 
 ## Permissions
 
-Eleven scopes. You grant them individually.
+Fourteen scopes. You grant them individually.
 
 | Scope | What it allows |
 |---|---|
@@ -286,8 +290,11 @@ Eleven scopes. You grant them individually.
 | `melaya:connectors` | Read data from connected services. Read only |
 | `melaya:connectors.write` | Act through connected services: send emails, create or update records and files, including actions that move money or trade (payments, refunds, subscriptions, orders). Needs `melaya:connectors`. Writes run at once and are audit-logged |
 | `melaya:team` | Read project membership, and invite people you name |
+| `melaya:excom` | Your EXCOM teams: settings, executives and their apps, tasks, rules, outcomes, budgets, approvals waiting, the audit log. Read only |
+| `melaya:excom.write` | Manage your EXCOM teams as in the app, within your board role and your plan; risky changes are confirmed first. Needs `melaya:excom` |
+| `melaya:excom.approve` | Approve or decline what EXCOM executives wait on, by your computer's Safety setting; never spending, secrets, legal and people or production. Off unless you switch it on. Needs `melaya:excom` |
 
-The tool list your assistant receives is filtered to what you granted, so connecting for phone control alone shows **25 tools rather than all 130**. If a capability seems missing, you declined it; reconnect and approve it.
+The tool list your assistant receives is filtered to what you granted, so connecting for phone control alone shows **25 tools rather than all 147**. If a capability seems missing, you declined it; reconnect and approve it.
 
 > [!NOTE]
 > **If you also use the Melaya SDK**, "connectors" means something different there. In the SDK it is project credential storage. Here, `melaya:connectors` is reading data from services you already connected, and `melaya:connectors.write` is acting through them. This surface cannot read, set or delete a connector credential (the trigger signing secret and stream-source key above are the only secrets it accepts, and it never returns them).

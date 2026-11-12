@@ -1,16 +1,16 @@
 <!-- Module of the melaya skill. Entry point: ../../SKILL.md -->
-> Use when: the task is about Melaya EXCOM, the executive team of AI executives (CEO, CFO, CRO, CMO, COO, CTO, CPO and more) that reads the user's connected apps, drafts and acts under the autonomy the user sets. Covers creating a team end to end for the user (the New team wizard step by step, or the autopilot setup where you do it for them through Computer Control or Browser Control), personal and project teams and "Apply my connectors", the apps each role plans, mailboxes and aliases per executive, autonomy levels, action classes, rules and limits, approvals and channels, knowledge sources, and executives that operate the user's computer (the COO creating accounts). Load references/autopilot-setup.md to run the setup for the user, references/roles-and-apps.md for which apps each role uses.
+> Use when: the task is about Melaya EXCOM, the executive team of AI executives (CEO, CFO, CRO, CMO, COO, CTO, CPO and more) that reads the user's connected apps, drafts and acts under the autonomy the user sets. Covers creating a team end to end for the user (the New team wizard step by step, or the autopilot setup where you do it for them through Computer Control or Browser Control), personal and project teams and "Apply my connectors", the apps each role plans, mailboxes and aliases per executive, autonomy levels, action classes, rules and limits, approvals and channels, knowledge sources, executives that operate the user's computer (the COO creating accounts), executives that code on the user's computer (the CTO's coding sessions: worktrees, engines, push and deploy approvals, the production fix loop), and the devices (browser, computer, phones) the owner gives each executive at Observe or Act, chosen among the devices already paired. Load references/autopilot-setup.md to run the setup for the user, references/roles-and-apps.md for which apps each role uses.
 
 # Melaya EXCOM: an executive team of AI executives
 
 EXCOM gives a company a team of AI executives. Each executive has a charter (its role), goals, accounts bound from the user's connected apps, knowledge sources, a mailbox, rules and an autonomy level. They read, research, draft and, within the limits the user sets, act. Every action is classified and decided by the Melaya server before it runs, and everything is in the Audit tab.
 
-The app is at https://app.melaya.org/excom. There is no `melaya_excom_*` MCP tool: a team is created and changed in the app. To do it for the user, you drive the app with Browser Control (`melaya_browser_*`, the Melaya browser extension) or Computer Control (`melaya_computer_*`, the Melaya desktop app). Load `references/autopilot-setup.md`.
+The app is at https://app.melaya.org/excom. **Prefer the `melaya_excom_*` tools** (below): they create and change a team through the app's own actions, with the user's role and plan, and need no browser or desktop app. Drive the app with Browser Control or Computer Control (`references/autopilot-setup.md`) only when the connection was not granted the EXCOM permissions and the user does not want to reconnect.
 
 ## Rules that always apply
 
-1. The user approves. Never approve, decline or edit an EXCOM approval card for them, and never switch the team to a wider autonomy than they asked for.
-2. Connecting a service, signing in and choosing what to share are the user's steps. Accounts are bound read-only by default; widening a grant to draft or write is the user's choice, per account.
+1. The user approves. Never approve, decline or edit an EXCOM approval card on your own, and never switch the team to a wider autonomy than they asked for. With `melaya:excom.approve` granted, `melaya_excom_approval_decide` decides a card only when the user asks you to, after you showed it; it never approves spend, secret, legal_people or production cards, and under the computer's Safe setting it only declines.
+2. Connecting a service, signing in and choosing what to share are the user's steps. Accounts are bound at write by default and the team's autonomy decides what runs (Observe reads only, Prepare asks first, Run within rules follows the rules); lowering one account to read or drafts only is an optional per-account limit.
 3. Passwords, one-time codes, card numbers and legal acceptances are the user's. Hand them back (`melaya_computer_handoff`, or ask in chat) and continue after they confirm.
 4. An executive can never change its own grants, budget, rules, members or autonomy. Do not try to make one do it.
 5. For a dry run, set the team to Prepare (or Observe): nothing leaves without the user's approval.
@@ -24,9 +24,42 @@ The app is at https://app.melaya.org/excom. There is no `melaya_excom_*` MCP too
 | Pause or resume | The play / pause button in the header. Pause stops new work at once. |
 | Autonomy of the team | The Autonomy switch in the header (Observe, Prepare, Run within rules). |
 | Team settings | The gear: Profile, Members, Model, Knowledge, Channels, Limits and schedule (budget, message caps, quiet hours, review time), Objectives, Skills, Danger zone. |
-| One executive | Click it on the Stage or in the rail: Chat, Goals, Tasks, Tools and accounts (accounts, mailbox, computer control), Knowledge, Rules, Skills, Model, Schedule, Memory. |
+| One executive | Click it on the Stage or in the rail: Chat, Goals, Tasks, Tools and accounts (accounts, mailbox, pipelines, devices, computer control, code on this computer), Knowledge, Rules, Skills, Model, Schedule, Memory. |
 | Decisions waiting | The Actions tab and the approvals pill; also Telegram, WhatsApp, Slack or Teams cards when set. |
 | What happened | The Audit tab (every tool call, its class, the decision and the account used), exportable. |
+
+## The EXCOM tools: prefer them
+
+Seventeen `melaya_excom_*` tools manage a team end to end. Each is a family with an `action`; teams and executives are named by id or name (an executive also by its role, "CFO"); lists page with `limit` and `cursor`.
+
+| Need | Tool (action) | Permission |
+|---|---|---|
+| See the teams, one team, its settings, the planner's proposal | `melaya_excom_team_read` (list, get, settings, members, plan, setup, brief, usage, models, notifications) | `melaya:excom` |
+| Executives, their chat, devices, coding, wakes | `melaya_excom_executive_read` | `melaya:excom` |
+| Apps, accounts, tools, mailboxes, project connectors | `melaya_excom_grants_read` | `melaya:excom` |
+| Knowledge, skills, memory, lessons, managed pipelines | `melaya_excom_knowledge_read` | `melaya:excom` |
+| Tasks, everything waiting on a person, rules, outcomes | `melaya_excom_work_read` | `melaya:excom` |
+| Audit log, one turn's trace, tool I/O, metrics, budget and spend, the Dome, queue, jobs | `melaya_excom_observe` | `melaya:excom` |
+| Create (with `roles`), start, pause, resume, archive, delete, members | `melaya_excom_team_manage` | `+ melaya:excom.write` |
+| Autonomy, quiet hours, limits, approvers and escalation, channels, profile, the Dome, auto-grant, team model, pipeline read access | `melaya_excom_settings_manage` | `+ melaya:excom.write` |
+| Add an executive, charter, model, schedule, autonomy, activate, pause, archive, delete, wake / Push now, interrupt | `melaya_excom_executive_manage` | `+ melaya:excom.write` |
+| Message an executive | `melaya_excom_chat_send` (read the reply with executive_read history) | `+ melaya:excom.write` |
+| Give an app (`grant_recommended`), add / update / remove a grant, source edits, apply or share a connector to the project | `melaya_excom_grants_manage` | `+ melaya:excom.write` |
+| Mail aliases, wakes | `melaya_excom_mailbox_manage` | `+ melaya:excom.write` |
+| Devices, computer control, coding grant and sessions | `melaya_excom_access_manage` | `+ melaya:excom.write` |
+| Knowledge sources, skills, memory, managed pipelines | `melaya_excom_knowledge_manage` | `+ melaya:excom.write` |
+| Rules | `melaya_excom_rules_manage` | `+ melaya:excom.write` |
+| Answer an "asks for help", tasks, task autonomy, outcomes | `melaya_excom_tasks_manage` | `+ melaya:excom.write` |
+| Approve or decline a card, a proposed rule, a managed pipeline | `melaya_excom_approval_decide` | `+ melaya:excom.approve` (opt-in) |
+
+Method:
+
+1. Read before you change: `melaya_excom_team_read` (`list`, then `get` or `settings`).
+2. To create: `team_read` action `plan` (show the user the proposed roles, apps and outcomes), then `team_manage` action `create` with `name`, `scope` (personal, or project + `project`), `roles`, `autonomy` (Prepare for a first dry run), optional `website`; then `start`. Give missing apps with `grants_manage` `grant_recommended`; connect a new app with `melaya_connector_connect` (the user signs in).
+3. Risky changes return a dry run first (the result starts with DRY RUN and nothing changed) (archive, delete, removing access, autonomy to Run, loosening or removing a limit, devices, computer, coding, aliases, rules, removals). Show the dry run, then call again with `confirm: true` only once the user agrees.
+4. The board role and the plan decide exactly as in the app: a refusal is the app's message; an autonomy above the plan is saved at the plan's ceiling (say so, never work around it).
+5. Executives keep working under the team's autonomy, rules, quiet hours, limits and approvals: nothing here runs their actions.
+6. A missing tool is a permission the user did not grant: ask them to reconnect and switch on **Read your EXCOM teams** / **Manage your EXCOM teams** (and **Approve or decline**, only if they want to delegate decisions).
 
 ## Create a team: the New team wizard
 
@@ -51,7 +84,7 @@ A project team runs on the project's connectors, not the owner's personal ones. 
 
 ## The apps each role plans
 
-Each role plans its apps by capability slot (mailbox, calendar, chat, docs and knowledge, CRM, accounting, payments, ads, social, analytics, support desk, HR, recruiting, code, monitoring, cloud, data warehouse, e-signature, shipping, compliance ...), a few apps per slot, in priority order, bound read-only. The executive's Tools pane shows **Recommended for this role** with a coverage score, apps **Connected but left out**, and apps **Not in Melaya yet**. When the user connects an app later, every executive whose role uses it gets read access automatically (the team setting is on by default), or an item asks the owner to give it. Full table per role: `references/roles-and-apps.md`.
+Each role plans its apps by capability slot (mailbox, calendar, chat, docs and knowledge, CRM, accounting, payments, ads, social, analytics, support desk, HR, recruiting, code, monitoring, cloud, data warehouse, e-signature, shipping, compliance ...), a few apps per slot, in priority order, bound at write (the autonomy mode decides). The executive's Tools pane shows **Recommended for this role** with a coverage score, apps **Connected but left out**, and apps **Not in Melaya yet**. When the user connects an app later, every executive whose role uses it gets access automatically (the team setting is on by default), or an item asks the owner to give it. Full table per role: `references/roles-and-apps.md`.
 
 ## Mailboxes and aliases
 
@@ -93,6 +126,34 @@ Under an executive's **Tools and accounts > Computer control**, the owner can le
 - **Stored secrets**: keys and passwords it captured are kept as encrypted handles, never shown to the model; the owner can reveal or delete one.
 
 The allowed apps, their levels and the computer's approval mode still apply (Computer Control > Apps and Safety tabs). Password fields are handed to the user. Load `../../modules/devices-computer/GUIDE.md`.
+
+## Devices for executives (browser, computer, phone)
+
+Under an executive's **Tools and accounts > Devices**, the owner gives that executive specific devices of their own: a browser (the paired Melaya extension), a computer (the Melaya desktop app, the same switch as Computer control) and up to four Android phones. Each device is switched on separately, at a level:
+
+- **Observe**: the executive reads that device's screen only.
+- **Act**: it operates it under its autonomy. In Observe it still only reads; in Prepare it navigates, opens apps and types, and every post, send, submit, purchase or deletion shows the owner an approval card first; in Run within rules a post or a send runs when an active rule covers it (Rules: class Send, tool `phone_*` or `browser_*`), and a purchase or a deletion always asks.
+
+Rules of the feature:
+
+- Off by default. Only the team owner gives devices, and only their own (the member the executive works as). Suggestions per role (the CMO: phone and browser for social posting; the COO: computer and browser) never grant anything.
+- The executive can use only the devices picked there; any other device is refused, even one of the owner's.
+- Only devices the member has already paired can be given: one browser, one computer and up to four phones per executive. There is no separate EXCOM limit on devices; the plan limits browsers, computers and phones when they are paired. The plan's ceiling still applies (Sandbox and Outpost read only).
+- The device's own safe mode still stops on a post, a payment or a deletion it detects; a CAPTCHA, a password, a card or a bank detail is always handed to the person at the device.
+
+Typical request: "let the CMO post on X with my phone instead of the X API". Steps for the user (never grant on their behalf): open the CMO, Tools and accounts > Devices, switch the phone on, choose Act; keep the team in Prepare for a first post (it asks), then add a send rule for that phone if the user wants it to post alone. To set it up for the user through Browser or Computer Control, stop at each switch and let the user confirm it.
+
+## Executives that code on the user's computer (CTO)
+
+Under an executive's **Tools and accounts > Code on this computer** (suggested, open, on the CTO; off for everyone by default), the owner whose computer it is lets that executive develop on it in **coding sessions**. Settings: the computer (Melaya app or runner online and up to date), the repository folders (absolute paths), the remotes a push may use (`origin`), the base branch (`master`), the engine, optional checks (`npm test`, `npx tsc`...), minutes and turns per session.
+
+- Each session runs in its own git worktree on a new `excom/` branch; the user's working tree and branches are never touched. The engine only edits files and runs git status/diff/log/add/commit, tests, type checks and `npm run` scripts: no push, no network tools, no secrets.
+- Engines: **Automatic (the executive's model)** by default: Claude Code, Codex or the Copilot CLI when installed and matching the executive's model, otherwise Melaya's native loop, which runs on every local model (LM Studio and Ollama too). Or one engine explicitly.
+- The executive's tools: `excom_code_task` (repo, goal, optional runbook such as AddNewTool from a knowledge source, optional `evidence` of a production error) is a record write: it asks in Prepare. `excom_code_status` reads. `excom_code_push` target branch is a send; target base merges into the base branch and pushes it: production, it always asks, with the diff stat and the commits on the card; it refuses when the base moved and the merge conflicts. `excom_code_discard` removes the worktree (sessions are swept after 7 days).
+- Deploys go through the Jenkins connector, Backend, then melayaAgents, then Frontend, each `jenkins_trigger_build` asking first (production) and the next waiting for the previous to be green.
+- Production fix loop with a monitoring connector (Grafana): monitor, fix (a session with the error's evidence and a test that reproduces it; the result says which evidence it addressed and the covering test), push, deploy, verify the error stopped.
+
+Typical request: "let the CTO fix the errors Grafana shows". Steps for the user (never switch it on or approve on their behalf): connect the coding runbooks as a knowledge source of the CTO, open the CTO, Tools and accounts > Code on this computer, pick the computer, add the repository folders and `origin`, Switch on; keep the team in Prepare (each session, each base push and each deploy asks); connect Jenkins and Grafana. If the section says the computer is offline or no engine is found, the runner on that computer needs an update.
 
 ## Definition of done
 
